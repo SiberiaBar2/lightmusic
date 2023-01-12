@@ -2,16 +2,12 @@ import styled from "@emotion/styled";
 import { List, Skeleton, Image } from "antd";
 import { useParams } from "react-router-dom";
 import { useSongList } from "./utils";
-import { songIdSlice } from "store/play";
-import { useDispatch } from "react-redux";
+import { useSongIdSearchParam } from "body/PlayFooter/comutils";
 
 export const SongList = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
-  const { getSongId } = songIdSlice.actions;
-  console.log("mmm", id);
-
   const { data: songList, isLoading } = useSongList({ data: { id } });
+  const [param, setParam] = useSongIdSearchParam();
 
   return (
     <Skeleton loading={isLoading} active={true}>
@@ -42,10 +38,12 @@ export const SongList = () => {
         dataSource={songList?.playlist?.tracks}
         renderItem={(item: any) => (
           <List.Item
-            onClick={() => {
-              console.log("item -a--->", item);
-              dispatch(getSongId(item.id));
-            }}
+            onClick={() =>
+              setParam({
+                ...param,
+                songId: item.id,
+              })
+            }
             //   actions={[<RightCircleOutlined style={{ fontSize: 24 }} />]}
           >
             {item.name}
@@ -62,17 +60,9 @@ const ImageContainer = styled.div`
 `;
 
 const Describtion = styled.div`
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* justify-content: r; */
   position: relative;
-  /* margin: 0.5rem; */
   margin-left: 3rem;
   width: 100%;
-  /* align-items: center; */
-  /* span {
-    display: block;
-  } */
 `;
 
 const DescribtionContent = styled.div`

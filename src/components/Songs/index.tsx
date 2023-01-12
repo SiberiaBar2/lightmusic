@@ -1,11 +1,16 @@
-import { songIdSlice } from "store/play";
-import { useDispatch } from "react-redux";
+import { useSongIdSearchParam } from "body/PlayFooter/comutils";
 export const Songs = (item: any) => {
-  const dispatch = useDispatch();
-  const { getSongId } = songIdSlice.actions;
+  const [param, setParam] = useSongIdSearchParam();
 
   return (
-    <span style={{}} onClick={() => dispatch(getSongId(item.id))}>
+    <span
+      onClick={() =>
+        setParam({
+          ...param,
+          songId: item.id,
+        })
+      }
+    >
       {item.name}
     </span>
   );

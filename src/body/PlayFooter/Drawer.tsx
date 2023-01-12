@@ -5,17 +5,35 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Drawer as AntDrawer } from "antd";
+import { Divider, Drawer as AntDrawer } from "antd";
 import styled from "@emotion/styled";
+import { DrawProps } from "./index";
+import { useSongComment, useSongsimi } from "./utils";
 import "./index.css";
+import { Common } from "./Common";
+import { COMMENT } from "./contants";
+import { IsSame } from "./IsSame";
 
-const Drawer = (props: any, ref: any) => {
-  const { lyric, musicRef, time, picUrl } = props;
-  console.log("lyric", lyric);
+// import { AnyARecord } from "dns";
+
+const Drawer = (props: DrawProps, ref: any) => {
+  const { lyric, musicRef, time, picUrl, songId } = props;
+  // console.log("lyric", lyric);
   // audioTimeUpdate();
   const [visiable, setVisiable] = useState(false);
   const [lrc, setLrc] = useState<string[]>([""]);
   const lrcRef: React.MutableRefObject<any> = useRef();
+
+  const { data: { hotComments, comments, userId, topComments } = COMMENT } =
+    useSongComment(songId);
+
+  // item. content:string 评论内容 commentId:number ，评论id ， timeStr:string 时间字符， time:number 时间戳，
+  // item. user 用户信息 ，avatarUrl: string 头像地址，nickname:string 昵称， userId:number 用户id， userType:number 用户类型
+  // console.log("hotComments", hotComments);
+  const { data: { songs } = { songs: [] } } = useSongsimi(songId);
+
+  // data name：string 歌曲名，id： number 歌曲id， artists:[] 0.name 作者， picUrl ： 歌曲图片
+  console.log("data 相似", songs);
 
   const changeVisiable = () => {
     setVisiable(!visiable);
@@ -62,6 +80,7 @@ const Drawer = (props: any, ref: any) => {
       onClose={onClose}
       mask={false}
       closeIcon={null}
+      style={{ background: "rgb(227, 180, 184)", color: "rgb(43, 51, 62)" }}
     >
       <Container>
         <Round>
@@ -79,8 +98,20 @@ const Drawer = (props: any, ref: any) => {
         </Lyric>
       </Container>
       <Comment>
-        <CommentList></CommentList>
-        <Revelant></Revelant>
+        <CommentList>
+          <Divider orientation="left">热评</Divider>
+          {Array.isArray(hotComments) &&
+            hotComments.map((ele: any) => (
+              <Common key={ele.commentId} {...ele} />
+            ))}
+          <Divider orientation="left">最新评论</Divider>
+          {Array.isArray(comments) &&
+            comments.map((ele: any) => <Common key={ele.commentId} {...ele} />)}
+        </CommentList>
+        <Revelant>
+          <Divider orientation="left">相关</Divider>
+          {Array.isArray(songs) && songs.map((ele) => <IsSame {...ele} />)}
+        </Revelant>
       </Comment>
     </AntDrawer>
   );
@@ -95,8 +126,8 @@ const Container = styled.div`
 `;
 
 const Round = styled.div`
-  border: 1px solid violet;
-  box-sizing: border-box;
+  /* border: 1px solid violet; */
+  /* box-sizing: border-box; */
   width: 20rem;
   display: flex;
   justify-content: center;
@@ -116,13 +147,13 @@ const Round = styled.div`
   div:nth-of-type(2) {
     width: 100%;
     height: 3rem;
-    background: darkorange;
+    /* background: darkorange; */
   }
 `;
 
 const Lyric = styled.div`
-  border: 1px solid rebeccapurple;
-  box-sizing: border-box;
+  /* border: 1px solid rebeccapurple; */
+  /* box-sizing: border-box; */
   flex: 1;
   overflow: auto;
   padding: 2rem;
@@ -136,21 +167,16 @@ const Lyric = styled.div`
 const Comment = styled.div`
   display: flex;
   margin: 0 20rem;
-  /* border: 1px solid salmon;
-  box-sizing: border-box; */
-  height: 100%;
 `;
 
 const CommentList = styled.div`
   width: 60%;
-  border: 1px solid navy;
-  box-sizing: border-box;
 `;
 
 const Revelant = styled.div`
   flex: 1;
-  border: 1px solid magenta;
-  box-sizing: border-box;
+  margin: 2rem;
+  /* background: aliceblue; */
 `;
 
 Drawer.whyDidYouRender = true;

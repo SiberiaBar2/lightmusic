@@ -15,11 +15,9 @@ import {
   VolumeMute,
 } from "@icon-park/react";
 import { useReducer, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "store";
 import styled from "@emotion/styled";
 import Drawer from "./Drawer";
-import { Slider } from "antd";
+import { Slider, Tooltip } from "antd";
 import {
   useSongComment,
   useSongDetail,
@@ -27,14 +25,22 @@ import {
   useSongUrl,
 } from "./utils";
 import { PLAYCONSTANTS } from "./contants";
-import { playState } from "store/play";
 import { useMount, useInterVal } from "hooks";
+import { useSongIdSearchParam } from "./comutils";
 
 enum PlayType {
   dan,
   shun,
   liexun,
   sui,
+}
+
+export interface DrawProps {
+  picUrl: string;
+  time: string;
+  musicRef: React.MutableRefObject<any>;
+  lyric: string;
+  songId?: number;
 }
 
 const reducer = (state: any, action: any) => {
@@ -64,20 +70,24 @@ export const PlayFooter = () => {
   const musicRef: React.MutableRefObject<any> = useRef();
   const [time, setTime] = useState("");
 
+  const [param] = useSongIdSearchParam();
+
+  const songId = param.songId;
+
   const playMusic = (play: boolean) => {
     play ? musicRef.current?.play() : musicRef.current?.pause();
   };
 
-  const playState = useSelector<RootState, Pick<playState, "songId">>(
-    (state) => state.play
-  );
+  // const playState = useSelector<RootState, Pick<playState, "songId">>(
+  //   (state) => state.play
+  // );
 
   // 初始音量
   useMount(() => {
     if (musicRef.current) musicRef.current.volume = volume * 0.01;
   });
 
-  const { songId } = playState;
+  // const { songId = "" } = playState;
   const { data: { data } = { data: { data: [] } } } = useSongUrl(songId);
   const {
     data: {
@@ -92,8 +102,6 @@ export const PlayFooter = () => {
 
   const { data: { lrc: { lyric } } = { lrc: { lyric: "" } } } =
     useSonglyric(songId);
-
-  const { data: comment } = useSongComment(songId);
 
   const changePaly = (play: boolean) => {
     setPlay(play);
@@ -120,7 +128,7 @@ export const PlayFooter = () => {
             onClick={() => handeChangeType(PlayType.dan)}
             theme="outline"
             size="24"
-            fill="#333"
+            fill="rgb(237, 195, 194)"
           />
         );
       case PlayType.shun:
@@ -130,7 +138,7 @@ export const PlayFooter = () => {
             onClick={() => handeChangeType(PlayType.shun)}
             theme="outline"
             size="24"
-            fill="blue"
+            fill="rgb(237, 195, 194)"
           />
         );
       case PlayType.liexun:
@@ -140,7 +148,7 @@ export const PlayFooter = () => {
             onClick={() => handeChangeType(PlayType.liexun)}
             theme="outline"
             size="24"
-            fill="green"
+            fill="rgb(237, 195, 194)"
           />
         );
       case PlayType.sui:
@@ -150,7 +158,7 @@ export const PlayFooter = () => {
             onClick={() => handeChangeType(PlayType.sui)}
             theme="outline"
             size="24"
-            fill="yellow"
+            fill="rgb(237, 195, 194)"
           />
         );
 
@@ -196,11 +204,12 @@ export const PlayFooter = () => {
     return name + "-" + authName;
   };
 
-  const DrawerConfig = {
+  const DrawerConfig: DrawProps = {
     picUrl: picUrl,
-    name: name,
+    time: time,
     musicRef: musicRef,
     lyric: lyric,
+    songId: songId,
   };
 
   return (
@@ -230,12 +239,13 @@ export const PlayFooter = () => {
           </div>
         )}
         <div>
-          <div title={songAndAuth()} style={{ cursor: "pointer" }}>
-            {songAndAuth().length > 16
-              ? songAndAuth().slice(0, 16) + "..."
-              : songAndAuth()}
-          </div>
-
+          <Tooltip title={songAndAuth()}>
+            <div>
+              {songAndAuth().length > 16
+                ? songAndAuth().slice(0, 16) + "..."
+                : songAndAuth()}
+            </div>
+          </Tooltip>
           {data[0] ? (
             musicTime().map((time, index) => {
               return (
@@ -253,8 +263,7 @@ export const PlayFooter = () => {
         </div>
       </DivOne>
       <DivTwo>
-        <Like theme="outline" size="24" fill="#333" />
-        <GoStart theme="outline" size="24" fill="#333" />
+        <GoStart theme="outline" size="24" fill="rgb(237, 195, 194)" />
         {!play ? (
           <Play
             onClick={() => {
@@ -262,9 +271,9 @@ export const PlayFooter = () => {
               playMusic(true);
               console.log("musicTime();", musicTime());
             }}
-            theme="outline"
+            theme="filled"
             size="24"
-            fill="#333"
+            fill="rgb(237, 195, 194)"
           />
         ) : (
           <PauseOne
@@ -272,18 +281,30 @@ export const PlayFooter = () => {
               changePaly(false);
               playMusic(false);
             }}
-            theme="outline"
+            theme="filled"
             size="24"
-            fill="yellow"
+            fill="rgb(192, 44, 56)"
           />
         )}
-        <GoEnd theme="outline" size="24" fill="#333" />
-        <ShareOne theme="outline" size="24" fill="#333" />
+        <GoEnd theme="outline" size="24" fill="rgb(237, 195, 194)" />
+        {/* <ShareOne theme="outline" size="24" fill="#333" /> */}
+        <Like theme="outline" size="24" fill="rgb(237, 195, 194)" />
+        {/* <Like theme="filled" size="24" fill="rgb(192, 44, 56)" /> */}
       </DivTwo>
       <DivThree>
-        <Acoustic title="音效" theme="outline" size="24" fill="#333" />
+        <Acoustic
+          title="音效"
+          theme="outline"
+          size="24"
+          fill="rgb(237, 195, 194)"
+        />
         {getElement(type.type)}
-        <ListBottom title="播放列表" theme="outline" size="24" fill="#333" />
+        <ListBottom
+          title="播放列表"
+          theme="outline"
+          size="24"
+          fill="rgb(237, 195, 194)"
+        />
         <VolumeWrap>
           <div>
             <Slider
@@ -305,14 +326,14 @@ export const PlayFooter = () => {
               theme="outline"
               onClick={() => changeOpen(false)}
               size="24"
-              fill="#333"
+              fill="rgb(237, 195, 194)"
             />
           ) : (
             <VolumeMute
               theme="outline"
               onClick={() => changeOpen(true)}
               size="24"
-              fill="#333"
+              fill="rgb(237, 195, 194)"
             />
           )}
         </VolumeWrap>
@@ -334,8 +355,9 @@ const Container = styled.footer`
   justify-content: space-between;
   align-items: center;
   height: 4.3rem;
-  background: aliceblue;
+  background: rgb(249, 241, 219);
   position: relative;
+  color: rgb(93, 101, 95);
 
   .ant-drawer {
     margin-bottom: 4.3rem;
@@ -404,7 +426,7 @@ const VolumeWrap = styled.div`
     width: 2rem;
     position: absolute;
     height: 4.5rem;
-    background: rgb(236, 44, 100);
+    background: rgb(237, 195, 194);
     top: -4.5rem;
     border-radius: 0.8rem;
     display: none;
@@ -420,7 +442,7 @@ const Progress = styled.div`
   height: 0.25rem;
   background: rgb(167, 83, 90);
   position: absolute;
-  top: 0.1rem;
+  top: -0.1rem;
   left: 0;
   width: 100%;
   z-index: 99;
@@ -429,8 +451,15 @@ const Progress = styled.div`
     margin: 0;
     padding-block: 0;
 
+    &:hover {
+      .ant-slider-handle {
+        display: block;
+      }
+    }
+
     .ant-slider-handle {
       top: -2px;
+      display: none;
     }
   }
 `;

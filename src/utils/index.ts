@@ -14,7 +14,7 @@ export const http = async (
   endpoint: string,
   { data, token, headers, ...customConfig }: Config = {}
 ) => {
-  console.log("ddddddd", data);
+  // console.log("ddddddd", data);
 
   const config = {
     method: "GET",
@@ -25,9 +25,9 @@ export const http = async (
     ...customConfig,
   };
 
-  console.log("endpoint", endpoint);
+  // console.log("endpoint", endpoint);
 
-  console.log("qs.stringify(data)", qs.stringify(data));
+  // console.log("qs.stringify(data)", qs.stringify(data));
 
   if (config.method.toUpperCase() === "GET") {
     if (data) endpoint += `?${qs.stringify(data)}`;
@@ -35,7 +35,7 @@ export const http = async (
     config.body = JSON.stringify(data || {});
   }
 
-  console.log("sdssdsdsdsds", `${api}/${endpoint}`);
+  // console.log("sdssdsdsdsds", `${api}/${endpoint}`);
 
   return fetch(`${api}/${endpoint}`, config).then(async (response) => {
     // if (response.status === 401) {

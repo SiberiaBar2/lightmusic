@@ -30,3 +30,11 @@ export const useSongComment = (id: IdType) => {
     client("comment/music", { data: { id } })
   );
 };
+
+// 相似歌曲
+export const useSongsimi = (id: IdType) => {
+  const client = useHttp();
+  return useQuery(["simi/song", id], () =>
+    client("simi/song", { data: { id } })
+  );
+};
