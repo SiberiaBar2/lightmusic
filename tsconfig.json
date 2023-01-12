@@ -18,9 +18,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./src",
+    "downlevelIteration": true, //使 [...div.children]这种写法不报错
   },
   "include": [
     "src"
-  ]
+  ],
 }
