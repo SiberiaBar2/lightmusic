@@ -13,11 +13,19 @@ export const CardList = ({
   custom,
   ...other
 }: CardListProps) => {
-  const addConfig = (item: any, children: React.ReactNode) => {
+  const songIdList = dataSource?.map((item) => {
+    return (item as any).id;
+  });
+
+  const addConfig = (item: any, index: number, children: React.ReactNode) => {
     if (React.isValidElement(children)) {
       return React.cloneElement(children, {
-        key: item.id,
         ...item,
+        key: item.id,
+        songIdList: songIdList,
+        songIndex: index,
+        prev: Array.isArray(dataSource) && (dataSource[index - 1] as any)?.id,
+        next: Array.isArray(dataSource) && (dataSource[index + 1] as any)?.id,
       });
     }
     console.error("CardList 必须传入react元素！");
@@ -27,8 +35,8 @@ export const CardList = ({
     <>
       <AntList
         dataSource={dataSource}
-        renderItem={(item: any) => (
-          <List.Item>{addConfig(item, children)}</List.Item>
+        renderItem={(item: any, index: number) => (
+          <List.Item>{addConfig(item, index, children)}</List.Item>
         )}
         {...other}
       />

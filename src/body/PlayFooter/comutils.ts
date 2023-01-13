@@ -2,7 +2,13 @@ import { useMemo } from "react";
 import { useQueryParam } from "hooks";
 
 export const useSongIdSearchParam = () => {
-  const [param, setParam] = useQueryParam(["songId"]);
+  const [param, setParam] = useQueryParam([
+    "songId",
+    "prev",
+    "next",
+    "song",
+    "prevornext",
+  ]);
 
   return [
     useMemo(

@@ -14,16 +14,11 @@ import {
   VolumeSmall,
   VolumeMute,
 } from "@icon-park/react";
-import { useReducer, useRef, useState } from "react";
+import { useMemo, useReducer, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import Drawer from "./Drawer";
-import { Slider, Tooltip } from "antd";
-import {
-  useSongComment,
-  useSongDetail,
-  useSonglyric,
-  useSongUrl,
-} from "./utils";
+import { Slider, Tooltip, message } from "antd";
+import { useSongDetail, useSonglyric, useSongUrl } from "./utils";
 import { PLAYCONSTANTS } from "./contants";
 import { useMount, useInterVal } from "hooks";
 import { useSongIdSearchParam } from "./comutils";
@@ -70,24 +65,41 @@ export const PlayFooter = () => {
   const musicRef: React.MutableRefObject<any> = useRef();
   const [time, setTime] = useState("");
 
-  const [param] = useSongIdSearchParam();
-
+  const [param, setParam] = useSongIdSearchParam();
   const songId = param.songId;
+
+  const { song, prevornext } = param;
+  console.log("param ----> lits", param, typeof song, song);
 
   const playMusic = (play: boolean) => {
     play ? musicRef.current?.play() : musicRef.current?.pause();
+    setPlay(play);
   };
 
-  // const playState = useSelector<RootState, Pick<playState, "songId">>(
-  //   (state) => state.play
-  // );
+  // 切歌时重置播放进度 、关闭播放状态
+  useMemo(() => {
+    setDuration(0);
 
+    setTimeout(() => {
+      if (songId) {
+        playMusic(true);
+      }
+    }, 2500);
+  }, [songId]);
+
+  // useEffect(() => {
+  //   setPlay(false);
+  //   return () => {
+  //     console.log("卸载");
+  //     // setPlay(false);
+  //     // musicRef.current?.pause();
+  //   };
+  // }, []);
   // 初始音量
   useMount(() => {
     if (musicRef.current) musicRef.current.volume = volume * 0.01;
   });
 
-  // const { songId = "" } = playState;
   const { data: { data } = { data: { data: [] } } } = useSongUrl(songId);
   const {
     data: {
@@ -103,10 +115,6 @@ export const PlayFooter = () => {
   const { data: { lrc: { lyric } } = { lrc: { lyric: "" } } } =
     useSonglyric(songId);
 
-  const changePaly = (play: boolean) => {
-    setPlay(play);
-  };
-
   const changeOpen = (open: boolean) => {
     setOpen(open);
     if (!open) {
@@ -118,6 +126,33 @@ export const PlayFooter = () => {
 
   const handeChangeType = (type: number) => {
     dispatch({ type });
+  };
+
+  const goPrevorNext = (key: string) => {
+    let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
+
+    const getSongsId = prevornext.split(",");
+    const min = 0;
+    const max = getSongsId.length - 1;
+
+    if (togo < min) {
+      togo = 0;
+      message.warning("不能再往上了哦！", 2);
+      return;
+    }
+    if (togo > max) {
+      togo = max;
+      message.warning("到底再也没有了！", 2);
+      return;
+    }
+
+    setParam({
+      ...param,
+      song: togo,
+      songId: getSongsId[togo],
+    });
+
+    // playMusic(true);
   };
   const getElement = (type: number) => {
     switch (type) {
@@ -184,7 +219,17 @@ export const PlayFooter = () => {
 
   // 随着音乐播放，进度条自动行进
   useInterVal(() => {
-    play ? setDuration((dura) => dura + 1) : null;
+    // 这里 && musicRef.current 之后播放就稳定了
+    // 不会再出现切歌后进度条在走，也显示播放图标，但音频时而播放时而不播放的问题
+    // 做到了同步
+    // 但同时也必须配合2.5s
+    if (play && musicRef.current) {
+      setDuration((dura) => dura + 1);
+      // 重置播放状态
+      if (duration >= musicRef.current?.duration) {
+        setPlay(false);
+      }
+    }
   }, 1000);
 
   const audioTimeUpdate = () => {
@@ -219,6 +264,7 @@ export const PlayFooter = () => {
           value={duration}
           onChange={(dura) => {
             setDuration(dura);
+            playMusic(true);
             musicRef.current.currentTime = dura;
           }}
           tooltip={{ open: false }}
@@ -263,48 +309,60 @@ export const PlayFooter = () => {
         </div>
       </DivOne>
       <DivTwo>
-        <GoStart theme="outline" size="24" fill="rgb(237, 195, 194)" />
+        <GoStart
+          onClick={() => goPrevorNext("prev")}
+          theme="outline"
+          size="24"
+          fill="rgb(237, 195, 194)"
+          style={{ cursor: "pointer" }}
+        />
         {!play ? (
           <Play
-            onClick={() => {
-              changePaly(true);
-              playMusic(true);
-              console.log("musicTime();", musicTime());
-            }}
+            onClick={() => playMusic(true)}
             theme="filled"
             size="24"
             fill="rgb(237, 195, 194)"
+            style={{ cursor: "pointer" }}
           />
         ) : (
           <PauseOne
-            onClick={() => {
-              changePaly(false);
-              playMusic(false);
-            }}
+            onClick={() => playMusic(false)}
             theme="filled"
             size="24"
             fill="rgb(192, 44, 56)"
+            style={{ cursor: "pointer" }}
           />
         )}
-        <GoEnd theme="outline" size="24" fill="rgb(237, 195, 194)" />
+        <GoEnd
+          onClick={() => goPrevorNext("next")}
+          theme="outline"
+          size="24"
+          fill="rgb(237, 195, 194)"
+          style={{ cursor: "pointer" }}
+        />
         {/* <ShareOne theme="outline" size="24" fill="#333" /> */}
-        <Like theme="outline" size="24" fill="rgb(237, 195, 194)" />
+        <Like
+          theme="outline"
+          size="24"
+          fill="rgb(237, 195, 194)"
+          style={{ cursor: "pointer" }}
+        />
         {/* <Like theme="filled" size="24" fill="rgb(192, 44, 56)" /> */}
       </DivTwo>
       <DivThree>
-        <Acoustic
+        {/* <Acoustic
           title="音效"
           theme="outline"
           size="24"
           fill="rgb(237, 195, 194)"
-        />
-        {getElement(type.type)}
-        <ListBottom
+        /> */}
+        {/* {getElement(type.type)} */}
+        {/* <ListBottom
           title="播放列表"
           theme="outline"
           size="24"
           fill="rgb(237, 195, 194)"
-        />
+        /> */}
         <VolumeWrap>
           <div>
             <Slider

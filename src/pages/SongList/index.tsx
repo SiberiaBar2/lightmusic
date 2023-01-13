@@ -1,14 +1,13 @@
 import styled from "@emotion/styled";
-import { List, Skeleton, Image } from "antd";
+import { Skeleton, Image } from "antd";
 import { useParams } from "react-router-dom";
 import { useSongList } from "./utils";
-import { useSongIdSearchParam } from "body/PlayFooter/comutils";
+import { CardList } from "components";
+import SongsItem from "components/SongsItem";
 
 export const SongList = () => {
   const { id } = useParams();
   const { data: songList, isLoading } = useSongList({ data: { id } });
-  const [param, setParam] = useSongIdSearchParam();
-
   return (
     <Skeleton loading={isLoading} active={true}>
       <ImageContainer>
@@ -33,23 +32,9 @@ export const SongList = () => {
           </DescribtionContent>
         </Describtion>
       </ImageContainer>
-      <List
-        size="large"
-        dataSource={songList?.playlist?.tracks}
-        renderItem={(item: any) => (
-          <List.Item
-            onClick={() =>
-              setParam({
-                ...param,
-                songId: item.id,
-              })
-            }
-            //   actions={[<RightCircleOutlined style={{ fontSize: 24 }} />]}
-          >
-            {item.name}
-          </List.Item>
-        )}
-      />
+      <CardList size="large" dataSource={songList?.playlist?.tracks}>
+        <SongsItem />
+      </CardList>
     </Skeleton>
   );
 };

@@ -38,3 +38,10 @@ export const useSongsimi = (id: IdType) => {
     client("simi/song", { data: { id } })
   );
 };
+
+// 相似歌曲
+export const useCheckMusic = () => {
+  const client = useHttp();
+  return (id: IdType) =>
+    useQuery(["checkmusic", id], () => client("check/music", { data: { id } }));
+};

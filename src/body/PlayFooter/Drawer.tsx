@@ -14,8 +14,6 @@ import { Common } from "./Common";
 import { COMMENT } from "./contants";
 import { IsSame } from "./IsSame";
 
-// import { AnyARecord } from "dns";
-
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, musicRef, time, picUrl, songId } = props;
   // console.log("lyric", lyric);
@@ -26,6 +24,9 @@ const Drawer = (props: DrawProps, ref: any) => {
 
   const { data: { hotComments, comments, userId, topComments } = COMMENT } =
     useSongComment(songId);
+
+  // const { data: check } = useCheckMusic(songId);
+  // console.log("check", check);
 
   // item. content:string 评论内容 commentId:number ，评论id ， timeStr:string 时间字符， time:number 时间戳，
   // item. user 用户信息 ，avatarUrl: string 头像地址，nickname:string 昵称， userId:number 用户id， userType:number 用户类型
@@ -64,8 +65,14 @@ const Drawer = (props: DrawProps, ref: any) => {
 
     if (index !== -1 && div) {
       div.style.top = -index * 2 + 11 + "rem";
-      [...div.children].forEach((item) => (item.className = ""));
-      div.children[index].className = "active";
+      [...div.children].forEach((item) => {
+        if (item) {
+          item.className = "";
+        }
+      });
+      if (div.children[index]) {
+        div.children[index].className = "active";
+      }
     }
     // console.log("index----->", index);
   }, [lyric, time]);
@@ -126,8 +133,6 @@ const Container = styled.div`
 `;
 
 const Round = styled.div`
-  /* border: 1px solid violet; */
-  /* box-sizing: border-box; */
   width: 20rem;
   display: flex;
   justify-content: center;
@@ -152,8 +157,6 @@ const Round = styled.div`
 `;
 
 const Lyric = styled.div`
-  /* border: 1px solid rebeccapurple; */
-  /* box-sizing: border-box; */
   flex: 1;
   overflow: auto;
   padding: 2rem;
