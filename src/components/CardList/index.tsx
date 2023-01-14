@@ -1,16 +1,21 @@
 import React from "react";
 import { List } from "antd";
 import styled from "@emotion/styled";
+import _ from "lodash";
 
 interface CardListProps
   extends React.PropsWithChildren<React.ComponentProps<typeof List>> {
   custom?: boolean;
+  many?: {
+    renderFunc: (value: any) => any;
+  };
 }
 
 export const CardList = ({
   children,
   dataSource,
   custom,
+  many,
   ...other
 }: CardListProps) => {
   const songIdList = dataSource?.map((item) => {
@@ -22,13 +27,18 @@ export const CardList = ({
       return React.cloneElement(children, {
         ...item,
         key: item.id,
-        songIdList: songIdList,
         songIndex: index,
-        prev: Array.isArray(dataSource) && (dataSource[index - 1] as any)?.id,
-        next: Array.isArray(dataSource) && (dataSource[index + 1] as any)?.id,
+        songIdList: songIdList,
       });
     }
     console.error("CardList 必须传入react元素！");
+  };
+
+  const customRender = (item: any) => {
+    if (!_.isEmpty(many)) {
+      const { renderFunc } = many;
+      return renderFunc(item);
+    }
   };
 
   return (
@@ -36,7 +46,10 @@ export const CardList = ({
       <AntList
         dataSource={dataSource}
         renderItem={(item: any, index: number) => (
-          <List.Item>{addConfig(item, index, children)}</List.Item>
+          <List.Item>
+            {addConfig(item, index, children)}
+            {customRender(item)}
+          </List.Item>
         )}
         {...other}
       />

@@ -1,5 +1,5 @@
 import { useHttp } from "utils";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 type IdType = number | string | null | undefined;
 
@@ -44,4 +44,15 @@ export const useCheckMusic = () => {
   const client = useHttp();
   return (id: IdType) =>
     useQuery(["checkmusic", id], () => client("check/music", { data: { id } }));
+};
+
+// 喜欢歌曲
+export const useLike = () => {
+  const client = useHttp();
+  return useMutation((param: { id: IdType }) =>
+    client("like", {
+      method: "GET",
+      data: param,
+    })
+  );
 };

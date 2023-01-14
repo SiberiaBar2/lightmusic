@@ -3,7 +3,7 @@ import {
   GoStart,
   Play,
   PauseOne,
-  Like,
+  // Like,
   ShareOne,
   Acoustic,
   PlayOnce,
@@ -22,6 +22,7 @@ import { useSongDetail, useSonglyric, useSongUrl } from "./utils";
 import { PLAYCONSTANTS } from "./contants";
 import { useMount, useInterVal } from "hooks";
 import { useSongIdSearchParam } from "./comutils";
+import { Like } from "./like";
 
 enum PlayType {
   dan,
@@ -69,32 +70,24 @@ export const PlayFooter = () => {
   const songId = param.songId;
 
   const { song, prevornext } = param;
-  console.log("param ----> lits", param, typeof song, song);
 
   const playMusic = (play: boolean) => {
     play ? musicRef.current?.play() : musicRef.current?.pause();
     setPlay(play);
   };
 
-  // 切歌时重置播放进度 、关闭播放状态
+  // 切歌时重置播放进度
   useMemo(() => {
     setDuration(0);
 
-    setTimeout(() => {
-      if (songId) {
-        playMusic(true);
-      }
-    }, 2500);
+    // 切歌后自动播放 暂不启用 会影响初始状态
+    // setTimeout(() => {
+    //   if (!songId) {
+    //     playMusic(true);
+    //   }
+    // }, 2500);
   }, [songId]);
 
-  // useEffect(() => {
-  //   setPlay(false);
-  //   return () => {
-  //     console.log("卸载");
-  //     // setPlay(false);
-  //     // musicRef.current?.pause();
-  //   };
-  // }, []);
   // 初始音量
   useMount(() => {
     if (musicRef.current) musicRef.current.volume = volume * 0.01;
@@ -151,8 +144,6 @@ export const PlayFooter = () => {
       song: togo,
       songId: getSongsId[togo],
     });
-
-    // playMusic(true);
   };
   const getElement = (type: number) => {
     switch (type) {
@@ -303,7 +294,7 @@ export const PlayFooter = () => {
           ) : (
             <>
               <span>00:00</span>
-              <span style={{ color: "red" }}>/00:00</span>
+              <span>/00:00</span>
             </>
           )}
         </div>
@@ -340,14 +331,7 @@ export const PlayFooter = () => {
           fill="rgb(237, 195, 194)"
           style={{ cursor: "pointer" }}
         />
-        {/* <ShareOne theme="outline" size="24" fill="#333" /> */}
-        <Like
-          theme="outline"
-          size="24"
-          fill="rgb(237, 195, 194)"
-          style={{ cursor: "pointer" }}
-        />
-        {/* <Like theme="filled" size="24" fill="rgb(192, 44, 56)" /> */}
+        {/* <Like songId={songId} /> */}
       </DivTwo>
       <DivThree>
         {/* <Acoustic

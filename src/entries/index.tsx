@@ -2,10 +2,11 @@ import styled from "@emotion/styled";
 import { Aside as BodyAside, PlayFooter } from "body";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
-import { Recommend, Ranking, RadioStation, SongList } from "pages";
+import { Recommend, Ranking, RadioStation, SongList, Recent } from "pages";
 import { Provider } from "react-redux";
 import { Affix } from "antd";
 import store from "../store";
+// import { ReactQueryDevtools } from "react-query-devtools";
 
 const Entries = () => {
   return (
@@ -24,6 +25,7 @@ const Entries = () => {
                   <Route path="ranking" element={<Ranking />} />
                   <Route path="radioStation" element={<RadioStation />} />
                   <Route path="songList/:id" element={<SongList />} />
+                  <Route path="recent" element={<Recent />} />
                   <Route path="/" element={<Recommend />} />
                 </Routes>
               </Section>
@@ -33,6 +35,7 @@ const Entries = () => {
             </AntAffix>
           </Router>
         </QueryPrivider>
+        {/* <ReactQueryDevtools /> */}
       </Container>
     </Provider>
   );
