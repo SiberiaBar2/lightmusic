@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { RANGKING } from "./contants";
 import { useRanking } from "./utils";
 import { MusciCard, CardList } from "components";
@@ -7,7 +8,7 @@ export const Ranking = () => {
   const { data: { list: ranking, artistToplist } = RANGKING } = useRanking();
 
   return (
-    <>
+    <Fragment>
       <CardList dataSource={ranking.slice(0, 4)}>
         <CardSongs />
       </CardList>
@@ -17,6 +18,6 @@ export const Ranking = () => {
       >
         <MusciCard />
       </CardList>
-    </>
+    </Fragment>
   );
 };

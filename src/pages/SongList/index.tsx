@@ -25,7 +25,7 @@ export const SongList = () => {
               })}
             </div>
             <Span>
-              歌曲数：{songList?.playlist?.tracks.length}播放数：{" "}
+              歌曲数：{songList?.playlist?.tracks?.length}播放数：{" "}
               {songList?.playlist?.playCount}
             </Span>
             <Span>简介: {songList?.playlist?.name}</Span>

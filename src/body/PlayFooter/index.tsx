@@ -18,11 +18,10 @@ import { useMemo, useReducer, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import Drawer from "./Drawer";
 import { Slider, Tooltip, message } from "antd";
-import { useSongDetail, useSonglyric, useSongUrl } from "./utils";
-import { PLAYCONSTANTS } from "./contants";
 import { useMount, useInterVal } from "hooks";
 import { useSongIdSearchParam } from "./comutils";
 import { Like } from "./like";
+import { useSongs } from "./useSongs";
 
 enum PlayType {
   dan,
@@ -36,7 +35,7 @@ export interface DrawProps {
   time: string;
   musicRef: React.MutableRefObject<any>;
   lyric: string;
-  songId?: number;
+  songId?: number | undefined;
 }
 
 const reducer = (state: any, action: any) => {
@@ -72,20 +71,13 @@ export const PlayFooter = () => {
   const { song, prevornext } = param;
 
   const playMusic = (play: boolean) => {
-    play ? musicRef.current?.play() : musicRef.current?.pause();
+    play && data[0]?.url ? musicRef.current?.play() : musicRef.current?.pause();
     setPlay(play);
   };
 
   // 切歌时重置播放进度
   useMemo(() => {
     setDuration(0);
-
-    // 切歌后自动播放 暂不启用 会影响初始状态
-    // setTimeout(() => {
-    //   if (!songId) {
-    //     playMusic(true);
-    //   }
-    // }, 2500);
   }, [songId]);
 
   // 初始音量
@@ -93,20 +85,7 @@ export const PlayFooter = () => {
     if (musicRef.current) musicRef.current.volume = volume * 0.01;
   });
 
-  const { data: { data } = { data: { data: [] } } } = useSongUrl(songId);
-  const {
-    data: {
-      songs: [
-        {
-          al: { name, picUrl },
-          ar: [{ name: authName }],
-        },
-      ],
-    } = PLAYCONSTANTS,
-  } = useSongDetail(songId);
-
-  const { data: { lrc: { lyric } } = { lrc: { lyric: "" } } } =
-    useSonglyric(songId);
+  const { data, name, picUrl, authName, lyric } = useSongs(songId);
 
   const changeOpen = (open: boolean) => {
     setOpen(open);
@@ -126,7 +105,7 @@ export const PlayFooter = () => {
 
     const getSongsId = prevornext.split(",");
     const min = 0;
-    const max = getSongsId.length - 1;
+    const max = getSongsId?.length - 1;
 
     if (togo < min) {
       togo = 0;
@@ -144,6 +123,11 @@ export const PlayFooter = () => {
       song: togo,
       songId: getSongsId[togo],
     });
+
+    // 下一首 、上一首播放 success
+    setTimeout(() => {
+      playMusic(true);
+    }, 2000);
   };
   const getElement = (type: number) => {
     switch (type) {
@@ -214,7 +198,7 @@ export const PlayFooter = () => {
     // 不会再出现切歌后进度条在走，也显示播放图标，但音频时而播放时而不播放的问题
     // 做到了同步
     // 但同时也必须配合2.5s
-    if (play && musicRef.current) {
+    if (play && musicRef.current && data[0].url) {
       setDuration((dura) => dura + 1);
       // 重置播放状态
       if (duration >= musicRef.current?.duration) {
@@ -283,20 +267,14 @@ export const PlayFooter = () => {
                 : songAndAuth()}
             </div>
           </Tooltip>
-          {data[0] ? (
+          {data[0] &&
             musicTime().map((time, index) => {
               return (
                 <span key={index} style={{ margin: "2px" }}>
                   {time}
                 </span>
               );
-            })
-          ) : (
-            <>
-              <span>00:00</span>
-              <span>/00:00</span>
-            </>
-          )}
+            })}
         </div>
       </DivOne>
       <DivTwo>

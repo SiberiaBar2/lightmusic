@@ -8,11 +8,10 @@ import React, {
 import { Divider, Drawer as AntDrawer } from "antd";
 import styled from "@emotion/styled";
 import { DrawProps } from "./index";
-import { useSongComment, useSongsimi } from "./utils";
 import "./index.css";
 import { Common } from "./Common";
-import { COMMENT } from "./contants";
 import { IsSame } from "./IsSame";
+import { useSongs } from "./useSongs";
 
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, musicRef, time, picUrl, songId } = props;
@@ -22,8 +21,8 @@ const Drawer = (props: DrawProps, ref: any) => {
   const [lrc, setLrc] = useState<string[]>([""]);
   const lrcRef: React.MutableRefObject<any> = useRef();
 
-  const { data: { hotComments, comments, userId, topComments } = COMMENT } =
-    useSongComment(songId);
+  const { hotComments, comments, userId, topComments, songs } =
+    useSongs(songId);
 
   // const { data: check } = useCheckMusic(songId);
   // console.log("check", check);
@@ -31,10 +30,8 @@ const Drawer = (props: DrawProps, ref: any) => {
   // item. content:string 评论内容 commentId:number ，评论id ， timeStr:string 时间字符， time:number 时间戳，
   // item. user 用户信息 ，avatarUrl: string 头像地址，nickname:string 昵称， userId:number 用户id， userType:number 用户类型
   // console.log("hotComments", hotComments);
-  const { data: { songs } = { songs: [] } } = useSongsimi(songId);
 
   // data name：string 歌曲名，id： number 歌曲id， artists:[] 0.name 作者， picUrl ： 歌曲图片
-  console.log("data 相似", songs);
 
   const changeVisiable = () => {
     setVisiable(!visiable);
@@ -117,7 +114,8 @@ const Drawer = (props: DrawProps, ref: any) => {
         </CommentList>
         <Revelant>
           <Divider orientation="left">相关</Divider>
-          {Array.isArray(songs) && songs.map((ele) => <IsSame {...ele} />)}
+          {Array.isArray(songs) &&
+            songs.map((ele) => <IsSame key={ele.id} {...ele} />)}
         </Revelant>
       </Comment>
     </AntDrawer>

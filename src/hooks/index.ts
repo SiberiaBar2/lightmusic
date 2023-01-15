@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   MutableRefObject,
+  useState,
 } from "react";
 import { URLSearchParamsInit, useSearchParams } from "react-router-dom";
 import { cleanObject } from "utils/utils";
@@ -83,4 +84,34 @@ export const useClearAllSearchParam = () => {
 
     clearSearchParams(clearParams);
   }, [clearSearchParams, searchParams]);
+};
+
+export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
+  const oldTitle = useRef(document.title).current;
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnUnmount) {
+        document.title = oldTitle;
+      }
+    };
+  }, [keepOnUnmount, oldTitle]);
+};
+
+export const useDebounce = <V>(value: V, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState<V>(value);
+
+  useEffect(() => {
+    // 每次在value变化以后设置一个定时器
+    const timeout = setTimeout(() => setDebouncedValue(value), delay);
+
+    // 每次在上一个的effect执行完后执行
+    return () => clearTimeout(timeout);
+  }, [delay, value]);
+
+  return debouncedValue;
 };
