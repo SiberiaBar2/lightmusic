@@ -46,6 +46,16 @@ export const useCheckMusic = () => {
     useQuery(["checkmusic", id], () => client("check/music", { data: { id } }));
 };
 
+export const useCheckMusictwo = () => {
+  const client = useHttp();
+  return useMutation((param: { id: number }) =>
+    client("check/music", {
+      method: "GET",
+      data: param,
+    })
+  );
+};
+
 // 喜欢歌曲
 export const useLike = () => {
   const client = useHttp();

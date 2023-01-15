@@ -3,7 +3,7 @@ import { useCheckMusic } from "body/PlayFooter/utils";
 import { useSongIdSearchParam } from "body/PlayFooter/comutils";
 
 const SongsItem = (props: any) => {
-  const { id, name, songIndex, songIdList } = props;
+  const { id, name, songIndex, songIdList, customRender, ...other } = props;
 
   const [param, setParam] = useSongIdSearchParam();
   const check = useCheckMusic();
@@ -30,13 +30,16 @@ const SongsItem = (props: any) => {
   return (
     <div
       style={{
-        color: isUse(id) === false ? "rgb(116, 120, 122)" : "",
+        color: !isUse(id) ? "rgb(116, 120, 122)" : "",
         display: "flex",
         justifyContent: "space-between",
-        // width: "100%",
+        width: "100%",
+        cursor: "pointer",
       }}
+      {...isClick}
     >
-      <span {...isClick}>{name}</span>
+      <span>{name}</span>
+      {customRender ? customRender(other) : null}
     </div>
   );
 };

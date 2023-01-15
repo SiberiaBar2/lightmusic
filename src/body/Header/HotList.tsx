@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
 import { Divider } from "antd";
+import styled from "@emotion/styled";
 import { useHotList } from "./utils";
 
 export const HotList = () => {
@@ -44,6 +44,7 @@ const Container = styled.div`
         margin-right: 1rem;
       }
     }
+
     span:nth-of-type(2) {
       color: rgb(122, 115, 116);
     }

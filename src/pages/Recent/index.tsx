@@ -18,7 +18,7 @@ export const Recent = () => {
     });
   };
 
-  console.log("handelList", handelList());
+  // console.log("handelList", handelList());
 
   // 自定义渲染函数
   const renderFunc = (value: any) => {
@@ -38,6 +38,8 @@ export const Recent = () => {
 
   const manyConfig = {
     renderFunc: renderFunc,
+    color: ["rgb(167, 83, 90)", "rgb(238, 63, 77)"],
+    background: ["rgb(167, 168, 189)", "rgb(35, 188, 183)"],
   };
 
   return (
