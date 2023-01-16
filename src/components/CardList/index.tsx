@@ -6,10 +6,18 @@ interface CardListProps
   extends React.PropsWithChildren<React.ComponentProps<typeof List>> {
   custom?: boolean;
   many?: {
-    renderFunc: (value: any) => any;
+    renderFunc: (value: any) => JSX.Element;
     color?: string[];
     background?: string[];
   };
+}
+
+export interface childrenReturnType {
+  key?: React.Key | null;
+  songIndex?: number;
+  songIdList?: number[];
+  customRender?: (value: any) => JSX.Element;
+  [x: string]: any;
 }
 
 export const CardList = ({
@@ -20,11 +28,11 @@ export const CardList = ({
   ...other
 }: CardListProps) => {
   const songIdList = dataSource?.map((item) => {
-    return (item as any).id;
+    return (item as any).id as number;
   });
 
   const addConfig = (item: any, index: number, children: React.ReactNode) => {
-    if (React.isValidElement(children)) {
+    if (React.isValidElement<childrenReturnType>(children)) {
       return React.cloneElement(children, {
         ...item,
         key: item.id,

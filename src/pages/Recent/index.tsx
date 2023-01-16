@@ -38,8 +38,8 @@ export const Recent = () => {
 
   const manyConfig = {
     renderFunc: renderFunc,
-    color: ["rgb(167, 83, 90)", "rgb(238, 63, 77)"],
-    background: ["rgb(167, 168, 189)", "rgb(35, 188, 183)"],
+    color: ["rgb(167, 83, 90)", "rgb(167, 83, 90)"],
+    background: ["rgb(240, 161, 168)", "rgb(241, 147, 156)"],
   };
 
   return (

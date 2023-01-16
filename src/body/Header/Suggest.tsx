@@ -5,7 +5,7 @@ export const Suggest = (props: any) => {
   const { param } = props;
   const { data: { result } = { result: {} } } = useSuggest(param);
 
-  console.log("serch", result);
+  // console.log("serch", result);
 
   //   console.log("param", param, "data -------》", albums);
 
@@ -26,6 +26,7 @@ export const Suggest = (props: any) => {
 const Container = styled.div`
   padding: 1rem;
 `;
+
 const Item = styled.div`
   padding: 0.2rem;
   background: rgb(240, 201, 207);

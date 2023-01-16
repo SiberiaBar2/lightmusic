@@ -1,18 +1,26 @@
 import { Divider } from "antd";
 import styled from "@emotion/styled";
 import { useHotList } from "./utils";
+import { useNavigate } from "react-router-dom";
+import { useSongParam } from "body/PlayFooter/comutils";
 
-export const HotList = () => {
+export const HotList = (props: any) => {
+  const { handelBlue } = props;
   const { data: { data } = { data: [] } } = useHotList();
+  const navigate = useNavigate();
+  const songParam = useSongParam();
 
-  //   console.log("热", data);
+  const goSearchHot = (keywords: string) => {
+    navigate(`search/${keywords}${songParam}`);
+    handelBlue();
+  };
 
   return (
     <Container>
       <Divider orientation="left">热搜榜</Divider>
       {data.map((item: any, index: number) => {
         return (
-          <p key={item.searchWord}>
+          <p key={item.searchWord} onClick={() => goSearchHot(item.searchWord)}>
             <span>
               <span>{index + 1}</span>
               {item.searchWord}

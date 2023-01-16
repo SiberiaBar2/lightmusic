@@ -1,8 +1,9 @@
 import { message } from "antd";
 import { useCheckMusic } from "body/PlayFooter/utils";
 import { useSongIdSearchParam } from "body/PlayFooter/comutils";
+import { childrenReturnType } from "components/CardList";
 
-const SongsItem = (props: any) => {
+const SongsItem = (props: childrenReturnType) => {
   const { id, name, songIndex, songIdList, customRender, ...other } = props;
 
   const [param, setParam] = useSongIdSearchParam();

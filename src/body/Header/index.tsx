@@ -1,10 +1,11 @@
 import { Avatar, Button, Dropdown, Input } from "antd";
 import styled from "@emotion/styled";
 import { Left, Right } from "@icon-park/react";
-import { KeyboardEventHandler, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSongParam } from "body/PlayFooter/comutils";
 import { HotList } from "./HotList";
 import { useDebounce } from "hooks";
-import { useCloudsearch, useSuggest } from "./utils";
 import { Suggest } from "./Suggest";
 
 export const Header = () => {
@@ -12,25 +13,18 @@ export const Header = () => {
   const [search, setSearch] = useState("");
 
   const debouncedParam = useDebounce(search, 500);
-  const { mutate: enterSearch, data } = useCloudsearch();
+  const songParam = useSongParam();
 
-  console.log("结果", data);
-
-  console.log("debouncedParam", debouncedParam);
+  const navigate = useNavigate();
 
   const handelBlue = () => {
     setOpen(!open);
   };
 
   const handelEnter = (e: any) => {
-    console.log(
-      "debouncedParam ---- enter",
-      debouncedParam,
-      typeof debouncedParam
-    );
-
     if (e.key === "Enter") {
-      enterSearch({ keywords: debouncedParam });
+      navigate(`search/${debouncedParam}${songParam}`);
+      handelBlue();
     }
   };
   const items = [
@@ -44,16 +38,28 @@ export const Header = () => {
     <Container>
       <H4>you-musci</H4>
       <RightContent>
-        <div>
-          <Left theme="outline" size="24" fill="#333" />
-          <Right theme="outline" size="24" fill="#333" />
-        </div>
+        <IconWrap>
+          <Left
+            theme="outline"
+            size="24"
+            fill="rgb(237, 90, 101)"
+            onClick={() => window.history.back()}
+          />
+          <Right
+            theme="outline"
+            size="24"
+            fill="rgb(237, 90, 101)"
+            onClick={() => window.history.forward()}
+          />
+        </IconWrap>
         <User>
           <Input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
             style={{ width: "50%" }}
-            onBlur={handelBlue}
+            onBlur={() => setTimeout(() => handelBlue(), 2000)}
             onFocus={handelBlue}
             onPressEnter={(e) => handelEnter(e)}
           />
@@ -71,7 +77,11 @@ export const Header = () => {
         </User>
       </RightContent>
       <SearchContent style={{ display: open ? "" : "none" }}>
-        {!search ? <HotList /> : <Suggest param={debouncedParam} />}
+        {!search ? (
+          <HotList handelBlue={handelBlue} />
+        ) : (
+          <Suggest param={debouncedParam} />
+        )}
       </SearchContent>
     </Container>
   );
@@ -84,11 +94,12 @@ const Container = styled.div`
 const H4 = styled.h4`
   margin: 0;
   width: 19%;
-  background: yellowgreen;
+  /* background: yellowgreen; */
   height: 100%;
   line-height: 3.75rem;
   text-align: center;
   position: relative;
+  color: rgb(237, 90, 101);
 `;
 
 const RightContent = styled.div`
@@ -116,4 +127,13 @@ const SearchContent = styled.div`
   right: 8rem;
   z-index: 20;
   overflow-y: auto;
+`;
+
+const IconWrap = styled.div`
+  margin-left: 2.2rem;
+
+  span {
+    margin: 0 0.5rem;
+    cursor: pointer;
+  }
 `;

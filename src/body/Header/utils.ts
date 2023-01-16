@@ -17,13 +17,17 @@ export const useSuggest = (keywords: string) => {
 };
 
 // 搜索结果
-export const useCloudsearch = () => {
+export const useCloudsearch = ({
+  keywords,
+  limit,
+  offset,
+}: {
+  keywords: string;
+  limit?: number;
+  offset?: number;
+}) => {
   const client = useHttp();
-
-  return useMutation((param: { keywords: string }) =>
-    client("cloudsearch", {
-      method: "GET",
-      data: { keywords: param.keywords, limit: 100, offset: 1 },
-    })
+  return useQuery(["cloudsearch", keywords], () =>
+    client("cloudsearch", { data: { keywords, limit, offset } })
   );
 };

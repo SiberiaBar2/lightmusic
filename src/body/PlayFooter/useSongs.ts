@@ -6,7 +6,6 @@ import {
   useSongUrl,
 } from "./utils";
 import { PLAYCONSTANTS, COMMENT } from "./contants";
-import { useState } from "react";
 
 export const useSongs = (songId?: number) => {
   // 这里的if 会导致react hook数组发生变化 引发bug！经验证确认！

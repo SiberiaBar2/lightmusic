@@ -134,7 +134,7 @@ export const PlayFooter = () => {
     // 下一首 、上一首切换、播放 success
     setTimeout(() => {
       playMusic(true);
-    }, 2000);
+    }, 2500);
   };
   const getElement = (type: number) => {
     switch (type) {
@@ -184,20 +184,30 @@ export const PlayFooter = () => {
     }
   };
 
-  const musicTime = () => {
-    const audio = musicRef.current;
-    const timeCount = Math.floor(audio.currentTime); // 总时长秒数
-    const minutes = parseInt(audio.duration / 60 + ""); // 获取总时长分钟
-    const seconds = parseInt((audio.duration % 60) + ""); // 获取总时长秒数
-    const timeMinute = Math.floor(timeCount / 60); // 当前播放进度 分
-    const timeDisplay = Math.floor(audio.currentTime % 60); // 当前播放进度 秒
-    const secondsTime = timeDisplay < 10 ? "0" + timeDisplay : timeDisplay; // 秒
+  const musicTime = useMemo(() => {
+    if (musicRef.current) {
+      const audio = musicRef.current;
 
-    const t = timeMinute < 10 ? "0" + timeMinute : timeMinute;
-    const m = minutes < 10 ? "0" + minutes : minutes;
-    const s = seconds < 10 ? "0" + seconds : seconds;
-    return [t + ":" + secondsTime, "/", m + ":" + s] as const;
-  };
+      if (isNaN(audio.duration)) {
+        return ["00:00", "/", "00:00"];
+      }
+
+      const timeCount = Math.floor(audio.currentTime); // 总时长秒数
+      const minutes = parseInt(audio.duration / 60 + ""); // 获取总时长分钟
+      const seconds = parseInt((audio.duration % 60) + ""); // 获取总时长秒数
+      const timeMinute = Math.floor(timeCount / 60); // 当前播放进度 分
+      const timeDisplay = Math.floor(audio.currentTime % 60); // 当前播放进度 秒
+      const secondsTime = timeDisplay < 10 ? "0" + timeDisplay : timeDisplay; // 秒
+
+      const t = timeMinute < 10 ? "0" + timeMinute : timeMinute;
+      const m = minutes < 10 ? "0" + minutes : minutes;
+      const s = seconds < 10 ? "0" + seconds : seconds;
+      console.log("mmmmm", m, typeof m, "ssss", s);
+
+      return [t + ":" + secondsTime, "/", m + ":" + s] as const;
+    }
+    return ["00:00", "/", "00:00"];
+  }, [musicRef.current?.duration, musicRef.current?.currentTime]);
 
   // 随着音乐播放，进度条自动行进
   useInterVal(() => {
@@ -275,7 +285,7 @@ export const PlayFooter = () => {
             </div>
           </Tooltip>
           {data[0] &&
-            musicTime().map((time, index) => {
+            musicTime.map((time, index) => {
               return (
                 <span key={index} style={{ margin: "2px" }}>
                   {time}
