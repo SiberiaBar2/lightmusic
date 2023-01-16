@@ -1,4 +1,4 @@
-import { Avatar, Button, Dropdown, Input } from "antd";
+import { Avatar, Button, Dropdown, Input, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import { Left, Right } from "@icon-park/react";
 import { useState } from "react";
@@ -53,16 +53,19 @@ export const Header = () => {
           />
         </IconWrap>
         <User>
-          <Input
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-            style={{ width: "50%" }}
-            onBlur={() => setTimeout(() => handelBlue(), 2000)}
-            onFocus={handelBlue}
-            onPressEnter={(e) => handelEnter(e)}
-          />
+          <Tooltip title="输入歌曲名或歌手 按下enter搜索">
+            <Input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              placeholder="输入歌曲名或歌手"
+              style={{ width: "50%" }}
+              onBlur={() => setTimeout(() => handelBlue(), 1000)}
+              onFocus={handelBlue}
+              onPressEnter={(e) => handelEnter(e)}
+            />
+          </Tooltip>
           <Dropdown menu={{ items }}>
             <div>
               <Avatar
@@ -76,13 +79,15 @@ export const Header = () => {
           </Dropdown>
         </User>
       </RightContent>
-      <SearchContent style={{ display: open ? "" : "none" }}>
-        {!search ? (
+      {!search && (
+        <SearchContent style={{ display: open ? "" : "none" }}>
+          {/* {!search ? ( */}
           <HotList handelBlue={handelBlue} />
-        ) : (
-          <Suggest param={debouncedParam} />
-        )}
-      </SearchContent>
+          {/* ) :  */}
+          {/* // <Suggest param={debouncedParam} />
+          // null} */}
+        </SearchContent>
+      )}
     </Container>
   );
 };

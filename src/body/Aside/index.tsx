@@ -16,22 +16,28 @@ const items: MenuItem[] = asideList.map((aside) => {
 });
 
 export const Aside = () => {
-  const [current, setCurrent] = useState("1");
+  // const [current, setCurrent] = useState("1");
   const navigate = useNavigate();
   const songParam = useSongParam();
 
+  const nowSecKey = (sessionStorage.getItem("secondKeys") as string) || "推荐";
+  const defaultMenu = sessionStorage.getItem("subMenu") as string;
+
   const onClick: MenuProps["onClick"] = (e) => {
-    setCurrent(e.key);
+    sessionStorage.setItem("subMenu", e.keyPath[1]);
+    sessionStorage.setItem("secondKeys", e.key);
+    // setCurrent(e.key);
     navigate(`${ROUTERPATH[e.key]}${songParam}`);
   };
   return (
     <AntMenu
       theme={"light"}
       onClick={onClick}
-      defaultOpenKeys={["sub1"]}
-      selectedKeys={[current]}
+      defaultOpenKeys={[defaultMenu]}
+      // selectedKeys={[current]}
       mode="inline"
       items={items}
+      selectedKeys={[nowSecKey]}
     />
   );
 };

@@ -22,7 +22,8 @@ export const Recent = () => {
 
   // 自定义渲染函数
   const renderFunc = (value: any) => {
-    const { ar, publishTime } = value;
+    const { ar } = value;
+    // const { ar, publishTime } = value;
     const authAndtime = ar.map((ele: any, index: number) => {
       if (index === 0) {
         return ele.name + "  ";
@@ -30,9 +31,9 @@ export const Recent = () => {
       return "/" + "  " + ele.name;
     });
 
-    const formatTime = dayjs(publishTime).format(DATEFORMAT);
+    // const formatTime = dayjs(publishTime).format(DATEFORMAT);
 
-    authAndtime.push(<span>{formatTime}</span>);
+    // authAndtime.push(<span>{formatTime}</span>);
     return <Container>{authAndtime}</Container>;
   };
 

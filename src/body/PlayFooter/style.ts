@@ -31,6 +31,30 @@ export const DivOne = styled.div`
     margin-left: 0.9rem;
     border: 1px solid darkblue;
     text-align: center;
+    cursor: pointer;
+    position: relative;
+
+    &:hover {
+      > div:nth-of-type(1) {
+        display: block;
+      }
+    }
+
+    > div:nth-of-type(1) {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      text-align: center;
+      line-height: 300px;
+      font-size: 30px;
+      color: white;
+      display: none;
+      line-height: 3rem;
+      text-align: center;
+    }
 
     > img:nth-of-type(1) {
       width: 100%;

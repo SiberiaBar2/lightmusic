@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Divider, Drawer as AntDrawer } from "antd";
 import styled from "@emotion/styled";
-import { DrawProps } from "./index";
+import { DrawProps } from "./Dynamic";
 import "./index.css";
 import { Common } from "./Common";
 import { IsSame } from "./IsSame";
@@ -34,7 +34,7 @@ const Drawer = (props: DrawProps, ref: any) => {
   // data name：string 歌曲名，id： number 歌曲id， artists:[] 0.name 作者， picUrl ： 歌曲图片
 
   const changeVisiable = () => {
-    setVisiable(!visiable);
+    songId && setVisiable(!visiable);
   };
   const onClose = () => {
     setVisiable(false);

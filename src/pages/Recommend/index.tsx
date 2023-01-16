@@ -9,8 +9,6 @@ export const Recommend = () => {
   const { data: banners } = useBanner();
 
   const navigate = useNavigate();
-  // console.log("data", data?.result);
-  console.log("banner", banners);
 
   const songParam = useSongParam();
 
