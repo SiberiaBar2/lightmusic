@@ -2,11 +2,14 @@ import { useHttp } from "utils";
 import { useMutation, useQuery } from "react-query";
 
 type IdType = number | string | null | undefined;
+const cookie = localStorage.getItem("cookie");
 
 // 播放地址
 export const useSongUrl = (id: IdType) => {
   const client = useHttp();
-  return useQuery(["songurl", id], () => client("song/url", { data: { id } }));
+  return useQuery(["songurl", id], () =>
+    client("song/url", { data: { id, cookie } })
+  );
 };
 
 // 歌曲详情

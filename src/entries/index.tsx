@@ -14,47 +14,54 @@ import {
   SongList,
   Recent,
   Search,
+  Ilike,
 } from "pages";
 import { Provider } from "react-redux";
 import { Affix } from "antd";
-import store from "../store";
-// import { ReactQueryDevtools } from "react-query-devtools";
+import store, { persist } from "../store";
+import { ReactQueryDevtools } from "react-query-devtools";
+import { PersistGate } from "redux-persist/integration/react";
 
 const Entries = () => {
   return (
     <Provider store={store}>
-      <Container>
-        <QueryPrivider client={new QueryClient()}>
-          <Router>
-            <Header>
-              <BodyHeader />
-            </Header>
-            <Main>
-              <Aside>
-                <BodyAside />
-              </Aside>
-              <Section>
-                <Routes>
-                  <Route path="recommend" element={<Recommend />} />
-                  <Route path="ranking" element={<Ranking />} />
-                  {/* <Route path="radioStation" element={<RadioStation />} /> */}
-                  <Route path="songList/:id" element={<SongList />} />
-                  <Route path="recent" element={<Recent />} />
-                  <Route path="search/:searchparam" element={<Search />} />
-                  <Route
-                    path="/"
-                    element={<Navigate to={"recommend"} replace />}
-                  />
-                </Routes>
-              </Section>
-            </Main>
-            <AntAffix style={{ position: "fixed", bottom: "2rem", zIndex: 1 }}>
-              <PlayFooter />
-            </AntAffix>
-          </Router>
-        </QueryPrivider>
-        {/* <ReactQueryDevtools /> */}
-      </Container>
+      <PersistGate persistor={persist}>
+        <Container>
+          <QueryPrivider client={new QueryClient()}>
+            <Router>
+              <Header>
+                <BodyHeader />
+              </Header>
+              <Main>
+                <Aside>
+                  <BodyAside />
+                </Aside>
+                <Section>
+                  <Routes>
+                    <Route path="recommend" element={<Recommend />} />
+                    <Route path="ranking" element={<Ranking />} />
+                    {/* <Route path="radioStation" element={<RadioStation />} /> */}
+                    <Route path="songList/:id" element={<SongList />} />
+                    <Route path="recent" element={<Recent />} />
+                    <Route path="search/:searchparam" element={<Search />} />
+                    <Route path="ilike" element={<Ilike />} />
+                    <Route
+                      path="/"
+                      element={<Navigate to={"recommend"} replace />}
+                    />
+                  </Routes>
+                </Section>
+              </Main>
+              <AntAffix
+                style={{ position: "fixed", bottom: "2rem", zIndex: 1 }}
+              >
+                <PlayFooter />
+              </AntAffix>
+            </Router>
+          </QueryPrivider>
+          {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+        </Container>
+      </PersistGate>
     </Provider>
   );
 };
@@ -76,7 +83,7 @@ const Aside = styled.aside`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgb(240, 161, 168);
+  /* background: rgb(240, 161, 168); */
 `;
 
 const Main = styled.main`
@@ -87,7 +94,7 @@ const Main = styled.main`
 const Section = styled.section`
   flex: 1;
   overflow-y: auto;
-  background: rgb(240, 161, 168);
+  /* background: rgb(240, 161, 168); */
 `;
 
 const AntAffix = styled(Affix)`

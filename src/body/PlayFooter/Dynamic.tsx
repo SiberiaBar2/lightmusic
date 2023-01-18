@@ -16,7 +16,7 @@ import {
   ArrowUp,
   ArrowDown,
 } from "@icon-park/react";
-import { useMemo, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import Drawer from "./Drawer";
 import { Slider, Tooltip, message } from "antd";
 import { useMount, useInterVal } from "hooks";
@@ -63,9 +63,7 @@ const reducer = (state: any, action: any) => {
 
 export const Dynamic = (props: any) => {
   const { param, setParam } = props;
-  const { songId, song, prevornext, stop } = param;
-
-  console.log("stop", stop, typeof stop);
+  const { songId, song, prevornext } = param;
 
   const [play, setPlay] = useState(false);
   const [open, setOpen] = useState(true);
@@ -80,7 +78,7 @@ export const Dynamic = (props: any) => {
   const [time, setTime] = useState("");
 
   const playMusic = (play: boolean) => {
-    play && data[0]?.url ? musicRef.current?.play() : musicRef.current?.pause();
+    play ? musicRef.current?.play() : musicRef.current?.pause();
     setPlay(play);
   };
 

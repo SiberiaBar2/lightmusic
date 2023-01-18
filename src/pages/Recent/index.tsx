@@ -11,6 +11,8 @@ const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 export const Recent = () => {
   const { data: { data: { total, list } } = RESETDATA } = useRecent();
 
+  console.log("list", list);
+
   // 处理为 CardList 需要的数据格式
   const handelList = () => {
     return list.map((ele: any) => {
@@ -39,8 +41,8 @@ export const Recent = () => {
 
   const manyConfig = {
     renderFunc: renderFunc,
-    color: ["rgb(167, 83, 90)", "rgb(167, 83, 90)"],
-    background: ["rgb(240, 161, 168)", "rgb(241, 147, 156)"],
+    // color: ["rgb(167, 83, 90)", "rgb(167, 83, 90)"],
+    // background: ["rgb(240, 161, 168)", "rgb(241, 147, 156)"],
   };
 
   return (

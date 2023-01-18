@@ -1,20 +1,57 @@
-import { Avatar, Button, Dropdown, Input, Tooltip } from "antd";
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  Input,
+  message,
+  Popover,
+  Tooltip,
+} from "antd";
 import styled from "@emotion/styled";
 import { Left, Right } from "@icon-park/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSongParam } from "body/PlayFooter/comutils";
 import { HotList } from "./HotList";
-import { useDebounce } from "hooks";
+import { useDebounce, useInterVal } from "hooks";
 import { Suggest } from "./Suggest";
+import {
+  qrCheck,
+  useGetQr,
+  useLoginStatus,
+  useQrCheck,
+  useQrCreate,
+  useQrKey,
+} from "login";
+import Qrcode from "./Qrcode";
+import { useLogin } from "./useLogin";
 
+import { useSelector } from "react-redux";
+import { RootState } from "store";
+import { LoginState } from "store/login";
+import _ from "lodash";
+import { UserDetail } from "./UserDetail";
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  // const [refresh, setRefresh] = useState(false);
+  const loginState = useSelector<RootState, Pick<LoginState, "data">>(
+    (state) => state.login
+  );
 
+  // 解构赋值 真正的默认值
+  const { data: { data: { profile = {} } = {} } = {} } = loginState;
+
+  console.log("loginState", loginState, "data。", profile);
+
+  // useLogin();
   const debouncedParam = useDebounce(search, 500);
   const songParam = useSongParam();
+  const [stop, setStop] = useState(false);
+  const qrCodeRef: React.MutableRefObject<any> = useRef();
+  // console.log("users--->info", qrCodeRef);
 
+  // let timer: string | number | NodeJS.Timer | undefined;
   const navigate = useNavigate();
 
   const handelBlue = () => {
@@ -27,12 +64,54 @@ export const Header = () => {
       handelBlue();
     }
   };
-  const items = [
-    {
-      label: <Button type={"link"}>登出</Button>,
-      key: "logout",
-    },
-  ];
+
+  // const { data: { data: { unikey } } = { data: { unikey: "" } } } = useQrKey();
+  // // console.log("loginKey", unikey);
+
+  // const { data: { data: { qrimg } } = { data: { qrimg: "" } } } =
+  //   useQrCreate(unikey);
+  // console.log("create", qrimg);
+
+  // const cookie = localStorage.getItem("cookie");
+  // const { data: userInfo } = useLoginStatus(cookie as string);
+  // console.log("userInfo", userInfo);
+
+  // const func = (key: string) => {
+  // const { mutate, data } = useQrCheck();
+  // const { data } = useGetQr(unikey);
+  // console.log("获得", data);
+  //   console.log("mus", data);
+  //   // mutate(key);
+  // };
+  // useInterVal(
+  //   () => {
+  //     mutate(unikey);
+  //     // const { data } = useGetQr(unikey);
+  //     console.log("datadata", data);
+  //     if (data?.code === 800) {
+  //       setStop(true);
+  //       message.error("二维码已过期，请重新获取");
+  //     }
+  //     if (data?.code === 803) {
+  //       setStop(true);
+  //       message.success("授权登录成功");
+  //     }
+  //   },
+  //   !stop ? 3000 : null
+  // );
+
+  // eslint-disable-next-line prefer-const
+  // timer = setInterval(() => {
+  //   console.log("datadata", data);
+  //   if (data?.code === 800) {
+  //     clearInterval(timer);
+  //     message.error("二维码已过期，请重新获取");
+  //   }
+  //   if (data?.code === 803) {
+  //     clearInterval(timer);
+  //     message.success("授权登录成功");
+  //   }
+  // }, 3000);
 
   return (
     <Container>
@@ -66,17 +145,63 @@ export const Header = () => {
               onPressEnter={(e) => handelEnter(e)}
             />
           </Tooltip>
-          <Dropdown menu={{ items }}>
+          <Popover
+            content={
+              _.isEmpty(profile) ? (
+                <Qrcode ref={qrCodeRef} />
+              ) : (
+                <UserDetail uid={profile.userId} />
+              )
+            }
+            trigger="click"
+          >
             <div>
-              <Avatar
-                style={{ backgroundColor: "pink", verticalAlign: "middle" }}
-                size="large"
-              />
-              <span style={{ margin: "0 0.5rem", display: "inline-block" }}>
-                hi {123}
-              </span>
+              {/* <Button
+                style={{
+                  fontSize: "0.9rem",
+                  cursor: "pointer",
+                  borderRadius: "5rem",
+                }}
+              >
+                请登录
+              </Button> */}
+              {_.isEmpty(profile) ? (
+                <Button
+                  style={{
+                    fontSize: "0.9rem",
+                    cursor: "pointer",
+                    borderRadius: "5rem",
+                  }}
+                >
+                  请登录
+                </Button>
+              ) : (
+                <>
+                  <Avatar
+                    style={{ backgroundColor: "pink", verticalAlign: "middle" }}
+                    size="large"
+                    icon={
+                      <img
+                        src={!_.isEmpty(profile) ? profile.avatarUrl : null}
+                      />
+                    }
+                  />
+                  <Tooltip title={profile.nickname}>
+                    <span
+                      style={{
+                        margin: "0 0.5rem",
+                        display: "inline-block",
+                        fontSize: "0.8rem",
+                      }}
+                    >
+                      {!_.isEmpty(profile) ? profile.nickname : null}
+                    </span>
+                  </Tooltip>
+                </>
+              )}
             </div>
-          </Dropdown>
+          </Popover>
+          {/* <Qrcode ref={qrCodeRef} /> */}
         </User>
       </RightContent>
       {!search && (
@@ -115,7 +240,7 @@ const RightContent = styled.div`
 `;
 
 const User = styled.div`
-  width: 25%;
+  width: 30%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -140,5 +265,24 @@ const IconWrap = styled.div`
   span {
     margin: 0 0.5rem;
     cursor: pointer;
+  }
+`;
+
+const Content = styled.div`
+  width: 18rem;
+  height: 18rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > div {
+    width: 12rem;
+    height: 12rem;
+    text-align: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 `;

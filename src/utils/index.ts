@@ -31,6 +31,7 @@ export const http = async (
 
   if (config.method.toUpperCase() === "GET") {
     if (data) endpoint += `?${qs.stringify(data)}`;
+    console.log("endpoint", endpoint);
   } else {
     config.body = JSON.stringify(data || {});
   }
