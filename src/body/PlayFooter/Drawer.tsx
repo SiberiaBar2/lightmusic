@@ -86,48 +86,59 @@ const Drawer = (props: DrawProps, ref: any) => {
       closeIcon={null}
       style={{ background: "rgb(227, 180, 184)", color: "rgb(43, 51, 62)" }}
     >
-      <Container>
-        <Round>
-          <div>
-            <img src={picUrl} alt="" />
-          </div>
-          <div></div>
-        </Round>
-        <Lyric>
-          <div id="lyricdiv" ref={lrcRef}>
-            {lrc.map((item: any, index: number) => (
-              <p key={index}>{item}</p>
-            ))}
-          </div>
-        </Lyric>
-      </Container>
-      <Comment>
-        <CommentList>
-          <Divider orientation="left">热评</Divider>
-          {Array.isArray(hotComments) &&
-            hotComments.map((ele: any) => (
-              <Common key={ele.commentId} {...ele} />
-            ))}
-          <Divider orientation="left">最新评论</Divider>
-          {Array.isArray(comments) &&
-            comments.map((ele: any) => <Common key={ele.commentId} {...ele} />)}
-        </CommentList>
-        <Revelant>
-          <Divider orientation="left">相关</Divider>
-          {Array.isArray(songs) &&
-            songs.map((ele) => <IsSame key={ele.id} {...ele} />)}
-        </Revelant>
-      </Comment>
+      <Wrap>
+        <Container>
+          <Round>
+            <div>
+              <img src={picUrl} alt="" />
+            </div>
+            <div></div>
+          </Round>
+          <Lyric>
+            <div id="lyricdiv" ref={lrcRef}>
+              {lrc.map((item: any, index: number) => (
+                <p key={index}>{item}</p>
+              ))}
+            </div>
+          </Lyric>
+        </Container>
+        <Comment>
+          <CommentList>
+            <Divider orientation="left">热评</Divider>
+            {Array.isArray(hotComments) &&
+              hotComments.map((ele: any) => (
+                <Common key={ele.commentId} {...ele} />
+              ))}
+            <Divider orientation="left">最新评论</Divider>
+            {Array.isArray(comments) &&
+              comments.map((ele: any) => (
+                <Common key={ele.commentId} {...ele} />
+              ))}
+          </CommentList>
+          <Revelant>
+            <Divider orientation="left">相关</Divider>
+            {Array.isArray(songs) &&
+              songs.map((ele) => <IsSame key={ele.id} {...ele} />)}
+          </Revelant>
+        </Comment>
+      </Wrap>
     </AntDrawer>
   );
 };
 
 export default forwardRef(Drawer);
 
+const Wrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const Container = styled.div`
-  margin: 0 20rem;
+  width: 55rem;
   height: 75%;
   display: flex;
+  margin-top: 7rem;
 `;
 
 const Round = styled.div`
@@ -150,7 +161,6 @@ const Round = styled.div`
   div:nth-of-type(2) {
     width: 100%;
     height: 3rem;
-    /* background: darkorange; */
   }
 `;
 
@@ -167,7 +177,7 @@ const Lyric = styled.div`
 
 const Comment = styled.div`
   display: flex;
-  margin: 0 20rem;
+  width: 55rem;
 `;
 
 const CommentList = styled.div`

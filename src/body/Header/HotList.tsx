@@ -2,13 +2,11 @@ import { Divider } from "antd";
 import styled from "@emotion/styled";
 import { useHotList } from "./utils";
 import { useNavigate } from "react-router-dom";
-import { useSongParam } from "body/PlayFooter/comutils";
 
 export const HotList = (props: any) => {
   const { handelBlue } = props;
   const { data: { data } = { data: [] } } = useHotList();
   const navigate = useNavigate();
-  // const songParam = useSongParam();
 
   const goSearchHot = (keywords: string) => {
     navigate(`search/${keywords}`);
