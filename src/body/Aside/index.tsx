@@ -4,7 +4,6 @@ import { Menu } from "antd";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import { asideList, ROUTERPATH } from "../contants";
-import { useSongParam } from "body/PlayFooter/comutils";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -18,7 +17,6 @@ const items: MenuItem[] = asideList.map((aside) => {
 export const Aside = () => {
   // const [current, setCurrent] = useState("1");
   const navigate = useNavigate();
-  const songParam = useSongParam();
 
   const nowSecKey = (sessionStorage.getItem("secondKeys") as string) || "推荐";
   const defaultMenu = sessionStorage.getItem("subMenu") as string;
@@ -27,7 +25,7 @@ export const Aside = () => {
     sessionStorage.setItem("subMenu", e.keyPath[1]);
     sessionStorage.setItem("secondKeys", e.key);
     // setCurrent(e.key);
-    navigate(`${ROUTERPATH[e.key]}${songParam}`);
+    navigate(`${ROUTERPATH[e.key]}`);
   };
   return (
     <AntMenu

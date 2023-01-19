@@ -16,12 +16,17 @@ import {
   ArrowUp,
   ArrowDown,
 } from "@icon-park/react";
-import { useEffect, useMemo, useReducer, useRef, useState } from "react";
-import Drawer from "./Drawer";
+import { useMemo, useReducer, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { Slider, Tooltip, message } from "antd";
+import _ from "lodash";
+import Drawer from "./Drawer";
 import { useMount, useInterVal } from "hooks";
 import { Like } from "./like";
 import { useSongs } from "./useSongs";
+import { RootState } from "store";
+import { playState, changePlay } from "store/play";
+import { songsInfo, songsState } from "store/songs";
 import {
   Container,
   DivOne,
@@ -65,7 +70,6 @@ export const Dynamic = (props: any) => {
   const { param, setParam } = props;
   const { songId, song, prevornext } = param;
 
-  const [play, setPlay] = useState(false);
   const [open, setOpen] = useState(true);
   const [type, dispatch] = useReducer(reducer, { type: PlayType.liexun });
 
@@ -77,9 +81,19 @@ export const Dynamic = (props: any) => {
   const musicRef: React.MutableRefObject<any> = useRef();
   const [time, setTime] = useState("");
 
+  const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
+    _.pick(state.play, "play")
+  );
+  const { play } = playState;
+
+  const songsState = useSelector<
+    RootState,
+    Pick<songsState, "songId" | "song" | "prevornext">
+  >((state) => state.songs);
+
   const playMusic = (play: boolean) => {
     play ? musicRef.current?.play() : musicRef.current?.pause();
-    setPlay(play);
+    setParam(changePlay({ play }));
   };
 
   // 切歌时重置播放进度
@@ -125,11 +139,13 @@ export const Dynamic = (props: any) => {
       return;
     }
 
-    setParam({
-      ...param,
-      song: togo,
-      songId: getSongsId[togo],
-    });
+    setParam(
+      songsInfo({
+        ...songsState,
+        songId: getSongsId[togo],
+        song: togo,
+      })
+    );
 
     // 下一首 、上一首切换、播放 success
     setTimeout(() => {
@@ -218,7 +234,7 @@ export const Dynamic = (props: any) => {
       setDuration((dura) => dura + 1);
       // 重置播放状态
       if (duration >= musicRef.current?.duration) {
-        setPlay(false);
+        setParam(changePlay({ play: false }));
       }
     }
   }, 1000);

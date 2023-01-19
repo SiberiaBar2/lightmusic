@@ -1,40 +1,20 @@
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  Input,
-  message,
-  Popover,
-  Tooltip,
-} from "antd";
-import styled from "@emotion/styled";
-import { Left, Right } from "@icon-park/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSongParam } from "body/PlayFooter/comutils";
-import { HotList } from "./HotList";
-import { useDebounce, useInterVal } from "hooks";
-import { Suggest } from "./Suggest";
-import {
-  qrCheck,
-  useGetQr,
-  useLoginStatus,
-  useQrCheck,
-  useQrCreate,
-  useQrKey,
-} from "login";
-import Qrcode from "./Qrcode";
-import { useLogin } from "./useLogin";
-
 import { useSelector } from "react-redux";
+import { Left, Right } from "@icon-park/react";
+import { Avatar, Button, Input, message, Popover, Tooltip } from "antd";
+import styled from "@emotion/styled";
+import _ from "lodash";
+import { HotList } from "./HotList";
+// import { Suggest } from "./Suggest";
+import Qrcode from "./Qrcode";
 import { RootState } from "store";
 import { LoginState } from "store/login";
-import _ from "lodash";
 import { UserDetail } from "./UserDetail";
+
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  // const [refresh, setRefresh] = useState(false);
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
     (state) => state.login
   );
@@ -42,16 +22,10 @@ export const Header = () => {
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {} } = loginState;
 
-  console.log("loginState", loginState, "data。", profile);
+  // console.log("loginState", loginState, "data。", profile);
 
-  // useLogin();
-  const debouncedParam = useDebounce(search, 500);
-  const songParam = useSongParam();
-  const [stop, setStop] = useState(false);
-  const qrCodeRef: React.MutableRefObject<any> = useRef();
-  // console.log("users--->info", qrCodeRef);
+  // const debouncedParam = useDebounce(search, 500);
 
-  // let timer: string | number | NodeJS.Timer | undefined;
   const navigate = useNavigate();
 
   const handelBlue = () => {
@@ -60,7 +34,7 @@ export const Header = () => {
 
   const handelEnter = (e: any) => {
     if (e.key === "Enter") {
-      navigate(`search/${debouncedParam}${songParam}`);
+      search && navigate(`search/${search}`);
       handelBlue();
     }
   };
@@ -83,6 +57,7 @@ export const Header = () => {
   //   console.log("mus", data);
   //   // mutate(key);
   // };
+  // 这里 mutate 拿不到扫码后的值 即使你扫码了
   // useInterVal(
   //   () => {
   //     mutate(unikey);
@@ -100,6 +75,7 @@ export const Header = () => {
   //   !stop ? 3000 : null
   // );
 
+  // 会引发无限请求
   // eslint-disable-next-line prefer-const
   // timer = setInterval(() => {
   //   console.log("datadata", data);
@@ -115,7 +91,7 @@ export const Header = () => {
 
   return (
     <Container>
-      <H4>you-musci</H4>
+      <H4>you-music</H4>
       <RightContent>
         <IconWrap>
           <Left
@@ -148,7 +124,7 @@ export const Header = () => {
           <Popover
             content={
               _.isEmpty(profile) ? (
-                <Qrcode ref={qrCodeRef} />
+                <Qrcode />
               ) : (
                 <UserDetail uid={profile.userId} />
               )
@@ -156,15 +132,6 @@ export const Header = () => {
             trigger="click"
           >
             <div>
-              {/* <Button
-                style={{
-                  fontSize: "0.9rem",
-                  cursor: "pointer",
-                  borderRadius: "5rem",
-                }}
-              >
-                请登录
-              </Button> */}
               {_.isEmpty(profile) ? (
                 <Button
                   style={{
@@ -201,7 +168,6 @@ export const Header = () => {
               )}
             </div>
           </Popover>
-          {/* <Qrcode ref={qrCodeRef} /> */}
         </User>
       </RightContent>
       {!search && (
@@ -265,24 +231,5 @@ const IconWrap = styled.div`
   span {
     margin: 0 0.5rem;
     cursor: pointer;
-  }
-`;
-
-const Content = styled.div`
-  width: 18rem;
-  height: 18rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  > div {
-    width: 12rem;
-    height: 12rem;
-    text-align: center;
-
-    img {
-      width: 100%;
-      height: 100%;
-    }
   }
 `;

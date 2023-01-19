@@ -19,7 +19,7 @@ export const Ilike = () => {
   const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
     loginState;
 
-  console.log("loginState", loginState, "data。", userId);
+  // console.log("loginState", loginState, "data。", userId);
   //   console.log("parparpar", searchparam);
   //   const { data: refresh } = useRefreshLogin();
   //   console.log("refresh", refresh);
@@ -27,7 +27,7 @@ export const Ilike = () => {
   // const [param, setParam] = useSongIdSearchParam();
   const { data: { ids = [] } = {} } = useIlike(userId);
 
-  console.log('ids.join(",")', ids.join(","));
+  // console.log('ids.join(",")', ids.join(","));
 
   const { data: { songs = [] } = {} } = useSongDetail(ids.join(","));
   //   const { mutate: enterSearch, data } = useCloudsearch();
@@ -39,8 +39,8 @@ export const Ilike = () => {
   //     enterSearch({ keywords: param.searchparam });
   //   }, [param.searchparam]);
   // console.log("param", param);
-  console.log("我喜欢", ids);
-  console.log("详情", songs);
+  // console.log("我喜欢", ids);
+  // console.log("详情", songs);
 
   const renderFunc = (value: any) => {
     const { ar } = value;

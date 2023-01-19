@@ -8,10 +8,10 @@ export const HotList = (props: any) => {
   const { handelBlue } = props;
   const { data: { data } = { data: [] } } = useHotList();
   const navigate = useNavigate();
-  const songParam = useSongParam();
+  // const songParam = useSongParam();
 
   const goSearchHot = (keywords: string) => {
-    navigate(`search/${keywords}${songParam}`);
+    navigate(`search/${keywords}`);
     handelBlue();
   };
 

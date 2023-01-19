@@ -1,17 +1,14 @@
+import { useParams } from "react-router-dom";
 import styled from "@emotion/styled";
+import dayjs from "dayjs";
 import { useCloudsearch } from "body/Header/utils";
-import { useSongIdSearchParam } from "body/PlayFooter/comutils";
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
-import dayjs from "dayjs";
-import { useMount } from "hooks";
-import { useMemo } from "react";
-import { useParams } from "react-router-dom";
 const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
 export const Search = () => {
   const { searchparam } = useParams();
-  console.log("parparpar", searchparam);
+  // console.log("parparpar", searchparam);
 
   // const [param, setParam] = useSongIdSearchParam();
   const { data } = useCloudsearch({
@@ -19,17 +16,6 @@ export const Search = () => {
     limit: 100,
     offset: 1,
   });
-
-  //   const { mutate: enterSearch, data } = useCloudsearch();
-
-  //   const { result: { songs, songCount } = { songs: [], songCount: 0 } } = data;
-  //   console.log("songs", songs, "songCount", songCount);
-
-  //   useMemo(() => {
-  //     enterSearch({ keywords: param.searchparam });
-  //   }, [param.searchparam]);
-  // console.log("param", param);
-  console.log("搜索歌曲", data);
 
   const renderFunc = (value: any) => {
     const { ar } = value;

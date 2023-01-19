@@ -1,23 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface playState {
-  songId?: number | string | null;
+  play?: boolean;
 }
 
 const initialState: playState = {
-  songId: null,
+  play: false,
 };
 
-export const songIdSlice = createSlice({
+export const playSlice = createSlice({
   name: "play",
   initialState,
   reducers: {
-    getSongId: (state, { payload }) => {
-      state.songId = payload;
+    changePlay: (state, { payload }) => {
+      state.play = payload.play;
     },
   },
 });
 
-export const getSongId = songIdSlice.actions.getSongId;
+export const changePlay = playSlice.actions.changePlay;
 
-export default songIdSlice.reducer;
+export default playSlice.reducer;

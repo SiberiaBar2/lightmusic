@@ -28,6 +28,8 @@ export const useCloudsearch = ({
 }) => {
   const client = useHttp();
   return useQuery(["cloudsearch", keywords], () =>
-    client("cloudsearch", { data: { keywords, limit, offset } })
+    client("cloudsearch", {
+      data: { keywords, limit, offset, timerstamp: Date.now() },
+    })
   );
 };

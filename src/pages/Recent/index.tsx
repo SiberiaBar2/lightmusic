@@ -11,7 +11,7 @@ const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 export const Recent = () => {
   const { data: { data: { total, list } } = RESETDATA } = useRecent();
 
-  console.log("list", list);
+  // console.log("list", list);
 
   // 处理为 CardList 需要的数据格式
   const handelList = () => {

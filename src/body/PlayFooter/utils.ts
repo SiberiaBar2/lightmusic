@@ -42,11 +42,13 @@ export const useSongsimi = (id: IdType) => {
   );
 };
 
-// 相似歌曲
+// 检测歌曲是否可用
 export const useCheckMusic = () => {
   const client = useHttp();
   return (id: IdType) =>
-    useQuery(["checkmusic", id], () => client("check/music", { data: { id } }));
+    useQuery(["checkmusic", id], () =>
+      client("check/music", { data: { id, cookie } })
+    );
 };
 
 export const useCheckMusictwo = () => {

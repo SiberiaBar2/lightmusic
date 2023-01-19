@@ -2,15 +2,12 @@ import styled from "@emotion/styled";
 import { Card, Carousel, List } from "antd";
 import { useBanner, useRecommend } from "./utils";
 import { useNavigate } from "react-router-dom";
-import { useSongParam } from "body/PlayFooter/comutils";
 
 export const Recommend = () => {
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
 
   const navigate = useNavigate();
-
-  const songParam = useSongParam();
 
   const onChange = (event: any) => {
     console.log(event);
@@ -30,9 +27,7 @@ export const Recommend = () => {
         dataSource={recommend?.result}
         renderItem={(item: any) => (
           <List.Item>
-            <AntCard
-              onClick={() => navigate(`/songlist/${item.id}${songParam}`)}
-            >
+            <AntCard onClick={() => navigate(`/songlist/${item.id}`)}>
               <Img src={item.picUrl} alt="" />
               <p style={{ fontSize: 14 }} title={item.name}>
                 {item.name}

@@ -8,22 +8,22 @@ import {
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-// import userInfoSlice from '@/store/slice/userInfoSlice'
-// import SimpleData from '@/store/slice/asyncSlice'
-
 import playReducer from "./play";
 import loginReducer from "./login";
+import songsReducer from "./songs";
 
 const rootReducer = combineReducers({
   play: playReducer,
   login: loginReducer,
+  songs: songsReducer,
 });
 
 // 状态持久化配置
 const persistConfig = {
   key: "root",
   storage,
-  // blacklist: ["modalInfo", "userInfoSlice", "SimpleData"], // 写在这块的数据不会存在storage
+  // 注意： 这里的黑名单是 playSlice 的 name 值 ; 写在这块的数据不会存在storage
+  blacklist: ["play"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
