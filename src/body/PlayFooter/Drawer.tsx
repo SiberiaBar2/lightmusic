@@ -61,7 +61,7 @@ const Drawer = (props: DrawProps, ref: any) => {
     // console.log("divdivdiv", div);
 
     if (index !== -1 && div) {
-      div.style.top = -index * 2 + 11 + "rem";
+      div.style.top = -index * 2 + 5.5 + "rem";
       [...div.children].forEach((item) => {
         if (item) {
           item.className = "";
