@@ -15,6 +15,8 @@ import { useSongs } from "./useSongs";
 
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, musicRef, time, picUrl, songId } = props;
+  console.log("time", time);
+
   // console.log("lyric", lyric);
   // audioTimeUpdate();
   const [visiable, setVisiable] = useState(false);
@@ -49,13 +51,25 @@ const Drawer = (props: DrawProps, ref: any) => {
     const regex = /\[(\d{2}:\d{2})\.\d{2,3}\](.+)/g;
     // console.log("regex.exec(lyric)", regex.exec(lyric));
     let tmp = regex.exec(lyric);
+    // console.log("tmp", tmp);
+
+    // console.log("time", time);
+
     while (tmp) {
       timeArr.push(tmp[1]);
       lrcArr.push(tmp[2]);
       tmp = regex.exec(lyric);
     }
+    // console.log("timeArr", timeArr);
+
     setLrc(lrcArr);
-    const index = timeArr.findIndex((item: any) => item === time);
+    const index = timeArr.findIndex((item: any) => {
+      // console.log("time", time);
+      // console.log("tim--->item-", item);
+      // console.log("item === time", item === time);
+
+      return item === time;
+    });
     // console.log("time---->", time);
     const div = document.getElementById("lyricdiv");
     // console.log("divdivdiv", div);

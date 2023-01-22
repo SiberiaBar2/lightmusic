@@ -24,7 +24,7 @@ export const useSongs = (songId?: number) => {
   //     userId: 0,
   //     topComments: [],
   //   };
-  const { data: { data } = { data: { data: [] } } } = useSongUrl(songId);
+  const { data: { data = [{ url: "" }] } = {} } = useSongUrl(songId);
   const {
     data: {
       songs: [
