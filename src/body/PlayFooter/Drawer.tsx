@@ -15,7 +15,7 @@ import { useSongs } from "./useSongs";
 
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, musicRef, time, picUrl, songId } = props;
-  console.log("time", time);
+  // console.log("time", time);
 
   // console.log("lyric", lyric);
   // audioTimeUpdate();

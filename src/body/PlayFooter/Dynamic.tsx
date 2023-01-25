@@ -22,10 +22,9 @@ import {
   useReducer,
   useRef,
   useState,
-  forwardRef,
-  useImperativeHandle,
+  memo,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Slider, Tooltip, message } from "antd";
 import _ from "lodash";
 import Drawer from "./Drawer";
@@ -35,7 +34,6 @@ import { useSongs } from "./useSongs";
 import { RootState } from "store";
 import { playState, changePlay } from "store/play";
 import { songsInfo, songsState } from "store/songs";
-import { changeTimeStr, TimeState } from "store/timestr";
 import {
   Container,
   DivOne,
@@ -83,14 +81,11 @@ export const Dynamic = (props: any) => {
   const [type, dispatch] = useReducer(reducer, { type: PlayType.liexun });
 
   const [volume, setVolume] = useState(50);
-  // const [duration, setDuration] = useState(0);
   const [upOrDown, setUpOrDown] = useState(false);
 
   const drawerRef: React.MutableRefObject<any> = useRef();
   const musicRef: React.MutableRefObject<any> = useRef();
-  const timeRef: React.MutableRefObject<any> = useRef();
   const [time, setTime] = useState("");
-  // let nowTimeRef = useRef("").current;
 
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
@@ -112,55 +107,56 @@ export const Dynamic = (props: any) => {
     if (musicRef.current) musicRef.current.volume = volume * 0.01;
   });
 
-  const { data, name, picUrl, authName, lyric } = useSongs(songId);
+  const { name, picUrl, authName, lyric } = useSongs(songId);
 
-  data[0].url && localStorage.setItem("songurl", data[0].url);
-  console.log("data", data);
-
-  const changeOpen = (open: boolean) => {
+  const changeOpen = useCallback((open: boolean) => {
     setOpen(open);
     if (!open) {
       musicRef.current.volume = 0;
       setVolume(0);
       return;
     }
-  };
+  }, []);
 
-  const handeChangeType = (type: number) => {
+  const handeChangeType = useCallback((type: number) => {
     dispatch({ type });
-  };
+  }, []);
 
-  const goPrevorNext = (key: string) => {
-    let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
+  const goPrevorNext = useCallback(
+    (key: string) => {
+      let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
 
-    const getSongsId = prevornext.split(",");
-    const min = 0;
-    const max = getSongsId?.length - 1;
+      const getSongsId = prevornext.split(",");
+      const min = 0;
+      const max = getSongsId?.length - 1;
 
-    if (togo < min) {
-      togo = 0;
-      message.warning("不能再往上了哦！", 2);
-      return;
-    }
-    if (togo > max) {
-      togo = max;
-      message.warning("到底再也没有了！", 2);
-      return;
-    }
+      if (togo < min) {
+        togo = 0;
+        message.warning("不能再往上了哦！", 2);
+        return;
+      }
+      if (togo > max) {
+        togo = max;
+        message.warning("到底再也没有了！", 2);
+        return;
+      }
 
-    setParam(
-      songsInfo({
-        ...songsState,
-        songId: getSongsId[togo],
-        song: togo,
-      })
-    );
+      setParam(
+        songsInfo({
+          ...songsState,
+          songId: getSongsId[togo],
+          song: togo,
+        })
+      );
 
-    // 下一首 、上一首切换、播放 success
-    setTimeout(() => {
-      playMusic(true);
-    }, 2500);
-  };
+      // 下一首 、上一首切换、播放 success
+      setTimeout(() => {
+        playMusic(true);
+      }, 2500);
+    },
+    [setParam, songsInfo, playMusic, prevornext, songsState]
+  );
+
   const getElement = (type: number) => {
     switch (type) {
       case PlayType.dan:
@@ -209,31 +205,6 @@ export const Dynamic = (props: any) => {
     }
   };
 
-  // console.log("mmmmmmmm", musicRef.current.ontimeupdate);
-
-  // const musicTime = useMemo(() => {
-  //   if (musicRef.current) {
-  //     const audio = musicRef.current;
-
-  //     if (isNaN(audio.duration)) {
-  //       return ["00:00"];
-  //     }
-
-  //     const timeCount = Math.floor(audio.currentTime); // 总时长秒数
-  //     const minutes = parseInt(audio.duration / 60 + ""); // 获取总时长分钟
-  //     const seconds = parseInt((audio.duration % 60) + ""); // 获取总时长秒数
-  //     const timeMinute = Math.floor(timeCount / 60); // 当前播放进度 分
-  //     const timeDisplay = Math.floor(audio.currentTime % 60); // 当前播放进度 秒
-  //     const secondsTime = timeDisplay < 10 ? "0" + timeDisplay : timeDisplay; // 秒
-
-  //     const t = timeMinute < 10 ? "0" + timeMinute : timeMinute;
-  //     const m = minutes < 10 ? "0" + minutes : minutes;
-  //     const s = seconds < 10 ? "0" + seconds : seconds;
-
-  //     return [m + ":" + s] as const;
-  //   }
-  //   return ["00:00"];
-  // }, [musicRef.current?.duration, musicRef.current?.currentTime]);
   const musicTime = useMemo(() => {
     if (musicRef.current) {
       const audio = musicRef.current;
@@ -243,14 +214,6 @@ export const Dynamic = (props: any) => {
       }
 
       const timeCount = Math.floor(audio.currentTime); // 总时长秒数
-      console.log(
-        "timeCount",
-        timeCount,
-        "audio.currentTime",
-        audio.currentTime,
-        "audio",
-        audio
-      );
 
       const minutes = parseInt(audio.duration / 60 + ""); // 获取总时长分钟
       const seconds = parseInt((audio.duration % 60) + ""); // 获取总时长秒数
@@ -267,9 +230,9 @@ export const Dynamic = (props: any) => {
     return ["00:00", "/", "00:00"];
   }, [musicRef.current?.duration, musicRef.current?.currentTime]);
 
-  const songAndAuth = () => {
+  const songAndAuth = useCallback(() => {
     return name + "-" + authName;
-  };
+  }, [name, authName]);
 
   const DrawerConfig: DrawProps = {
     picUrl: picUrl,
@@ -279,7 +242,7 @@ export const Dynamic = (props: any) => {
     songId: songId,
   };
 
-  const audioTimeUpdate = () => {
+  const audioTimeUpdate = useCallback(() => {
     const { currentTime = 0 } = musicRef.current;
     const minutes = parseInt(currentTime / 60 + "");
     const seconds = parseInt((currentTime % 60) + "");
@@ -290,25 +253,26 @@ export const Dynamic = (props: any) => {
       (seconds < 10 ? "0" + seconds : seconds);
 
     setTime(timeStr);
-  };
+  }, []);
 
-  const hocConfig = {
-    playMusic: playMusic,
-    musicRef: musicRef,
-    songId: songId,
-    play: play,
-    setParam: setParam,
-  };
+  const hocConfig = useMemo(() => {
+    return {
+      playMusic: playMusic,
+      musicRef: musicRef,
+      songId: songId,
+      play: play,
+      setParam: setParam,
+    };
+  }, [playMusic, musicRef, songId, play, setParam]);
 
-  const audioConfig = {
-    musicRef,
-    data,
-    drawerRef,
-    picUrl,
-    lyric,
-    songId,
-    // setParam,
-  };
+  // 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染1
+  const audioConfig = useMemo(() => {
+    return {
+      songId,
+      musicRef,
+      audioTimeUpdate,
+    };
+  }, [songId, musicRef, audioTimeUpdate]);
 
   return (
     <Container>
@@ -436,14 +400,7 @@ export const Dynamic = (props: any) => {
             )}
           </VolumeWrap>
         </DivThree>
-        {/* <Audio {...audioConfig} ref={timeRef} /> */}
-        <audio
-          controls
-          ref={musicRef}
-          src={data[0].url || localStorage.getItem("songurl")}
-          style={{ display: "none" }}
-          onTimeUpdate={audioTimeUpdate}
-        />
+        <Audio {...audioConfig} />
         <Drawer ref={drawerRef} {...DrawerConfig} />
       </FatherHoc>
     </Container>
@@ -452,68 +409,29 @@ export const Dynamic = (props: any) => {
 
 Dynamic.whyDidYouRender = true;
 
-const ChangeTime = () => {
-  const TimeState = useSelector<RootState, Pick<TimeState, "str">>(
-    (state) => state.timestr
-  );
-  console.log("TimeState", TimeState);
-  return <div></div>;
-};
+// 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染2
+const Audio = memo(
+  ({
+    musicRef,
+    songId,
+    audioTimeUpdate,
+  }: {
+    musicRef: React.MutableRefObject<any>;
+    songId: any;
+    audioTimeUpdate: any;
+  }) => {
+    const { data } = useSongs(songId);
 
-const Audio = forwardRef(
-  (
-    {
-      musicRef,
-      data,
-      drawerRef,
-      picUrl,
-      lyric,
-      songId,
-    }: // setParam,
-    {
-      musicRef: React.MutableRefObject<any>;
-      data: any[];
-      drawerRef: React.MutableRefObject<any>;
-      picUrl: any;
-      lyric: any;
-      songId: any;
-      // setParam: any;
-    },
-    ref: any
-  ) => {
-    const [time, setTime] = useState("");
-    const DrawerConfig: DrawProps = {
-      picUrl: picUrl,
-      time: time,
-      musicRef: musicRef,
-      lyric: lyric,
-      songId: songId,
-    };
-
-    const audioTimeUpdate = () => {
-      const { currentTime = 0 } = musicRef.current;
-      const minutes = parseInt(currentTime / 60 + "");
-      const seconds = parseInt((currentTime % 60) + "");
-
-      const timeStr =
-        (minutes < 10 ? "0" + minutes : minutes) +
-        ":" +
-        (seconds < 10 ? "0" + seconds : seconds);
-
-      setTime(timeStr);
-    };
+    console.log("render");
 
     return (
-      <>
-        <audio
-          controls
-          ref={musicRef}
-          src={data[0].url}
-          style={{ display: "none" }}
-          onTimeUpdate={audioTimeUpdate}
-        />
-        <Drawer ref={drawerRef} {...DrawerConfig} />
-      </>
+      <audio
+        controls
+        ref={musicRef}
+        src={data[0].url}
+        style={{ display: "none" }}
+        onTimeUpdate={audioTimeUpdate}
+      />
     );
   }
 );
@@ -536,6 +454,7 @@ const FatherHoc = ({
 }) => {
   const [duration, setDuration] = useState(0);
 
+  const { data } = useSongs(songId);
   // 切歌时重置播放进度
   useMemo(() => {
     setDuration(0);
@@ -547,7 +466,7 @@ const FatherHoc = ({
     // 不会再出现切歌后进度条在走，也显示播放图标，但音频时而播放时而不播放的问题
     // 做到了同步
     // 但同时也必须配合2.5s
-    if (play && musicRef.current) {
+    if (play && musicRef.current && data[0].url) {
       setDuration((dura) => dura + 1);
       // 播放完毕 重置播放状态
       if (duration >= musicRef.current?.duration) {
