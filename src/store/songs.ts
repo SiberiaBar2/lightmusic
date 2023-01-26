@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface songsState {
-  songId: number | string;
+  songId?: number | string;
   song: number | string;
-  prevornext: Array<number | string>;
+  prevornext: string;
 }
 
 const initialState: songsState = {
   songId: 0,
   song: 0,
-  prevornext: [0],
+  prevornext: "0",
 };
 
 export const songsSlice = createSlice({

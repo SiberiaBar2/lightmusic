@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import SongsItem from "components/SongsItem";
+import { config } from "utils/customRender";
 import { CardList, MusciCard } from "../index";
 import { useRankingSongs } from "./utils";
 
@@ -14,7 +15,11 @@ export const CardSongs = (item: any) => {
   return (
     <Container>
       <MusciCard {...item} />
-      <CardList custom style={{ flex: 1 }} dataSource={tracks.slice(0, 5)}>
+      <CardList
+        many={config}
+        style={{ flex: 1 }}
+        dataSource={tracks.slice(0, 5)}
+      >
         <SongsItem />
       </CardList>
     </Container>

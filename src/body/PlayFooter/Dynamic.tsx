@@ -23,8 +23,11 @@ import {
   useRef,
   useState,
   memo,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import { useSelector } from "react-redux";
+import { Dispatch as reduxDispatch, AnyAction } from "redux";
 import { Slider, Tooltip, message } from "antd";
 import _ from "lodash";
 import Drawer from "./Drawer";
@@ -41,6 +44,7 @@ import {
   DivThree,
   VolumeWrap,
   Progress,
+  SongsInfo,
 } from "./style";
 
 enum PlayType {
@@ -55,7 +59,7 @@ export interface DrawProps {
   time: any;
   musicRef: React.MutableRefObject<any>;
   lyric: string;
-  songId?: number;
+  songId?: number | string;
 }
 
 const reducer = (state: any, action: any) => {
@@ -73,7 +77,10 @@ const reducer = (state: any, action: any) => {
   }
 };
 
-export const Dynamic = (props: any) => {
+export const Dynamic = (props: {
+  param: songsState;
+  setParam: reduxDispatch<AnyAction>;
+}) => {
   const { param, setParam } = props;
   const { songId, song, prevornext } = param;
 
@@ -85,7 +92,8 @@ export const Dynamic = (props: any) => {
 
   const drawerRef: React.MutableRefObject<any> = useRef();
   const musicRef: React.MutableRefObject<any> = useRef();
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState("00:00");
+  const [dura, setDura] = useState("00:00");
 
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
@@ -205,31 +213,6 @@ export const Dynamic = (props: any) => {
     }
   };
 
-  const musicTime = useMemo(() => {
-    if (musicRef.current) {
-      const audio = musicRef.current;
-
-      if (isNaN(audio.duration)) {
-        return ["00:00", "/", "00:00"];
-      }
-
-      const timeCount = Math.floor(audio.currentTime); // 总时长秒数
-
-      const minutes = parseInt(audio.duration / 60 + ""); // 获取总时长分钟
-      const seconds = parseInt((audio.duration % 60) + ""); // 获取总时长秒数
-      const timeMinute = Math.floor(timeCount / 60); // 当前播放进度 分
-      const timeDisplay = Math.floor(audio.currentTime % 60); // 当前播放进度 秒
-      const secondsTime = timeDisplay < 10 ? "0" + timeDisplay : timeDisplay; // 秒
-
-      const t = timeMinute < 10 ? "0" + timeMinute : timeMinute;
-      const m = minutes < 10 ? "0" + minutes : minutes;
-      const s = seconds < 10 ? "0" + seconds : seconds;
-
-      return [t + ":" + secondsTime, "/", m + ":" + s] as const;
-    }
-    return ["00:00", "/", "00:00"];
-  }, [musicRef.current?.duration, musicRef.current?.currentTime]);
-
   const songAndAuth = useCallback(() => {
     return name + "-" + authName;
   }, [name, authName]);
@@ -253,7 +236,7 @@ export const Dynamic = (props: any) => {
       (seconds < 10 ? "0" + seconds : seconds);
 
     setTime(timeStr);
-  }, []);
+  }, [setTime, musicRef]);
 
   const hocConfig = useMemo(() => {
     return {
@@ -270,6 +253,7 @@ export const Dynamic = (props: any) => {
     return {
       songId,
       musicRef,
+      setDura,
       audioTimeUpdate,
     };
   }, [songId, musicRef, audioTimeUpdate]);
@@ -304,19 +288,15 @@ export const Dynamic = (props: any) => {
           )}
           <div>
             <Tooltip title={songAndAuth()}>
-              <div>
+              <SongsInfo>
                 {songAndAuth() && songAndAuth().length > 16
                   ? songAndAuth().slice(0, 16) + "..."
                   : songAndAuth()}
-              </div>
+              </SongsInfo>
             </Tooltip>
-            {musicTime.map((time, index) => {
-              return (
-                <span key={index} style={{ margin: "2px" }}>
-                  {time}
-                </span>
-              );
-            })}
+            <span>{time}</span>
+            <span style={{ margin: "0 0.5rem" }}>/</span>
+            <span>{dura}</span>
           </div>
         </DivOne>
         <DivTwo>
@@ -410,19 +390,35 @@ export const Dynamic = (props: any) => {
 Dynamic.whyDidYouRender = true;
 
 // 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染2
+// 抽离 audio , 使无关状态改变, 不重新渲染audio
+
 const Audio = memo(
   ({
     musicRef,
     songId,
     audioTimeUpdate,
+    setDura,
   }: {
     musicRef: React.MutableRefObject<any>;
-    songId: any;
-    audioTimeUpdate: any;
+    songId?: string | number;
+    audioTimeUpdate: () => void;
+    setDura: Dispatch<SetStateAction<string>>;
   }) => {
     const { data } = useSongs(songId);
 
     console.log("render");
+
+    // 获得播放总时长
+    const onDurationChange = useCallback(() => {
+      // 时长发生变化时执行的函数 确保时长不为NAN
+      const { duration } = musicRef.current;
+      const minutes = parseInt(duration / 60 + ""); // 获取总时长分钟
+      const seconds = parseInt((duration % 60) + ""); // 获取总时长秒数
+      const m = minutes < 10 ? "0" + minutes : minutes;
+      const s = seconds < 10 ? "0" + seconds : seconds;
+      const dura = m + ":" + s;
+      setDura(dura);
+    }, [setDura]);
 
     return (
       <audio
@@ -431,6 +427,7 @@ const Audio = memo(
         src={data[0].url}
         style={{ display: "none" }}
         onTimeUpdate={audioTimeUpdate}
+        onDurationChange={onDurationChange}
       />
     );
   }
@@ -448,9 +445,9 @@ const FatherHoc = ({
   children: React.ReactNode;
   playMusic: (play: boolean) => void;
   musicRef: React.MutableRefObject<any>;
-  songId?: number;
+  songId?: number | string;
   play: boolean | undefined;
-  setParam: any;
+  setParam: reduxDispatch<AnyAction>;
 }) => {
   const [duration, setDuration] = useState(0);
 

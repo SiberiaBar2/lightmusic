@@ -1,13 +1,12 @@
-import styled from "@emotion/styled";
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { LoginState } from "store/login";
-import { useIlike, useRefreshLogin } from "users";
-import { useCloudsearch } from "body/Header/utils";
+import { useIlike } from "users";
 import { useSongDetail } from "./utils";
+import { config } from "utils/customRender";
 const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
 export const Ilike = () => {
@@ -42,27 +41,6 @@ export const Ilike = () => {
   // console.log("我喜欢", ids);
   // console.log("详情", songs);
 
-  const renderFunc = (value: any) => {
-    const { ar } = value;
-    const authAndtime = ar.map((ele: any, index: number) => {
-      if (index === 0) {
-        return ele.name + "  ";
-      }
-      return "/" + "  " + ele.name;
-    });
-
-    // const formatTime = dayjs(publishTime).format(DATEFORMAT);
-
-    // authAndtime.push(<span>{formatTime}</span>);
-    return <Container>{authAndtime}</Container>;
-  };
-
-  const config = {
-    renderFunc,
-    // color: ["rgb(167, 83, 90)", "rgb(167, 83, 90)"],
-    // background: ["rgb(240, 161, 168)", "rgb(241, 147, 156)"],
-  };
-
   return (
     <div>
       <CardList many={config} dataSource={songs}>
@@ -71,9 +49,3 @@ export const Ilike = () => {
     </div>
   );
 };
-
-const Container = styled.div`
-  width: 50%;
-  display: flex;
-  justify-content: space-between;
-`;

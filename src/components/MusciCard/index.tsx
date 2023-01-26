@@ -1,9 +1,16 @@
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 
 export const MusciCard = (item: any) => {
+  const navigate = useNavigate();
+
   return (
     <Container>
-      <Img src={item.coverImgUrl} alt={item.name} />
+      <Img
+        src={item.coverImgUrl}
+        alt={item.name}
+        onClick={() => navigate(`/songlist/${item.id}`)}
+      />
     </Container>
   );
 };

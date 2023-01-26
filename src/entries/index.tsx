@@ -7,15 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
-import {
-  Recommend,
-  Ranking,
-  RadioStation,
-  SongList,
-  Recent,
-  Search,
-  Ilike,
-} from "pages";
+import { Recommend, Ranking, SongList, Recent, Search, Ilike } from "pages";
 import { Provider } from "react-redux";
 import { Affix } from "antd";
 import store, { persist } from "../store";
@@ -40,7 +32,6 @@ const Entries = () => {
                   <Routes>
                     <Route path="recommend" element={<Recommend />} />
                     <Route path="ranking" element={<Ranking />} />
-                    {/* <Route path="radioStation" element={<RadioStation />} /> */}
                     <Route path="songList/:id" element={<SongList />} />
                     <Route path="recent" element={<Recent />} />
                     <Route path="search/:searchparam" element={<Search />} />

@@ -4,10 +4,37 @@ import { useParams } from "react-router-dom";
 import { useSongList } from "./utils";
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
+import { config } from "utils/customRender";
 
 export const SongList = () => {
   const { id } = useParams();
   const { data: songList, isLoading } = useSongList({ data: { id } });
+
+  const renderInfoList = () => (
+    <>
+      <Info>
+        <Span>标签: </Span>
+        {songList?.playlist?.tags.map((item: any, index: number) => {
+          if (index !== 2) return <Span key={item}>{item}、</Span>;
+          if (index === 2) return <Span key={item}>{item}</Span>;
+        })}
+      </Info>
+      <Info>
+        <Span>歌曲数：{songList?.playlist?.tracks?.length}</Span>
+        <Span>;</Span>
+        <Span>
+          {" "}
+          播放数：
+          {songList?.playlist?.playCount}
+        </Span>
+      </Info>
+      <Info>
+        <Span>简介:</Span>
+        <Span> {songList?.playlist?.name}</Span>
+      </Info>
+    </>
+  );
+
   return (
     <Skeleton loading={isLoading} active={true}>
       <ImageContainer>
@@ -16,23 +43,14 @@ export const SongList = () => {
           src={songList?.playlist?.coverImgUrl}
         />
         <Describtion>
-          <DescribtionContent>
-            <div>
-              <span>标签: </span>
-              {songList?.playlist?.tags.map((item: any, index: number) => {
-                if (index !== 2) return <span key={item}>{item}、</span>;
-                if (index === 2) return <span key={item}>{item}</span>;
-              })}
-            </div>
-            <Span>
-              歌曲数：{songList?.playlist?.tracks?.length}播放数：{" "}
-              {songList?.playlist?.playCount}
-            </Span>
-            <Span>简介: {songList?.playlist?.name}</Span>
-          </DescribtionContent>
+          <DescribtionContent>{renderInfoList()}</DescribtionContent>
         </Describtion>
       </ImageContainer>
-      <CardList size="large" dataSource={songList?.playlist?.tracks}>
+      <CardList
+        many={config}
+        size="large"
+        dataSource={songList?.playlist?.tracks}
+      >
         <SongsItem />
       </CardList>
     </Skeleton>
@@ -58,6 +76,10 @@ const DescribtionContent = styled.div`
   bottom: 0;
 `;
 
+const Info = styled.div`
+  margin-bottom: 0.5rem;
+`;
+
 const Span = styled.span`
-  margin: 0.2rem;
+  margin-right: 0.5rem;
 `;

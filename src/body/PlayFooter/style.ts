@@ -136,3 +136,11 @@ export const Progress = styled.div`
     }
   }
 `;
+
+export const SongsInfo = styled.div`
+  width: 15rem;
+  height: 1.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
