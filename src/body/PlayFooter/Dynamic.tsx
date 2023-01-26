@@ -98,7 +98,10 @@ export const Dynamic = (props: {
 
   // 持久化存储播放类型
   const [type, dispatch] = useReducer(reducer, {
-    type: Number(localStorage.getItem("playtype")) || PlayType.liexun,
+    type:
+      Number(localStorage.getItem("playtype")) === 0
+        ? 0
+        : Number(localStorage.getItem("playtype")) || PlayType.liexun,
   });
 
   const [volume, setVolume] = useState(50);
@@ -176,12 +179,14 @@ export const Dynamic = (props: {
   // 但两次是一起执行的 合并为一次了
   // 2Dynamic.tsx:174 currentTime 287.111837 duration 287.111837
 
+  // 这里必须 time !== INITTIME
+  // 不然单曲无法播放
   useEffect(() => {
     const { currentTime, duration } = musicRef.current;
-    if (currentTime === duration) {
+    if (currentTime === duration && time !== INITTIME) {
       switch (type.type) {
         case PlayType.dan:
-          setTimeout(() => playMusic(true), 500);
+          setTimeout(() => playMusic(true), 300);
           return;
         case PlayType.shun:
           setTimeout(() => goPrevorNext("next"), 1500);
