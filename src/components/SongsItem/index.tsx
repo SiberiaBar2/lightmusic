@@ -9,7 +9,6 @@ import { RootState } from "store";
 const SongsItem = (props: childrenReturnType) => {
   const { id, name, songIndex, songIdList, customRender, ...other } = props;
 
-  // const [param, setParam] = useSongIdSearchParam();
   const check = useCheckMusic();
   const dispatch = useDispatch();
 

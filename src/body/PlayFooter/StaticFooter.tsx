@@ -1,4 +1,4 @@
-import { GoEnd, GoStart, Play, VolumeSmall } from "@icon-park/react";
+import { GoEnd, GoStart, LoopOnce, Play, VolumeSmall } from "@icon-park/react";
 import { Slider, message } from "antd";
 import {
   Container,
@@ -60,6 +60,12 @@ export const StaticFooter = () => {
               fill="rgb(237, 195, 194)"
             /> */}
         {/* {getElement(type.type)} */}
+        <LoopOnce
+          title="顺序播放"
+          theme="outline"
+          size="24"
+          fill="rgb(237, 195, 194)"
+        />
         {/* <ListBottom
               title="播放列表"
               theme="outline"

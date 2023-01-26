@@ -25,6 +25,7 @@ import {
   memo,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 import { useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
@@ -47,12 +48,21 @@ import {
   SongsInfo,
 } from "./style";
 
+const INITTIME = "00:00";
+
 enum PlayType {
   dan,
   shun,
   liexun,
   sui,
 }
+
+const PLAYTYPE = {
+  [PlayType.dan]: "单曲循环",
+  [PlayType.shun]: "顺序播放",
+  [PlayType.liexun]: "列表循环",
+  [PlayType.sui]: "随机播放",
+};
 
 export interface DrawProps {
   picUrl: string;
@@ -85,15 +95,19 @@ export const Dynamic = (props: {
   const { songId, song, prevornext } = param;
 
   const [open, setOpen] = useState(true);
-  const [type, dispatch] = useReducer(reducer, { type: PlayType.liexun });
+
+  // 持久化存储播放类型
+  const [type, dispatch] = useReducer(reducer, {
+    type: Number(localStorage.getItem("playtype")) || PlayType.liexun,
+  });
 
   const [volume, setVolume] = useState(50);
   const [upOrDown, setUpOrDown] = useState(false);
 
   const drawerRef: React.MutableRefObject<any> = useRef();
   const musicRef: React.MutableRefObject<any> = useRef();
-  const [time, setTime] = useState("00:00");
-  const [dura, setDura] = useState("00:00");
+  const [time, setTime] = useState(INITTIME);
+  const [dura, setDura] = useState(INITTIME);
 
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
@@ -109,6 +123,83 @@ export const Dynamic = (props: {
     play ? musicRef.current.play() : musicRef.current.pause();
     setParam(changePlay({ play }));
   }, []);
+
+  // 播放下一首、上一首 同时支持列表循环 、随机数
+  const goPrevorNext = useCallback(
+    (key: string, reback?: string) => {
+      let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
+
+      const getSongsId = prevornext.split(",");
+      const min = 0;
+      const max = getSongsId?.length - 1;
+
+      if (togo < min) {
+        togo = 0;
+        message.warning("不能再往上了哦！", 2);
+        return;
+      }
+      if (togo > max) {
+        reback === "reback" ? (togo = 0) : (togo = max);
+        if (!reback) {
+          message.warning("到底再也没有了！", 2);
+          return;
+        }
+      }
+      // 生成一个歌曲列表下标数组之内的随机数
+      if (reback === "random") {
+        togo = Math.round(Math.random() * max);
+      }
+
+      setParam(
+        songsInfo({
+          ...songsState,
+          songId: getSongsId[togo],
+          song: togo,
+        })
+      );
+
+      // 下一首 、上一首切换、播放 success
+      setTimeout(() => {
+        playMusic(true);
+      }, 2500);
+    },
+    [setParam, songsInfo, playMusic, prevornext, songsState, song]
+  );
+
+  // 随时监听播放进度 以用来控制单曲、循环、列表，随机
+
+  // 加入 setTimeout 避免报错 ：元素没有播放的源错误
+  // 没有 setTimeout 会出现最大深度的错误
+  // 使用 time === dura && time !== "00:00" 对比
+  // 会引发执行两次的bug！导致顺序播放跳两首播放
+  // log 发现 currentTime 这种对比也执行了两次
+  // 但两次是一起执行的 合并为一次了
+  // 2Dynamic.tsx:174 currentTime 287.111837 duration 287.111837
+
+  useEffect(() => {
+    const { currentTime, duration } = musicRef.current;
+    if (currentTime === duration) {
+      switch (type.type) {
+        case PlayType.dan:
+          setTimeout(() => playMusic(true), 500);
+          return;
+        case PlayType.shun:
+          setTimeout(() => goPrevorNext("next"), 500);
+          return;
+        case PlayType.liexun:
+          setTimeout(() => goPrevorNext("next", "reback"), 500);
+          return;
+        case PlayType.sui:
+          setTimeout(() => goPrevorNext("next", "random"), 500);
+          return;
+        default:
+          return;
+      }
+    }
+    // 以下if 代码与上面  switch 一致 ；失败实践
+    // if (time === dura && time !== "00:00") {
+    // }
+  });
 
   // 初始音量
   useMount(() => {
@@ -126,44 +217,31 @@ export const Dynamic = (props: {
     }
   }, []);
 
-  const handeChangeType = useCallback((type: number) => {
-    dispatch({ type });
+  // 函数 提入组件内部与 useReducer的 reducer 区分开来，
+  // 避免 reducer 纯函数受到副作用污染
+  const storge = useCallback((type: number) => {
+    localStorage.setItem("playtype", String(type));
   }, []);
 
-  const goPrevorNext = useCallback(
-    (key: string) => {
-      let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
+  const saveStorge = useCallback((type: number) => {
+    switch (type) {
+      case PlayType.dan:
+        return storge(PlayType.shun);
+      case PlayType.shun:
+        return storge(PlayType.liexun);
+      case PlayType.liexun:
+        return storge(PlayType.sui);
+      case PlayType.sui:
+        return storge(PlayType.dan);
+      default:
+        return storge(PlayType.liexun);
+    }
+  }, []);
 
-      const getSongsId = prevornext.split(",");
-      const min = 0;
-      const max = getSongsId?.length - 1;
-
-      if (togo < min) {
-        togo = 0;
-        message.warning("不能再往上了哦！", 2);
-        return;
-      }
-      if (togo > max) {
-        togo = max;
-        message.warning("到底再也没有了！", 2);
-        return;
-      }
-
-      setParam(
-        songsInfo({
-          ...songsState,
-          songId: getSongsId[togo],
-          song: togo,
-        })
-      );
-
-      // 下一首 、上一首切换、播放 success
-      setTimeout(() => {
-        playMusic(true);
-      }, 2500);
-    },
-    [setParam, songsInfo, playMusic, prevornext, songsState]
-  );
+  const handeChangeType = useCallback((type: number) => {
+    dispatch({ type });
+    saveStorge(type);
+  }, []);
 
   const getElement = (type: number) => {
     switch (type) {
@@ -245,8 +323,9 @@ export const Dynamic = (props: {
       songId: songId,
       play: play,
       setParam: setParam,
+      type: type.type,
     };
-  }, [playMusic, musicRef, songId, play, setParam]);
+  }, [playMusic, musicRef, songId, play, setParam, type.type]);
 
   // 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染1
   const audioConfig = useMemo(() => {
@@ -340,7 +419,7 @@ export const Dynamic = (props: {
             size="24"
             fill="rgb(237, 195, 194)"
           /> */}
-          {/* {getElement(type.type)} */}
+          <Tooltip title={PLAYTYPE[type.type]}>{getElement(type.type)}</Tooltip>
           {/* <ListBottom
             title="播放列表"
             theme="outline"
@@ -392,6 +471,7 @@ Dynamic.whyDidYouRender = true;
 // 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染2
 // 抽离 audio , 使无关状态改变, 不重新渲染audio
 
+// 避免受到其他组件渲染的影响
 const Audio = memo(
   ({
     musicRef,
@@ -434,6 +514,8 @@ const Audio = memo(
 );
 
 // react 控制反转 使 duration 播放进度变化时 不影响父组件下的其他组件重渲
+
+// 控制进度 与 播放完成的暂停图标
 const FatherHoc = ({
   children,
   playMusic,
@@ -441,6 +523,7 @@ const FatherHoc = ({
   songId,
   play,
   setParam,
+  type,
 }: {
   children: React.ReactNode;
   playMusic: (play: boolean) => void;
@@ -448,6 +531,7 @@ const FatherHoc = ({
   songId?: number | string;
   play: boolean | undefined;
   setParam: reduxDispatch<AnyAction>;
+  type: PlayType;
 }) => {
   const [duration, setDuration] = useState(0);
 
@@ -465,8 +549,13 @@ const FatherHoc = ({
     // 但同时也必须配合2.5s
     if (play && musicRef.current && data[0].url) {
       setDuration((dura) => dura + 1);
-      // 播放完毕 重置播放状态
+      // 播放完毕 重置播放状态 | 从新播放
       if (duration >= musicRef.current?.duration) {
+        // 如果是单曲循环 不停止播放状态 、并且重置播放进度从新播放
+        if (type === PlayType.dan) {
+          setDuration(0);
+          return;
+        }
         setParam(changePlay({ play: false }));
       }
     }
