@@ -181,16 +181,16 @@ export const Dynamic = (props: {
     if (currentTime === duration) {
       switch (type.type) {
         case PlayType.dan:
-          setTimeout(() => playMusic(true), 500);
+          setTimeout(() => playMusic(true), 1500);
           return;
         case PlayType.shun:
-          setTimeout(() => goPrevorNext("next"), 500);
+          setTimeout(() => goPrevorNext("next"), 1500);
           return;
         case PlayType.liexun:
-          setTimeout(() => goPrevorNext("next", "reback"), 500);
+          setTimeout(() => goPrevorNext("next", "reback"), 1500);
           return;
         case PlayType.sui:
-          setTimeout(() => goPrevorNext("next", "random"), 500);
+          setTimeout(() => goPrevorNext("next", "random"), 1500);
           return;
         default:
           return;
