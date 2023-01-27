@@ -14,6 +14,7 @@ import { LoginState } from "store/login";
 const cookie = localStorage.getItem("cookie");
 export const Like = memo((props: any) => {
   const { songId } = props;
+
   const dispatch = useDispatch();
 
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
@@ -43,7 +44,10 @@ export const Like = memo((props: any) => {
     }
   }, [dispatch, changelike, ids, likes]);
 
-  const islike = likes.find((item) => item === songId);
+  const islike = useMemo(
+    () => likes.find((item) => item === Number(songId)),
+    [songId]
+  );
 
   const { mutate: tolike } = useLike();
 
