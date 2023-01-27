@@ -22,6 +22,10 @@ export const Header = () => {
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {} } = loginState;
 
+  // console.log("profile", profile);
+  // if (!_.isEmpty(profile)) {
+  //   window.location.reload();
+  // }
   // console.log("loginState", loginState, "data。", profile);
 
   // const debouncedParam = useDebounce(search, 500);

@@ -47,6 +47,7 @@ import {
   Progress,
   SongsInfo,
 } from "./style";
+import { useSongDetail } from "./utils";
 
 const INITTIME = "00:00";
 
@@ -212,6 +213,9 @@ export const Dynamic = (props: {
   });
 
   const { name, picUrl, authName, lyric } = useSongs(songId);
+
+  const { data: detail } = useSongDetail(songId);
+  // console.log("detail", detail);
 
   const changeOpen = useCallback((open: boolean) => {
     setOpen(open);
@@ -415,7 +419,7 @@ export const Dynamic = (props: {
             fill="rgb(237, 195, 194)"
             style={{ cursor: "pointer" }}
           />
-          {/* <Like songId={songId} /> */}
+          <Like songId={useMemo(() => songId, [songId])} />
         </DivTwo>
         <DivThree>
           {/* <Acoustic

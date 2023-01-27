@@ -1,4 +1,11 @@
-import { GoEnd, GoStart, LoopOnce, Play, VolumeSmall } from "@icon-park/react";
+import {
+  GoEnd,
+  GoStart,
+  // Like,
+  LoopOnce,
+  Play,
+  VolumeSmall,
+} from "@icon-park/react";
 import { Slider, message } from "antd";
 import {
   Container,
@@ -8,6 +15,7 @@ import {
   VolumeWrap,
   Progress,
 } from "./style";
+import { Like } from "./like";
 
 export const StaticFooter = () => {
   const tips = () => {
@@ -50,7 +58,7 @@ export const StaticFooter = () => {
           fill="rgb(237, 195, 194)"
           style={{ cursor: "pointer" }}
         />
-        {/* <Like songId={songId} /> */}
+        <Like songId={""} />
       </DivTwo>
       <DivThree>
         {/* <Acoustic

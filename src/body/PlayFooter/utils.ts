@@ -64,10 +64,16 @@ export const useCheckMusictwo = () => {
 // 喜欢歌曲
 export const useLike = () => {
   const client = useHttp();
-  return useMutation((param: { id: IdType }) =>
-    client("like", {
-      method: "GET",
-      data: param,
-    })
+  return useMutation(
+    (param: {
+      id: IdType;
+      cookie: string;
+      like?: boolean;
+      timerstamp: number;
+    }) =>
+      client("like", {
+        method: "GET",
+        data: param,
+      })
   );
 };

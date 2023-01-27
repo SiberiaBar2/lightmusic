@@ -11,11 +11,13 @@ import storage from "redux-persist/lib/storage";
 import playReducer from "./play";
 import loginReducer from "./login";
 import songsReducer from "./songs";
+import ilikeReducer from "./ilike";
 
 const rootReducer = combineReducers({
   play: playReducer,
   login: loginReducer,
   songs: songsReducer,
+  ilike: ilikeReducer,
 });
 
 // 状态持久化配置

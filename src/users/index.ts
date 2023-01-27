@@ -1,3 +1,4 @@
+import { now } from "lodash";
 import { useMutation, useQuery } from "react-query";
 import { http, useHttp } from "utils";
 
@@ -13,8 +14,8 @@ export const useUserDetail = (uid: number) => {
 export const useIlike = (uid: number) => {
   const cookie = localStorage.getItem("cookie");
   const client = useHttp();
-  return useQuery(["likelist"], () =>
-    client("likelist", { data: { uid: uid, cookie } })
+  return useQuery(["likelist", uid], () =>
+    client("likelist", { data: { uid: uid, cookie, timestemp: Date.now() } })
   );
 };
 
