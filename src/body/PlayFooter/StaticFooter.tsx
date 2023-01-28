@@ -6,7 +6,9 @@ import {
   Play,
   VolumeSmall,
 } from "@icon-park/react";
+import { useDispatch, useSelector } from "react-redux";
 import { Slider, message } from "antd";
+
 import {
   Container,
   DivOne,
@@ -16,13 +18,40 @@ import {
   Progress,
 } from "./style";
 import { Like } from "./like";
+import { useNewSongs } from "./utils";
+import { songsInfo, songsState } from "store/songs";
+import { RootState } from "store";
+import { changePlay } from "store/play";
 
 export const StaticFooter = () => {
-  const tips = () => {
-    message.error("请先选择音乐！", 2);
+  const { data: { result = [] } = {} } = useNewSongs();
+  const dispatch = useDispatch();
+
+  const songsState = useSelector<
+    RootState,
+    Pick<songsState, "songId" | "song" | "prevornext">
+  >((state) => state.songs);
+
+  // console.log("新歌曲", result);
+
+  const getIds = result.map((ele: any) => ele.id);
+  // console.log("getIds", getIds);
+
+  const init = () => {
+    // message.success("开始播放最新音乐");
+    dispatch(
+      songsInfo({
+        ...songsState,
+        songId: getIds[0],
+        song: 0,
+        prevornext: String(getIds),
+      })
+    );
+    // dispatch(changePlay({ play: true }));
   };
+
   return (
-    <Container onClick={tips}>
+    <Container onClick={init}>
       <Progress>
         <Slider
           value={0}

@@ -13,6 +13,8 @@ export const PlayFooter = () => {
 
   const { songId } = songsState;
 
+  console.log("songsState", songsState);
+
   return (
     <>
       {songId ? (

@@ -77,3 +77,11 @@ export const useLike = () => {
       })
   );
 };
+
+// 推荐新歌曲
+export const useNewSongs = () => {
+  const client = useHttp();
+  return useQuery(["personalizednewsong"], () =>
+    client("personalized/newsong")
+  );
+};

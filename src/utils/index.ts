@@ -23,6 +23,7 @@ export const http = async (
       "Content-Type": data ? "application/json" : "",
     },
     ...customConfig,
+    // credentials: "include",
   };
 
   // console.log("endpoint", endpoint);

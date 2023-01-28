@@ -214,7 +214,7 @@ export const Dynamic = (props: {
 
   const { name, picUrl, authName, lyric } = useSongs(songId);
 
-  const { data: detail } = useSongDetail(songId);
+  // const { data: detail } = useSongDetail(songId);
   // console.log("detail", detail);
 
   const changeOpen = useCallback((open: boolean) => {
