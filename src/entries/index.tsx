@@ -7,7 +7,15 @@ import {
   Navigate,
 } from "react-router-dom";
 import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
-import { Recommend, Ranking, SongList, Recent, Search, Ilike } from "pages";
+import {
+  Recommend,
+  Ranking,
+  SongList,
+  Recent,
+  Search,
+  Ilike,
+  SongSheet,
+} from "pages";
 import { Provider } from "react-redux";
 import { Affix } from "antd";
 import store, { persist } from "../store";
@@ -36,6 +44,7 @@ const Entries = () => {
                     <Route path="recent" element={<Recent />} />
                     <Route path="search/:searchparam" element={<Search />} />
                     <Route path="ilike" element={<Ilike />} />
+                    <Route path="songsheet" element={<SongSheet />} />
                     <Route
                       path="/"
                       element={<Navigate to={"recommend"} replace />}
