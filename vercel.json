@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/siberiabear/(.*)",
+      "destination": "/api/proxy"
+    }
+  ]
+}
