@@ -52,7 +52,7 @@ import { useSongDetail } from "./utils";
 const INITTIME = "00:00";
 
 enum PlayType {
-  dan,
+  dan = 1,
   shun,
   liexun,
   sui,
@@ -99,10 +99,7 @@ export const Dynamic = (props: {
 
   // 持久化存储播放类型
   const [type, dispatch] = useReducer(reducer, {
-    type:
-      Number(localStorage.getItem("playtype")) === 0
-        ? 0
-        : Number(localStorage.getItem("playtype")) || PlayType.liexun,
+    type: Number(localStorage.getItem("playtype")) || PlayType.liexun,
   });
 
   const [volume, setVolume] = useState(50);
@@ -182,30 +179,30 @@ export const Dynamic = (props: {
 
   // 这里必须 time !== INITTIME
   // 不然单曲无法播放
-  useEffect(() => {
-    const { currentTime, duration } = musicRef.current;
-    if (currentTime === duration && time !== INITTIME) {
-      switch (type.type) {
-        case PlayType.dan:
-          setTimeout(() => playMusic(true), 300);
-          return;
-        case PlayType.shun:
-          setTimeout(() => goPrevorNext("next"), 1500);
-          return;
-        case PlayType.liexun:
-          setTimeout(() => goPrevorNext("next", "reback"), 1500);
-          return;
-        case PlayType.sui:
-          setTimeout(() => goPrevorNext("next", "random"), 1500);
-          return;
-        default:
-          return;
-      }
-    }
-    // 以下if 代码与上面  switch 一致 ；失败实践
-    // if (time === dura && time !== "00:00") {
-    // }
-  });
+  // useEffect(() => {
+  //   const { currentTime, duration } = musicRef.current;
+  //   if (currentTime === duration && time !== INITTIME) {
+  //     switch (type.type) {
+  //       case PlayType.dan:
+  //         setTimeout(() => playMusic(true), 1000);
+  //         return;
+  //       case PlayType.shun:
+  //         setTimeout(() => goPrevorNext("next"), 1500);
+  //         return;
+  //       case PlayType.liexun:
+  //         setTimeout(() => goPrevorNext("next", "reback"), 1500);
+  //         return;
+  //       case PlayType.sui:
+  //         setTimeout(() => goPrevorNext("next", "random"), 1500);
+  //         return;
+  //       default:
+  //         return;
+  //     }
+  //   }
+  //   // 以下if 代码与上面  switch 一致 ；失败实践
+  //   // if (time === dura && time !== "00:00") {
+  //   // }
+  // });
 
   // 初始音量
   useMount(() => {
@@ -333,8 +330,9 @@ export const Dynamic = (props: {
       play: play,
       setParam: setParam,
       type: type.type,
+      goPrevorNext,
     };
-  }, [playMusic, musicRef, songId, play, setParam, type.type]);
+  }, [playMusic, musicRef, songId, play, setParam, type.type, goPrevorNext]);
 
   // 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染1
   const audioConfig = useMemo(() => {
@@ -533,6 +531,7 @@ const FatherHoc = ({
   play,
   setParam,
   type,
+  goPrevorNext,
 }: {
   children: React.ReactNode;
   playMusic: (play: boolean) => void;
@@ -541,6 +540,7 @@ const FatherHoc = ({
   play: boolean | undefined;
   setParam: reduxDispatch<AnyAction>;
   type: PlayType;
+  goPrevorNext: (key: string, reback?: string) => void;
 }) => {
   const [duration, setDuration] = useState(0);
 
@@ -560,9 +560,22 @@ const FatherHoc = ({
       setDuration((dura) => dura + 1);
       // 播放完毕 重置播放状态 | 从新播放
       if (duration >= musicRef.current?.duration) {
-        // 如果是单曲循环 不停止播放状态 、并且重置播放进度从新播放
+        // 重置播放进度从新播放
+        setDuration(0);
         if (type === PlayType.dan) {
-          setDuration(0);
+          playMusic(true);
+          return;
+        }
+        if (type === PlayType.shun) {
+          setTimeout(() => goPrevorNext("next"), 1000);
+          return;
+        }
+        if (type === PlayType.liexun) {
+          setTimeout(() => goPrevorNext("next", "reback"), 1000);
+          return;
+        }
+        if (type === PlayType.sui) {
+          setTimeout(() => goPrevorNext("next", "random"), 1000);
           return;
         }
         setParam(changePlay({ play: false }));
