@@ -97,17 +97,21 @@ export const VolumeWrap = styled.div`
   }
 
   > div:nth-of-type(1) {
-    width: 2rem;
+    width: 3rem;
     position: absolute;
-    height: 4.5rem;
+    height: 5.5rem;
     background: rgb(237, 195, 194);
-    top: -4.5rem;
-    border-radius: 0.8rem;
+    top: -5.5rem;
+    border-radius: 2rem;
     display: none;
     z-index: 999;
 
     &:hover {
       display: block;
+    }
+    .ant-slider {
+      margin: 0 1rem;
+      height: 60%;
     }
   }
 `;

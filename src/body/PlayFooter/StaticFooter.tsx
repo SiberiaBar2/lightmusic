@@ -116,7 +116,7 @@ export const StaticFooter = () => {
               <Slider
                 vertical
                 value={0}
-                style={{ height: "85%", bottom: "none" }}
+                style={{ height: "85% !important", bottom: "none" }}
               />
             </div>
             <VolumeSmall theme="outline" size="24" fill="rgb(237, 195, 194)" />
