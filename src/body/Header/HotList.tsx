@@ -1,4 +1,4 @@
-import { Divider } from "antd";
+import { Divider, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import { useHotList } from "./utils";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,9 @@ export const HotList = (props: any) => {
               <span>{index + 1}</span>
               {item.searchWord}
             </span>
-            <span>{item?.content}</span>
+            <Tooltip title={item?.content}>
+              <span>{item?.content.slice(0, 13)}</span>
+            </Tooltip>
           </p>
         );
       })}
@@ -35,11 +37,13 @@ const Container = styled.div`
   font-size: 0.8rem;
 
   p {
-    height: 3rem;
+    height: 4rem;
     margin: 1rem 0;
-    padding: 0.2rem 0.5rem;
-    background: rgb(240, 201, 207);
+    padding: 0.2rem 1rem;
     cursor: pointer;
+    &:hover {
+      background: rgb(226, 225, 228);
+    }
 
     span:nth-of-type(1) {
       font-weight: 700;
@@ -53,6 +57,11 @@ const Container = styled.div`
 
     span:nth-of-type(2) {
       color: rgb(122, 115, 116);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+      width: 80%;
     }
   }
 

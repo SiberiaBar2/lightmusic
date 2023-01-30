@@ -7,7 +7,8 @@ import { songsInfo, songsState } from "store/songs";
 import { RootState } from "store";
 
 const SongsItem = (props: childrenReturnType) => {
-  const { id, name, songIndex, songIdList, customRender, ...other } = props;
+  const { songindex, songidlist, customrender, item, ...other } = props;
+  const { id, name } = item;
 
   const check = useCheckMusic();
   const dispatch = useDispatch();
@@ -51,15 +52,15 @@ const SongsItem = (props: childrenReturnType) => {
           songsInfo({
             ...songsState,
             songId: id,
-            song: songIndex,
-            prevornext: String(songIdList),
+            song: songindex,
+            prevornext: String(songidlist),
           })
         );
         dispatch(changePlay({ play: false }));
       }}
     >
       <span>{name}</span>
-      {customRender ? customRender(other) : null}
+      {customrender ? customrender(item) : null}
     </div>
   );
 };

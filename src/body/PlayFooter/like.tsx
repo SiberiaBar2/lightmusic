@@ -46,7 +46,7 @@ export const Like = memo((props: any) => {
 
   const islike = likes.find((item) => item === Number(songId));
 
-  // console.log("islike", islike);
+  console.log("islike", islike);
 
   const { mutate: tolike } = useLike();
 

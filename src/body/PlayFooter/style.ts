@@ -4,7 +4,7 @@ export const Container = styled.footer`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 4.3rem;
+  height: 5.3rem;
   background: rgb(249, 241, 219);
   position: relative;
   color: rgb(93, 101, 95);
@@ -20,15 +20,16 @@ export const Container = styled.footer`
   }
 `;
 export const DivOne = styled.div`
-  width: 20rem;
+  width: 40%;
   height: 100%;
   display: flex;
   align-items: center;
+  margin-left: 1rem;
 
   > div:nth-of-type(1) {
-    width: 3rem;
-    height: 3rem;
-    margin-left: 0.9rem;
+    width: 4rem;
+    height: 4rem;
+    /* margin-left: 0.9rem; */
     border: 1px solid darkblue;
     text-align: center;
     cursor: pointer;
@@ -143,4 +144,12 @@ export const SongsInfo = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+`;
+
+export const DivRight = styled.div`
+  display: flex;
+  justify-content: space-between;
+  /* align-items: center; */
+  width: calc(100% - 40%);
+  height: 100%;
 `;

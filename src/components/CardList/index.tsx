@@ -14,9 +14,9 @@ interface CardListProps
 
 export interface childrenReturnType {
   key?: React.Key | null;
-  songIndex?: number;
-  songIdList?: number[];
-  customRender?: (value: any) => JSX.Element;
+  songindex?: number;
+  songidlist?: number[];
+  customrender?: (value: any) => JSX.Element;
   [x: string]: any;
 }
 
@@ -27,18 +27,19 @@ export const CardList = ({
   many,
   ...other
 }: CardListProps) => {
-  const songIdList = dataSource?.map((item) => {
+  const songidlist = dataSource?.map((item) => {
     return (item as any).id as number;
   });
 
   const addConfig = (item: any, index: number, children: React.ReactNode) => {
     if (React.isValidElement<childrenReturnType>(children)) {
       return React.cloneElement(children, {
-        ...item,
+        // ...item,
         key: item.id,
-        songIndex: index,
-        songIdList: songIdList,
-        customRender: many?.renderFunc,
+        songindex: index,
+        songidlist: songidlist,
+        customrender: many?.renderFunc,
+        item: item,
       });
     }
     console.error("CardList 必须传入react元素！");

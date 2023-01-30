@@ -69,7 +69,7 @@ const Qrcode = () => {
   return (
     <Content>
       <div>
-        <span>请使用网易云app扫码登录</span>
+        <span>使用网易云app扫码登录</span>
         <img id="#qrImg" ref={imgRef} alt="" />
       </div>
     </Content>
@@ -77,15 +77,19 @@ const Qrcode = () => {
 };
 
 const Content = styled.div`
-  width: 18rem;
-  height: 18rem;
+  width: 20rem;
+  height: 20rem;
   display: flex;
   justify-content: center;
   align-items: center;
 
+  span {
+    font-size: 1rem;
+  }
+
   > div {
-    width: 12rem;
-    height: 12rem;
+    width: 14rem;
+    height: 14rem;
     text-align: center;
 
     img {

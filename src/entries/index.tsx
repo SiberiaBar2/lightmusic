@@ -53,7 +53,7 @@ const Entries = () => {
                 </Section>
               </Main>
               <AntAffix
-                style={{ position: "fixed", bottom: "2rem", zIndex: 1 }}
+                style={{ position: "fixed", bottom: "3rem", zIndex: 1 }}
               >
                 <PlayFooter />
               </AntAffix>
@@ -70,11 +70,16 @@ export default Entries;
 
 const Container = styled.div`
   height: 100%;
+  /* position: relative; */
 `;
 
 const Header = styled.header`
-  height: 3.75rem;
+  height: 4.75rem;
   background: rgb(241, 147, 155);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 99;
 `;
 
 const Aside = styled.aside`
@@ -89,6 +94,7 @@ const Aside = styled.aside`
 const Main = styled.main`
   display: flex;
   height: 100%;
+  margin-top: 4.75rem;
 `;
 
 const Section = styled.section`

@@ -4,7 +4,8 @@ import { config } from "utils/customRender";
 import { CardList, MusciCard } from "../index";
 import { useRankingSongs } from "./utils";
 
-export const CardSongs = (item: any) => {
+export const CardSongs = (props: any) => {
+  const { item } = props;
   const { data: { playlist: { tracks } } = { playlist: { tracks: [] } } } =
     useRankingSongs(item.id);
   // console.log("data", tracks);
@@ -14,7 +15,7 @@ export const CardSongs = (item: any) => {
 
   return (
     <Container>
-      <MusciCard {...item} />
+      <MusciCard item={item} />
       <CardList
         many={config}
         style={{ flex: 1 }}

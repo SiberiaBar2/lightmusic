@@ -15,10 +15,7 @@ import { useSongs } from "./useSongs";
 
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, musicRef, time, picUrl, songId } = props;
-  // console.log("time", time);
 
-  // console.log("lyric", lyric);
-  // audioTimeUpdate();
   const [visiable, setVisiable] = useState(false);
   const [lrc, setLrc] = useState<string[]>([""]);
   const lrcRef: React.MutableRefObject<any> = useRef();
@@ -26,14 +23,13 @@ const Drawer = (props: DrawProps, ref: any) => {
   const { hotComments, comments, userId, topComments, songs } =
     useSongs(songId);
 
-  // const { data: check } = useCheckMusic(songId);
-  // console.log("check", check);
-
-  // item. content:string 评论内容 commentId:number ，评论id ， timeStr:string 时间字符， time:number 时间戳，
-  // item. user 用户信息 ，avatarUrl: string 头像地址，nickname:string 昵称， userId:number 用户id， userType:number 用户类型
-  // console.log("hotComments", hotComments);
-
-  // data name：string 歌曲名，id： number 歌曲id， artists:[] 0.name 作者， picUrl ： 歌曲图片
+  /**
+   *
+   *  item. content:string 评论内容 commentId:number ，评论id ， timeStr:string 时间字符， time:number 时间戳，
+   *  item. user 用户信息 ，avatarUrl: string 头像地址，nickname:string 昵称， userId:number 用户id， userType:number 用户类型
+   *  console.log("hotComments", hotComments);
+   *  data name：string 歌曲名，id： number 歌曲id， artists:[] 0.name 作者， picUrl ： 歌曲图片
+   */
 
   const changeVisiable = () => {
     songId && setVisiable(!visiable);
@@ -201,7 +197,6 @@ const CommentList = styled.div`
 const Revelant = styled.div`
   flex: 1;
   margin: 2rem;
-  /* background: aliceblue; */
 `;
 
 Drawer.whyDidYouRender = true;

@@ -1,16 +1,26 @@
 import styled from "@emotion/styled";
-import { Tooltip } from "antd";
+import { Tag, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 
-export const MusciCard = (item: any) => {
-  const { customrender } = item;
+export const MusciCard = (props: any) => {
+  const { customrender, songIndex: index, item } = props;
   const navigate = useNavigate();
+
+  const renderTag = (index: number) => {
+    return (
+      <Tag color={index % 2 === 0 ? "purple" : "geekblue"}>
+        {item.name.slice(0, 15)}
+      </Tag>
+    );
+  };
 
   return (
     <>
       {customrender ? (
         <Tooltip title={item.name}>
-          <Name>{item.name.slice(0, 15)}</Name>
+          {/* <Name> */}
+          {renderTag(index)}
+          {/* </Name> */}
         </Tooltip>
       ) : null}
       <Container>
@@ -25,8 +35,8 @@ export const MusciCard = (item: any) => {
 };
 
 const Container = styled.div`
-  width: 10rem;
-  height: 10rem;
+  width: 16rem;
+  height: 16rem;
   cursor: pointer;
   margin: 0.3rem;
 `;
@@ -38,9 +48,9 @@ const Img = styled.img`
 
 // type a = typeof MusciCard
 const Name = styled.div`
-  height: 1.5rem;
-  width: 70%;
-  margin: 0.5rem;
+  /* height: 1.5rem; */
+  /* width: 70%; */
+  /* margin: 0.5rem; */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

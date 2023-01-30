@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { useUserDetail } from "users";
 
 export const UserDetail = ({ uid }: { uid: number }) => {
@@ -10,8 +10,8 @@ export const UserDetail = ({ uid }: { uid: number }) => {
     <div>
       <p>等级： {level}</p>
       <p>听歌数： {listenSongs}</p>
-      <p>vip等级 {vipType}</p>
-      <Button>退出登录</Button>
+      <p>viptype： {vipType}</p>
+      <Button onClick={() => message.warning("暂不支持", 1)}>退出登录</Button>
     </div>
   );
 };

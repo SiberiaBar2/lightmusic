@@ -46,6 +46,7 @@ import {
   VolumeWrap,
   Progress,
   SongsInfo,
+  DivRight,
 } from "./style";
 import { useSongDetail } from "./utils";
 
@@ -385,87 +386,91 @@ export const Dynamic = (props: {
             <span>{dura}</span>
           </div>
         </DivOne>
-        <DivTwo>
-          <GoStart
-            onClick={() => goPrevorNext("prev")}
-            theme="outline"
-            size="24"
-            fill="rgb(237, 195, 194)"
-            style={{ cursor: "pointer" }}
-          />
-          {!play ? (
-            <Play
-              onClick={() => playMusic(true)}
-              theme="filled"
+        <DivRight>
+          <DivTwo>
+            <GoStart
+              onClick={() => goPrevorNext("prev")}
+              theme="outline"
               size="24"
               fill="rgb(237, 195, 194)"
               style={{ cursor: "pointer" }}
             />
-          ) : (
-            <PauseOne
-              onClick={() => playMusic(false)}
-              theme="filled"
+            {!play ? (
+              <Play
+                onClick={() => playMusic(true)}
+                theme="filled"
+                size="24"
+                fill="rgb(237, 195, 194)"
+                style={{ cursor: "pointer" }}
+              />
+            ) : (
+              <PauseOne
+                onClick={() => playMusic(false)}
+                theme="filled"
+                size="24"
+                fill="rgb(192, 44, 56)"
+                style={{ cursor: "pointer" }}
+              />
+            )}
+            <GoEnd
+              onClick={() => goPrevorNext("next")}
+              theme="outline"
               size="24"
-              fill="rgb(192, 44, 56)"
+              fill="rgb(237, 195, 194)"
               style={{ cursor: "pointer" }}
             />
-          )}
-          <GoEnd
-            onClick={() => goPrevorNext("next")}
-            theme="outline"
-            size="24"
-            fill="rgb(237, 195, 194)"
-            style={{ cursor: "pointer" }}
-          />
-          <Like songId={useMemo(() => songId, [songId])} />
-        </DivTwo>
-        <DivThree>
-          {/* <Acoustic
+            <Like songId={useMemo(() => songId, [songId])} />
+          </DivTwo>
+          <DivThree>
+            {/* <Acoustic
             title="音效"
             theme="outline"
             size="24"
             fill="rgb(237, 195, 194)"
           /> */}
-          <Tooltip title={PLAYTYPE[type.type]}>{getElement(type.type)}</Tooltip>
-          {/* <ListBottom
+            <Tooltip title={PLAYTYPE[type.type]}>
+              {getElement(type.type)}
+            </Tooltip>
+            {/* <ListBottom
             title="播放列表"
             theme="outline"
             size="24"
             fill="rgb(237, 195, 194)"
           /> */}
-          <VolumeWrap>
-            <div>
-              <Slider
-                vertical
-                value={volume}
-                onChange={(volume) => {
-                  setVolume(volume);
-                  musicRef.current.volume = volume * 0.01;
-                  volume && changeOpen(true);
-                }}
-                min={0}
-                max={100}
-                step={5}
-                style={{ height: "85%", bottom: "none" }}
-              />
-            </div>
-            {open && volume !== 0 ? (
-              <VolumeSmall
-                theme="outline"
-                onClick={() => changeOpen(false)}
-                size="24"
-                fill="rgb(237, 195, 194)"
-              />
-            ) : (
-              <VolumeMute
-                theme="outline"
-                onClick={() => changeOpen(true)}
-                size="24"
-                fill="rgb(237, 195, 194)"
-              />
-            )}
-          </VolumeWrap>
-        </DivThree>
+            <VolumeWrap>
+              <div>
+                <Slider
+                  vertical
+                  value={volume}
+                  onChange={(volume) => {
+                    setVolume(volume);
+                    musicRef.current.volume = volume * 0.01;
+                    volume && changeOpen(true);
+                  }}
+                  min={0}
+                  max={100}
+                  step={5}
+                  style={{ height: "85%", bottom: "none" }}
+                />
+              </div>
+              {open && volume !== 0 ? (
+                <VolumeSmall
+                  theme="outline"
+                  onClick={() => changeOpen(false)}
+                  size="24"
+                  fill="rgb(237, 195, 194)"
+                />
+              ) : (
+                <VolumeMute
+                  theme="outline"
+                  onClick={() => changeOpen(true)}
+                  size="24"
+                  fill="rgb(237, 195, 194)"
+                />
+              )}
+            </VolumeWrap>
+          </DivThree>
+        </DivRight>
         <Audio {...audioConfig} />
         <Drawer ref={drawerRef} {...DrawerConfig} />
       </FatherHoc>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Left, Right } from "@icon-park/react";
+import { Left, Right, Search } from "@icon-park/react";
 import { Avatar, Button, Input, message, Popover, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
@@ -93,6 +93,20 @@ export const Header = () => {
   //   }
   // }, 3000);
 
+  const searchIcon = () => {
+    return (
+      <Search
+        onClick={() => {
+          search && navigate(`search/${search}`);
+          handelBlue();
+        }}
+        theme="outline"
+        size="18"
+        fill="rgb(62, 56, 65)"
+      />
+    );
+  };
+
   return (
     <Container>
       <H4>you-music</H4>
@@ -101,25 +115,26 @@ export const Header = () => {
           <Left
             theme="outline"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(62, 56, 65)"
             onClick={() => window.history.back()}
           />
           <Right
             theme="outline"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(62, 56, 65)"
             onClick={() => window.history.forward()}
           />
         </IconWrap>
         <User>
-          <Tooltip title="输入歌曲名或歌手 按下enter搜索">
+          <Tooltip title="输入歌曲名、歌手">
             <Input
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
+              addonAfter={searchIcon()}
               placeholder="输入歌曲名或歌手"
-              style={{ width: "50%" }}
+              style={{ width: "25%", marginRight: "2rem" }}
               onBlur={() => setTimeout(() => handelBlue(), 1000)}
               onFocus={handelBlue}
               onPressEnter={(e) => handelEnter(e)}
@@ -133,9 +148,9 @@ export const Header = () => {
                 <UserDetail uid={profile.userId} />
               )
             }
-            trigger="click"
+            trigger="hover"
           >
-            <div>
+            <Users>
               {_.isEmpty(profile) ? (
                 <Button
                   style={{
@@ -163,6 +178,8 @@ export const Header = () => {
                         margin: "0 0.5rem",
                         display: "inline-block",
                         fontSize: "0.8rem",
+                        lineHeight: "100%",
+                        color: "rgb(62, 56, 65)",
                       }}
                     >
                       {!_.isEmpty(profile) ? profile.nickname : null}
@@ -170,7 +187,7 @@ export const Header = () => {
                   </Tooltip>
                 </>
               )}
-            </div>
+            </Users>
           </Popover>
         </User>
       </RightContent>
@@ -189,17 +206,18 @@ export const Header = () => {
 
 const Container = styled.div`
   display: flex;
+  height: 100%;
 `;
 
-const H4 = styled.h4`
+const H4 = styled.h2`
   margin: 0;
   width: 19%;
   /* background: yellowgreen; */
   height: 100%;
-  line-height: 3.75rem;
+  line-height: 4.75rem;
   text-align: center;
   position: relative;
-  color: rgb(237, 90, 101);
+  color: rgb(62, 56, 65);
 `;
 
 const RightContent = styled.div`
@@ -210,30 +228,40 @@ const RightContent = styled.div`
 `;
 
 const User = styled.div`
-  width: 30%;
+  width: calc(100% - 40%);
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-right: 2.5rem;
+  /* margin-right: 2.5rem; */
 `;
 
 const SearchContent = styled.div`
-  width: 18rem;
+  width: 21rem;
   height: 35rem;
-  background: rgb(230, 210, 213);
+  background: rgb(188, 132, 168);
   position: absolute;
-  top: 3.75rem;
-  right: 8rem;
+  top: 4.5rem;
+  right: 12rem;
   z-index: 20;
   overflow-y: auto;
+  border-radius: 1rem;
 `;
 
 const IconWrap = styled.div`
-  margin-left: 2.2rem;
+  /* margin-left: 2.2rem; */
+  width: 40%;
 
   span {
     margin: 0 0.5rem;
     cursor: pointer;
   }
+`;
+
+const Users = styled.div`
+  /* width: calc(100% - 60%); */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
 `;
