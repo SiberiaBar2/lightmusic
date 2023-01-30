@@ -16,6 +16,7 @@ import {
   DivThree,
   VolumeWrap,
   Progress,
+  DivRight,
 } from "./style";
 import { Like } from "./like";
 import { useNewSongs } from "./utils";
@@ -68,58 +69,60 @@ export const StaticFooter = () => {
           <span>00:00 / 00:00</span>
         </div>
       </DivOne>
-      <DivTwo>
-        <GoStart
-          theme="outline"
-          size="24"
-          fill="rgb(237, 195, 194)"
-          style={{ cursor: "pointer" }}
-        />
-        <Play
-          theme="filled"
-          size="24"
-          fill="rgb(237, 195, 194)"
-          style={{ cursor: "pointer" }}
-        />
-        <GoEnd
-          theme="outline"
-          size="24"
-          fill="rgb(237, 195, 194)"
-          style={{ cursor: "pointer" }}
-        />
-        <Like songId={""} />
-      </DivTwo>
-      <DivThree>
-        {/* <Acoustic
+      <DivRight>
+        <DivTwo>
+          <GoStart
+            theme="outline"
+            size="24"
+            fill="rgb(237, 195, 194)"
+            style={{ cursor: "pointer" }}
+          />
+          <Play
+            theme="filled"
+            size="24"
+            fill="rgb(237, 195, 194)"
+            style={{ cursor: "pointer" }}
+          />
+          <GoEnd
+            theme="outline"
+            size="24"
+            fill="rgb(237, 195, 194)"
+            style={{ cursor: "pointer" }}
+          />
+          <Like songId={""} />
+        </DivTwo>
+        <DivThree>
+          {/* <Acoustic
               title="音效"
               theme="outline"
               size="24"
               fill="rgb(237, 195, 194)"
             /> */}
-        {/* {getElement(type.type)} */}
-        <LoopOnce
-          title="顺序播放"
-          theme="outline"
-          size="24"
-          fill="rgb(237, 195, 194)"
-        />
-        {/* <ListBottom
+          {/* {getElement(type.type)} */}
+          <LoopOnce
+            title="顺序播放"
+            theme="outline"
+            size="24"
+            fill="rgb(237, 195, 194)"
+          />
+          {/* <ListBottom
               title="播放列表"
               theme="outline"
               size="24"
               fill="rgb(237, 195, 194)"
             /> */}
-        <VolumeWrap>
-          <div>
-            <Slider
-              vertical
-              value={0}
-              style={{ height: "85%", bottom: "none" }}
-            />
-          </div>
-          <VolumeSmall theme="outline" size="24" fill="rgb(237, 195, 194)" />
-        </VolumeWrap>
-      </DivThree>
+          <VolumeWrap>
+            <div>
+              <Slider
+                vertical
+                value={0}
+                style={{ height: "85%", bottom: "none" }}
+              />
+            </div>
+            <VolumeSmall theme="outline" size="24" fill="rgb(237, 195, 194)" />
+          </VolumeWrap>
+        </DivThree>
+      </DivRight>
       <audio controls style={{ display: "none" }} />
     </Container>
   );
