@@ -76,7 +76,7 @@ const Container = styled.div`
 const Header = styled.header`
   height: 4.75rem;
   background: rgb(241, 147, 155);
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   width: 100%;
   z-index: 99;

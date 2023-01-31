@@ -1,10 +1,36 @@
 import styled from "@emotion/styled";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "store";
+import { changePlay } from "store/play";
+import { songsInfo, songsState } from "store/songs";
 
 export const IsSame = (props: any) => {
-  const { name, id, artists } = props;
-  const { name: authname, picUrl } = artists[0];
+  const { songindex, songidlist, item } = props;
+
+  const dispatch = useDispatch();
+  const songsState = useSelector<
+    RootState,
+    Pick<songsState, "songId" | "song" | "prevornext">
+  >((state) => state.songs);
+
+  const { name, artists, album, id } = item;
+  const { name: authname } = artists[0];
+  const { picUrl } = album;
+
   return (
-    <Container>
+    <Container
+      onClick={() => {
+        dispatch(
+          songsInfo({
+            ...songsState,
+            songId: id,
+            song: songindex,
+            prevornext: String(songidlist),
+          })
+        );
+        dispatch(changePlay({ play: false }));
+      }}
+    >
       <ImageWrap>
         <img src={picUrl} alt="" />
       </ImageWrap>
@@ -17,18 +43,20 @@ export const IsSame = (props: any) => {
 };
 
 const Container = styled.div`
-  height: 4rem;
+  width: 30rem;
+  height: 5.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.4rem;
-  background: rgb(208, 223, 230);
   cursor: pointer;
+  &:hover {
+    background: rgb(240, 161, 168);
+  }
 `;
 
 const ImageWrap = styled.div`
-  width: 4rem;
-  height: 4rem;
+  width: 5rem;
+  height: 5rem;
 
   img {
     width: 100%;

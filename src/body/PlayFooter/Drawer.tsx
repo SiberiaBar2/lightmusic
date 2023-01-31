@@ -2,7 +2,6 @@ import React, {
   forwardRef,
   useImperativeHandle,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { Divider, Drawer as AntDrawer } from "antd";
@@ -12,13 +11,13 @@ import "./index.css";
 import { Common } from "./Common";
 import { IsSame } from "./IsSame";
 import { useSongs } from "./useSongs";
+import { CardList } from "components";
 
 const Drawer = (props: DrawProps, ref: any) => {
-  const { lyric, musicRef, time, picUrl, songId } = props;
+  const { lyric, time, picUrl, songId } = props;
 
   const [visiable, setVisiable] = useState(false);
   const [lrc, setLrc] = useState<string[]>([""]);
-  const lrcRef: React.MutableRefObject<any> = useRef();
 
   const { hotComments, comments, userId, topComments, songs } =
     useSongs(songId);
@@ -71,7 +70,7 @@ const Drawer = (props: DrawProps, ref: any) => {
     // console.log("divdivdiv", div);
 
     if (index !== -1 && div) {
-      div.style.top = -index * 2 + 5.5 + "rem";
+      div.style.top = -index * 2.5 + 15 + "rem";
       [...div.children].forEach((item) => {
         if (item) {
           item.className = "";
@@ -89,7 +88,7 @@ const Drawer = (props: DrawProps, ref: any) => {
       getContainer={false}
       keyboard
       placement="bottom"
-      height={"98vh"}
+      height={"100vh"}
       open={visiable}
       onClose={onClose}
       mask={false}
@@ -105,11 +104,13 @@ const Drawer = (props: DrawProps, ref: any) => {
             <div></div>
           </Round>
           <Lyric>
-            <div id="lyricdiv" ref={lrcRef}>
+            {/* <div> */}
+            <ul id="lyricdiv">
               {lrc.map((item: any, index: number) => (
-                <p key={index}>{item}</p>
+                <li key={index}>{item}</li>
               ))}
-            </div>
+            </ul>
+            {/* </div> */}
           </Lyric>
         </Container>
         <Comment>
@@ -127,8 +128,9 @@ const Drawer = (props: DrawProps, ref: any) => {
           </CommentList>
           <Revelant>
             <Divider orientation="left">相关</Divider>
-            {Array.isArray(songs) &&
-              songs.map((ele) => <IsSame key={ele.id} {...ele} />)}
+            <CardList grid={{ column: 1, gutter: 1 }} dataSource={songs}>
+              <IsSame />
+            </CardList>
           </Revelant>
         </Comment>
       </Wrap>
@@ -145,10 +147,12 @@ const Wrap = styled.div`
   align-items: center;
 `;
 const Container = styled.div`
-  width: 55rem;
-  height: 75%;
+  width: 70rem;
+  height: 30rem;
   display: flex;
-  margin-top: 7rem;
+  margin-top: 5rem;
+  /* border: 1px solid salmon; */
+  /* justify-content: space-between; */
 `;
 
 const Round = styled.div`
@@ -157,10 +161,11 @@ const Round = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  margin-right: 5rem;
 
   div:nth-of-type(1) {
-    width: 15rem;
-    height: 15rem;
+    width: 18rem;
+    height: 18rem;
 
     img:nth-of-type(1) {
       width: 100%;
@@ -176,18 +181,35 @@ const Round = styled.div`
 
 const Lyric = styled.div`
   flex: 1;
+  /* width: 40rem; */
   overflow: auto;
-  padding: 2rem;
+  /* padding: 2rem; */
   position: relative;
+  font-size: 1.4rem;
 
-  > div {
+  /* > div {
     position: absolute;
+    top: 15rem; */
+  ul {
+    width: 100%;
+    position: absolute;
+    top: 15rem;
+
+    li {
+      margin-bottom: 1.5rem;
+      height: 1rem;
+      list-style: none;
+      width: 100%;
+      line-height: 1rem;
+      /* text-align: center; */
+    }
   }
+  /* } */
 `;
 
 const Comment = styled.div`
   display: flex;
-  width: 55rem;
+  width: 70rem;
 `;
 
 const CommentList = styled.div`

@@ -42,13 +42,13 @@ export const Common = (props: any) => {
 };
 
 const Container = styled.div`
-  height: 4rem;
+  height: 5rem;
   display: flex;
   align-items: center;
 
   div:nth-of-type(1) {
-    width: 3.2rem;
-    height: 3.2rem;
+    width: 4rem;
+    height: 4rem;
 
     img {
       width: 100%;
@@ -60,7 +60,7 @@ const Container = styled.div`
   div:nth-of-type(2) {
     width: calc(100% - 3.2rem);
     padding: 0.2rem;
-    height: 4rem;
+    height: 5.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -72,7 +72,7 @@ const Container = styled.div`
     }
 
     span {
-      font-size: 0.8rem;
+      font-size: 1.3rem;
     }
 
     p:nth-of-type(1) {
@@ -83,12 +83,13 @@ const Container = styled.div`
       span:nth-of-type(2) {
         display: inline-block;
         width: 70%;
-        height: 1rem;
+        /* height: 1rem; */
         overflow: hidden;
         text-overflow: ellipsis;
         cursor: pointer;
         white-space: nowrap;
       }
+      display: flex;
     }
 
     p:nth-of-type(2) {
