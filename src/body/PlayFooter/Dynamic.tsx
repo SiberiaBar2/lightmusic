@@ -123,7 +123,7 @@ export const Dynamic = (props: {
   >((state) => state.songs);
 
   const playMusic = useCallback((play: boolean) => {
-    play ? musicRef.current.play() : musicRef.current.pause();
+    play ? musicRef.current?.play() : musicRef.current?.pause();
     setParam(changePlay({ play }));
   }, []);
 
@@ -499,7 +499,7 @@ const Audio = memo(
   }) => {
     const { data } = useSongs(songId);
 
-    console.log("render", dayjs().format("YYYY-MM-DD:HH:MM:ss"));
+    console.log("render", dayjs().format("YYYY-MM-DD:HH:mm:ss"));
 
     // 获得播放总时长
     const onDurationChange = useCallback(() => {
