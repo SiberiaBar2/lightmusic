@@ -49,6 +49,7 @@ import {
   DivRight,
 } from "./style";
 import { useSongDetail } from "./utils";
+import dayjs from "dayjs";
 
 const INITTIME = "00:00";
 
@@ -498,7 +499,7 @@ const Audio = memo(
   }) => {
     const { data } = useSongs(songId);
 
-    console.log("render");
+    console.log("render", dayjs().format("YYYY-MM-DD:HH:MM:ss"));
 
     // 获得播放总时长
     const onDurationChange = useCallback(() => {
@@ -567,23 +568,26 @@ const FatherHoc = ({
       if (duration >= musicRef.current?.duration) {
         // 重置播放进度从新播放
         setDuration(0);
+        setParam(changePlay({ play: false }));
         if (type === PlayType.dan) {
           playMusic(true);
           return;
         }
         if (type === PlayType.shun) {
-          setTimeout(() => goPrevorNext("next"), 1000);
+          // setTimeout(() => goPrevorNext("next"), 1000)
+          goPrevorNext("next");
           return;
         }
         if (type === PlayType.liexun) {
-          setTimeout(() => goPrevorNext("next", "reback"), 1000);
+          // setTimeout(() => goPrevorNext("next", "reback"), 1000);
+          goPrevorNext("next", "reback");
           return;
         }
         if (type === PlayType.sui) {
-          setTimeout(() => goPrevorNext("next", "random"), 1000);
+          // setTimeout(() => goPrevorNext("next", "random"), 1000);
+          goPrevorNext("next", "random");
           return;
         }
-        setParam(changePlay({ play: false }));
       }
     }
   }, 1000);

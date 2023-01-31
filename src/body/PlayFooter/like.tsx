@@ -44,6 +44,13 @@ export const Like = memo((props: any) => {
     }
   }, [dispatch, changelike, ids, likes]);
 
+  // console.log("likes", likes);
+
+  // const islike = useMemo(
+  //   () => likes.find((item) => item === Number(songId)),
+  //   [likes, songId]
+  // );
+
   const islike = likes.find((item) => item === Number(songId));
 
   console.log("islike", islike);
@@ -88,7 +95,12 @@ export const Like = memo((props: any) => {
           }),
         1000
       );
-      const like = [songId, ...likes];
+
+      const like = _.cloneDeep(likes);
+      // unshift 方法会影响原数组！
+      like.unshift(songId);
+
+      // const like = [songId, ...likes];
       dispatch(
         changelike({
           likes: like,
