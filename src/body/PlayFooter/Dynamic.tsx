@@ -595,6 +595,7 @@ const FatherHoc = ({
   // 切歌时重置播放进度
   useMemo(() => {
     setDuration(0);
+    localStorage.setItem("currentTime", "0");
   }, [songId]);
 
   // 随着音乐播放，进度条自动行进
