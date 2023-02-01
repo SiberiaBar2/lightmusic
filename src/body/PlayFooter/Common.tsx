@@ -72,7 +72,7 @@ const Container = styled.div`
     }
 
     span {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
 
     p:nth-of-type(1) {

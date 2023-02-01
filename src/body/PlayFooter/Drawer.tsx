@@ -147,7 +147,7 @@ const Wrap = styled.div`
   align-items: center;
 `;
 const Container = styled.div`
-  width: 70rem;
+  width: 90rem;
   height: 30rem;
   display: flex;
   margin-top: 5rem;
@@ -161,7 +161,7 @@ const Round = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin-right: 5rem;
+  margin-right: 15rem;
 
   div:nth-of-type(1) {
     width: 18rem;
@@ -209,7 +209,7 @@ const Lyric = styled.div`
 
 const Comment = styled.div`
   display: flex;
-  width: 70rem;
+  width: 90rem;
 `;
 
 const CommentList = styled.div`

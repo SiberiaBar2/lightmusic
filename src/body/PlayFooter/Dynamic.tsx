@@ -48,7 +48,6 @@ import {
   SongsInfo,
   DivRight,
 } from "./style";
-import { useSongDetail } from "./utils";
 import dayjs from "dayjs";
 
 const INITTIME = "00:00";
@@ -169,15 +168,17 @@ export const Dynamic = (props: {
     [setParam, songsInfo, playMusic, prevornext, songsState, song]
   );
 
-  // 随时监听播放进度 以用来控制单曲、循环、列表，随机
-
-  // 加入 setTimeout 避免报错 ：元素没有播放的源错误
-  // 没有 setTimeout 会出现最大深度的错误
-  // 使用 time === dura && time !== "00:00" 对比
-  // 会引发执行两次的bug！导致顺序播放跳两首播放
-  // log 发现 currentTime 这种对比也执行了两次
-  // 但两次是一起执行的 合并为一次了
-  // 2Dynamic.tsx:174 currentTime 287.111837 duration 287.111837
+  /**
+   *  随时监听播放进度 以用来控制单曲、循环、列表，随机
+   *
+   *  加入 setTimeout 避免报错 ：元素没有播放的源错误
+   *  没有 setTimeout 会出现最大深度的错误
+   *  使用 time === dura && time !== "00:00" 对比
+   *  会引发执行两次的bug！导致顺序播放跳两首播放
+   *  log 发现 currentTime 这种对比也执行了两次
+   *  但两次是一起执行的 合并为一次了
+   *  2Dynamic.tsx:174 currentTime 287.111837 duration 287.111837
+   */
 
   // 这里必须 time !== INITTIME
   // 不然单曲无法播放
@@ -343,6 +344,7 @@ export const Dynamic = (props: {
       musicRef,
       setDura,
       audioTimeUpdate,
+      // play,
     };
   }, [songId, musicRef, audioTimeUpdate]);
 
@@ -497,9 +499,47 @@ const Audio = memo(
     audioTimeUpdate: () => void;
     setDura: Dispatch<SetStateAction<string>>;
   }) => {
+    const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
+      _.pick(state.play, "play")
+    );
+    const { play } = playState;
     const { data } = useSongs(songId);
 
     console.log("render", dayjs().format("YYYY-MM-DD:HH:mm:ss"));
+
+    const listenFunc = useCallback(() => {
+      console.log("刷新");
+      localStorage.setItem("currentTime", "0");
+    }, []);
+
+    addEventListener("load", listenFunc);
+    // 保存上一次的有效currentTime信息
+    // 在状态为播放且 currentTime 因重渲重置为零的情况下 恢复之前的 currentTime
+    useEffect(() => {
+      if (musicRef.current) {
+        const { currentTime } = musicRef.current;
+        // 只保存不为零的 有效值
+        if (currentTime) {
+          localStorage.setItem("currentTime", currentTime);
+        }
+
+        if (
+          play &&
+          currentTime === 0 &&
+          Number(localStorage.getItem("currentTime"))
+        ) {
+          // 恢复因为重渲而变为0的 currentTime 并调用 play 重新开始播放
+          musicRef.current.currentTime = Number(
+            localStorage.getItem("currentTime")
+          );
+          musicRef.current.play();
+          console.log("再赋值", musicRef.current.currentTime);
+        }
+      }
+      return () => {
+        removeEventListener("load", listenFunc);
+      };
+    });
 
     // 获得播放总时长
     const onDurationChange = useCallback(() => {
@@ -518,6 +558,7 @@ const Audio = memo(
         controls
         ref={musicRef}
         src={data[0].url}
+        crossOrigin="anonymous"
         style={{ display: "none" }}
         onTimeUpdate={audioTimeUpdate}
         onDurationChange={onDurationChange}
@@ -569,22 +610,21 @@ const FatherHoc = ({
         // 重置播放进度从新播放
         setDuration(0);
         setParam(changePlay({ play: false }));
+        // 播放完毕 清除 currentTime 记忆值
+        localStorage.setItem("currentTime", "0");
         if (type === PlayType.dan) {
           playMusic(true);
           return;
         }
         if (type === PlayType.shun) {
-          // setTimeout(() => goPrevorNext("next"), 1000)
           goPrevorNext("next");
           return;
         }
         if (type === PlayType.liexun) {
-          // setTimeout(() => goPrevorNext("next", "reback"), 1000);
           goPrevorNext("next", "reback");
           return;
         }
         if (type === PlayType.sui) {
-          // setTimeout(() => goPrevorNext("next", "random"), 1000);
           goPrevorNext("next", "random");
           return;
         }
