@@ -122,7 +122,9 @@ export const Dynamic = (props: {
   >((state) => state.songs);
 
   const playMusic = useCallback((play: boolean) => {
-    play ? musicRef.current?.play() : musicRef.current?.pause();
+    if (musicRef.current) {
+      play ? musicRef.current.play() : musicRef.current.pause();
+    }
     setParam(changePlay({ play }));
   }, []);
 

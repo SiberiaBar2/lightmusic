@@ -1,13 +1,17 @@
 import styled from "@emotion/styled";
 import { Carousel } from "antd";
-import { useBanner, useRecommend } from "./utils";
+import { useBanner, useRecommend, useRecommendSongs } from "./utils";
 import { AntCard } from "components/AntCard";
 import { CardList } from "components";
 
 export const Recommend = () => {
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
+  const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
+  console.log("recommendSongs", dailySongs);
+  console.log("recommend", recommend);
 
+  // const getNewList = recommend?.result.unshit()
   const onChange = (event: any) => {
     console.log(event);
   };

@@ -53,7 +53,7 @@ const Drawer = (props: DrawProps, ref: any) => {
     while (tmp) {
       timeArr.push(tmp[1]);
       lrcArr.push(tmp[2]);
-      tmp = regex.exec(lyric);
+      tmp = regex.exec(lyric); // 不写页面崩溃
     }
     // console.log("timeArr", timeArr);
 
