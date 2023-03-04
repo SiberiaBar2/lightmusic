@@ -51,6 +51,7 @@ import {
   DivRight,
 } from "./style";
 import dayjs from "dayjs";
+import { stringAdds } from "utils/utils";
 
 const INITTIME = "00:00";
 
@@ -442,7 +443,7 @@ export const Dynamic = (props: {
                   setUpOrDown(!upOrDown);
                 }}
               >
-                <img src={picUrl} alt="" />
+                <img src={stringAdds(picUrl)} alt="" />
                 <div
                   style={{
                     display: upOrDown ? "block" : "none",

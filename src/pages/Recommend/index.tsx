@@ -17,6 +17,8 @@ export const Recommend = () => {
     console.log(event);
   };
 
+  // console.log("banners?.banners,", banners?.banners);
+
   // const adds = banners?.banners.map((ele: any) => {
   //   const getHttp = ele.imageUrl.slice(0, 4) as string;
   //   const getEnd = ele.imageUrl.slice(4) as string;

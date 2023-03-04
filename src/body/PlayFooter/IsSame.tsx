@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "store";
 import { changePlay } from "store/play";
 import { songsInfo, songsState } from "store/songs";
+import { stringAdds } from "utils/utils";
 
 export const IsSame = (props: any) => {
   const { songindex, songidlist, item } = props;
@@ -32,7 +33,7 @@ export const IsSame = (props: any) => {
       }}
     >
       <ImageWrap>
-        <img src={picUrl} alt="" />
+        <img src={stringAdds(picUrl)} alt="" />
       </ImageWrap>
       <Info>
         <p>{name}</p>

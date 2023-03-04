@@ -12,6 +12,7 @@ import { Common } from "./Common";
 import { IsSame } from "./IsSame";
 import { useSongs } from "./useSongs";
 import { CardList } from "components";
+import { arrAdds, stringAdds } from "utils/utils";
 
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, time, picUrl, songId } = props;
@@ -99,7 +100,7 @@ const Drawer = (props: DrawProps, ref: any) => {
         <Container>
           <Round>
             <div>
-              <img src={picUrl} alt="" />
+              <img src={stringAdds(picUrl)} alt="" />
             </div>
             <div></div>
           </Round>

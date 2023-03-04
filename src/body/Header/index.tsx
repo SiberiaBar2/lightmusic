@@ -11,6 +11,7 @@ import Qrcode from "./Qrcode";
 import { RootState } from "store";
 import { LoginState } from "store/login";
 import { UserDetail } from "./UserDetail";
+import { stringAdds } from "utils/utils";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -22,13 +23,13 @@ export const Header = () => {
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {} } = loginState;
 
-  const getHttp = !_.isEmpty(profile)
-    ? (profile.avatarUrl.slice(0, 4) as string)
-    : "";
-  const getEnd = !_.isEmpty(profile)
-    ? (profile.avatarUrl.slice(4) as string)
-    : "";
-  const getHttps = getHttp + "s" + getEnd;
+  // const getHttp = !_.isEmpty(profile)
+  //   ? (profile.avatarUrl.slice(0, 4) as string)
+  //   : "";
+  // const getEnd = !_.isEmpty(profile)
+  //   ? (profile.avatarUrl.slice(4) as string)
+  //   : "";
+  // const getHttps = getHttp + "s" + getEnd;
   // console.log("profile", profile);
   // if (!_.isEmpty(profile)) {
   //   window.location.reload();
@@ -173,7 +174,15 @@ export const Header = () => {
                   <Avatar
                     style={{ backgroundColor: "pink", verticalAlign: "middle" }}
                     size="large"
-                    icon={<img src={!_.isEmpty(profile) ? getHttps : ""} />}
+                    icon={
+                      <img
+                        src={
+                          !_.isEmpty(profile)
+                            ? stringAdds(profile.avatarUrl)
+                            : ""
+                        }
+                      />
+                    }
                   />
                   <Tooltip title={profile.nickname}>
                     <span

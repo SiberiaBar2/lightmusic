@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 const isVoid = (value: unknown) =>
   value === undefined || value === null || value === "";
 export const cleanObject = (obj?: { [key: string]: unknown }) => {
@@ -16,15 +18,27 @@ export const cleanObject = (obj?: { [key: string]: unknown }) => {
   return result;
 };
 
+// 为数组对象的图片地址http添加s
 export const arrAdds = (arr: any[], key: string) => {
-  if (Array.isArray(arr))
+  if (Array.isArray(arr) && arr.length > 0) {
     return arr.map((ele: any) => {
-      const getHttp = ele[key].slice(0, 4) as string;
-      if (getHttp[getHttp.length - 1] === "s") return ele;
-      const getEnd = ele[key].slice(4) as string;
+      const getHttp = ele[key]?.slice(0, 4) as string;
+
+      if (ele[key]?.slice(0, 5)[ele[key]?.slice(0, 5)?.length - 1] === "s")
+        return ele;
+      const getEnd = ele[key]?.slice(4) as string;
       const item = { ...ele };
       item.imageUrl = getHttp + "s" + getEnd;
       return item;
     });
+  }
   return [];
+};
+
+export const stringAdds = (str: string) => {
+  if (!str) return "";
+  if (str.slice(0, 5)[str.slice(0, 5).length - 1] === "s") return str;
+  const getHttp = str.slice(0, 4);
+  const getEnd = str.slice(4);
+  return getHttp + "s" + getEnd;
 };
