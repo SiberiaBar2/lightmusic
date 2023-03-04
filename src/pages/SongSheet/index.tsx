@@ -1,12 +1,11 @@
-import { CardList, MusciCard } from "components";
+import { CardList } from "components";
 import { AntCard } from "components/AntCard";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { LoginState } from "store/login";
 import { useUserPlayList } from "./utils";
 
 export const SongSheet = () => {
-  const navigate = useDispatch();
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
     (state) => state.login
   );
@@ -14,14 +13,14 @@ export const SongSheet = () => {
 
   const { data: { playlist = [] } = {} } = useUserPlayList(profile.userId);
 
-  console.log("data", playlist);
+  console.log("data ---->", playlist);
 
   const renderFunc = () => {
     if (profile?.userId) {
       return (
         <CardList
           grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
-          dataSource={playlist}
+          dataSource={playlist.slice(1)}
         >
           <AntCard />
         </CardList>

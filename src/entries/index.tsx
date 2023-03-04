@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Global, css } from "@emotion/react";
 import { Aside as BodyAside, PlayFooter, Header as BodyHeader } from "body";
 import {
   BrowserRouter as Router,
@@ -21,11 +22,64 @@ import { Affix } from "antd";
 import store, { persist } from "../store";
 import { ReactQueryDevtools } from "react-query-devtools";
 import { PersistGate } from "redux-persist/integration/react";
+import { useCallback, useMemo, useState } from "react";
 
 const Entries = () => {
+  const [scroll, setScroll] = useState(false);
+  const handelScroll = useCallback(() => {
+    console.log("滚动了");
+    setScroll(true);
+  }, []);
+
+  const getScrollBarColor = useMemo(() => {
+    return scroll ? (
+      <Global
+        styles={css`
+          ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 0.5rem transparent;
+            border-radius: 2rem;
+            background: transparent;
+          }
+          ::-webkit-scrollbar {
+            width: 0.7rem;
+            height: 0.5rem;
+          }
+          ::-webkit-scrollbar-thumb {
+            border-radius: 2rem;
+            -webkit-box-shadow: inset 0 0 0.5rem transparent;
+            background: rgb(196, 90, 101);
+          }
+        `}
+      />
+    ) : (
+      <Global
+        styles={css`
+          ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 0.5rem transparent;
+            border-radius: 2rem;
+            background: transparent;
+          }
+          ::-webkit-scrollbar {
+            width: 0.7rem;
+            height: 0.5rem;
+          }
+          ::-webkit-scrollbar-thumb {
+            border-radius: 2rem;
+            -webkit-box-shadow: inset 0 0 0.5rem transparent;
+            background: transparent;
+          }
+        `}
+      />
+    );
+  }, [scroll]);
+
+  // 为什么写为true就能触发？
+  document.addEventListener("scroll", handelScroll, true);
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persist}>
+        {/* {getScrollBarColor} */}
         <Container>
           <QueryPrivider client={new QueryClient()}>
             <Router>
@@ -71,6 +125,10 @@ export default Entries;
 const Container = styled.div`
   height: 100%;
   /* position: relative; */
+  overflow-y: hidden;
+  /* &:hover {
+    overflow-y: auto;
+  } */
 `;
 
 const Header = styled.header`
@@ -99,8 +157,10 @@ const Main = styled.main`
 
 const Section = styled.section`
   flex: 1;
+  /* overflow-y: hidden; */
+  /* &:hover { */
   overflow-y: auto;
-  /* background: rgb(240, 161, 168); */
+  /* } */
 `;
 
 const AntAffix = styled(Affix)`

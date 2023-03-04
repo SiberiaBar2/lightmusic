@@ -11,10 +11,11 @@ import _ from "lodash";
 const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
 // 鉴于歌单包含了我喜欢 舍弃ilike
+// 再次启用
 export const Ilike = () => {
-  const loginState = useSelector<RootState, Pick<LoginState, "data">>(
-    (state) => state.login
-  );
+  // const loginState = useSelector<RootState, Pick<LoginState, "data">>(
+  //   (state) => state.login
+  // );
   const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
     _.pick(state.ilike, ["likes"])
   );
@@ -22,7 +23,7 @@ export const Ilike = () => {
   const { likes } = likeState;
   // 解构赋值 真正的默认值
   // const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
-  loginState;
+  // loginState;
 
   const { data: { songs = [] } = {} } = useSongDetail(likes.join(","));
 

@@ -117,7 +117,7 @@ export const VolumeWrap = styled.div`
 `;
 
 export const Progress = styled.div`
-  height: 0.25rem;
+  height: 0.3rem;
   background: rgb(167, 83, 90);
   position: absolute;
   top: -0.1rem;

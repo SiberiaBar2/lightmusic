@@ -58,7 +58,7 @@ const Container = styled.div`
   }
 
   div:nth-of-type(2) {
-    width: calc(100% - 3.2rem);
+    width: calc(100% - 4rem);
     padding: 0.2rem;
     height: 5.5rem;
     display: flex;

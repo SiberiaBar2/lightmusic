@@ -70,7 +70,7 @@ const Drawer = (props: DrawProps, ref: any) => {
     // console.log("divdivdiv", div);
 
     if (index !== -1 && div) {
-      div.style.top = -index * 2.5 + 15 + "rem";
+      div.style.top = -index * 3.5 + 15 + "rem";
       [...div.children].forEach((item) => {
         if (item) {
           item.className = "";
@@ -161,11 +161,12 @@ const Round = styled.div`
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin-right: 15rem;
+  margin-left: 1rem;
+  /* margin-right: 15rem; */
 
   div:nth-of-type(1) {
-    width: 18rem;
-    height: 18rem;
+    width: 22rem;
+    height: 22rem;
 
     img:nth-of-type(1) {
       width: 100%;
@@ -180,12 +181,14 @@ const Round = styled.div`
 `;
 
 const Lyric = styled.div`
-  flex: 1;
+  /* flex: 1; */
+  width: calc(100% - 30rem);
   /* width: 40rem; */
-  overflow: auto;
+  overflow-y: auto;
   /* padding: 2rem; */
   position: relative;
   font-size: 1.4rem;
+  text-align: center;
 
   /* > div {
     position: absolute;
@@ -197,10 +200,11 @@ const Lyric = styled.div`
 
     li {
       margin-bottom: 1.5rem;
-      height: 1rem;
+      height: 2rem;
       list-style: none;
       width: 100%;
-      line-height: 1rem;
+      line-height: 2rem;
+      /* text-overflow: ; */
       /* text-align: center; */
     }
   }
