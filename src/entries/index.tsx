@@ -9,13 +9,14 @@ import {
 } from "react-router-dom";
 import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
 import {
-  Recommend,
+  RecommendSongSheet,
   Ranking,
   SongList,
   Recent,
   Search,
   Ilike,
   SongSheet,
+  RecommendSongs,
 } from "pages";
 import { Provider } from "react-redux";
 import { Affix } from "antd";
@@ -92,7 +93,11 @@ const Entries = () => {
                 </Aside>
                 <Section>
                   <Routes>
-                    <Route path="recommend" element={<Recommend />} />
+                    <Route
+                      path="recommendsongsheet"
+                      element={<RecommendSongSheet />}
+                    />
+                    <Route path="recommendsongs" element={<RecommendSongs />} />
                     <Route path="ranking" element={<Ranking />} />
                     <Route path="songList/:id" element={<SongList />} />
                     <Route path="recent" element={<Recent />} />
@@ -101,7 +106,7 @@ const Entries = () => {
                     <Route path="songsheet" element={<SongSheet />} />
                     <Route
                       path="/"
-                      element={<Navigate to={"recommend"} replace />}
+                      element={<Navigate to={"recommendsongsheet"} replace />}
                     />
                   </Routes>
                 </Section>

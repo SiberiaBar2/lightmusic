@@ -18,7 +18,8 @@ export const Aside = () => {
   // const [current, setCurrent] = useState("1");
   const navigate = useNavigate();
 
-  const nowSecKey = (sessionStorage.getItem("secondKeys") as string) || "推荐";
+  const nowSecKey =
+    (sessionStorage.getItem("secondKeys") as string) || "推荐歌单";
   const defaultMenu = sessionStorage.getItem("subMenu") as string;
 
   const onClick: MenuProps["onClick"] = (e) => {

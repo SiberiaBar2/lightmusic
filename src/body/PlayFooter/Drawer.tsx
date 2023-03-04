@@ -84,11 +84,6 @@ const Drawer = (props: DrawProps, ref: any) => {
     // console.log("index----->", index);
   }, [lyric, time]);
 
-  console.log(
-    'arrAdds(hotComments, "avatarUrl")',
-    arrAdds(hotComments, "avatarUrl")
-  );
-
   return (
     <AntDrawer
       getContainer={false}
