@@ -16,23 +16,35 @@ export const Recommend = () => {
     console.log(event);
   };
 
-  const adds = banners?.banners.map((ele: any) => {
-    const getHttp = ele.imageUrl.slice(0, 4) as string;
-    const getEnd = ele.imageUrl.slice(4) as string;
-    const item = { ...ele };
-    item.imageUrl = getHttp + "s" + getEnd;
-    return item;
+  const arrAdds = (arr: any[], key: string) => {
+    if (Array.isArray(arr))
+      return arr.map((ele: any) => {
+        const getHttp = ele[key].slice(0, 4) as string;
+        const getEnd = ele[key].slice(4) as string;
+        const item = { ...ele };
+        item.imageUrl = getHttp + "s" + getEnd;
+        return item;
+      });
+    return [];
+  };
 
-    // 修改数组中的对象属性，会引发浅拷贝（影响原 banners?.banners 数组 ），因此需要像24行起这样写
-    // 结果导致，我们本来只想要添加一个s，却添加了多个s
-    // ele.imageUrl = getHttp + "s" + getEnd;
-    // return ele;
-  });
+  // const adds = banners?.banners.map((ele: any) => {
+  //   const getHttp = ele.imageUrl.slice(0, 4) as string;
+  //   const getEnd = ele.imageUrl.slice(4) as string;
+  //   const item = { ...ele };
+  //   item.imageUrl = getHttp + "s" + getEnd;
+  //   return item;
+
+  //   // 修改数组中的对象属性，会引发浅拷贝（影响原 banners?.banners 数组 ），因此需要像24行起这样写
+  //   // 结果导致，我们本来只想要添加一个s，却添加了多个s
+  //   // ele.imageUrl = getHttp + "s" + getEnd;
+  //   // return ele;
+  // });
 
   return (
     <>
       <AntCarousel afterChange={(event) => onChange(event)} autoplay={true}>
-        {adds?.map((item: any) => (
+        {arrAdds(banners?.banners, "imageUrl")?.map((item: any) => (
           <ImgContainer key={item.encodeId}>
             <Bannerimg src={item.imageUrl} alt="" />
           </ImgContainer>
@@ -40,7 +52,7 @@ export const Recommend = () => {
       </AntCarousel>
       <CardList
         grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
-        dataSource={recommend?.result}
+        dataSource={arrAdds(recommend?.result, "picUrl")}
       >
         <AntCard />
       </CardList>

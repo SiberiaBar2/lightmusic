@@ -22,8 +22,12 @@ export const Header = () => {
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {} } = loginState;
 
-  const getHttp = profile.avatarUrl.slice(0, 4) as string;
-  const getEnd = profile.avatarUrl.slice(4) as string;
+  const getHttp = !_.isEmpty(profile)
+    ? (profile.avatarUrl.slice(0, 4) as string)
+    : "";
+  const getEnd = !_.isEmpty(profile)
+    ? (profile.avatarUrl.slice(4) as string)
+    : "";
   const getHttps = getHttp + "s" + getEnd;
   // console.log("profile", profile);
   // if (!_.isEmpty(profile)) {
