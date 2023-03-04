@@ -5,6 +5,7 @@ import {
   ThumbsUp as ThumbsUpPark,
 } from "@icon-park/react";
 import { Tooltip } from "antd";
+import { stringAdds } from "utils/utils";
 
 export const Common = (props: any) => {
   const { content, timeStr, user, likedCount } = props;
@@ -12,7 +13,7 @@ export const Common = (props: any) => {
   return (
     <Container>
       <div>
-        <img src={avatarUrl} alt="" />
+        <img src={stringAdds(avatarUrl)} alt="" />
       </div>
       <div>
         <p>
