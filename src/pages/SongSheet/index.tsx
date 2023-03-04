@@ -3,6 +3,7 @@ import { AntCard } from "components/AntCard";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { LoginState } from "store/login";
+import { arrAdds } from "utils/utils";
 import { useUserPlayList } from "./utils";
 
 export const SongSheet = () => {
@@ -20,7 +21,7 @@ export const SongSheet = () => {
       return (
         <CardList
           grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
-          dataSource={playlist.slice(1)}
+          dataSource={arrAdds(playlist.slice(1), "coverImgUrl")}
         >
           <AntCard />
         </CardList>

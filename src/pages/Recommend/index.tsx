@@ -3,6 +3,7 @@ import { Carousel } from "antd";
 import { useBanner, useRecommend, useRecommendSongs } from "./utils";
 import { AntCard } from "components/AntCard";
 import { CardList } from "components";
+import { arrAdds } from "utils/utils";
 
 export const Recommend = () => {
   const { data: recommend } = useRecommend();
@@ -14,18 +15,6 @@ export const Recommend = () => {
   // const getNewList = recommend?.result.unshit()
   const onChange = (event: any) => {
     console.log(event);
-  };
-
-  const arrAdds = (arr: any[], key: string) => {
-    if (Array.isArray(arr))
-      return arr.map((ele: any) => {
-        const getHttp = ele[key].slice(0, 4) as string;
-        const getEnd = ele[key].slice(4) as string;
-        const item = { ...ele };
-        item.imageUrl = getHttp + "s" + getEnd;
-        return item;
-      });
-    return [];
   };
 
   // const adds = banners?.banners.map((ele: any) => {

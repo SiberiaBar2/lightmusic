@@ -15,7 +15,7 @@ export const AntCard = ({
 
   return (
     <Antcard onClick={() => navigate(`/songlist/${id}`)} {...other}>
-      <Img src={picUrl} alt="" />
+      <Img src={picUrl || coverImgUrl} alt="" />
       <Tooltip title={name}>
         <p>{name?.slice(0, 12)}</p>
       </Tooltip>
