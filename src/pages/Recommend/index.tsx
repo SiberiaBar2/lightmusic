@@ -24,6 +24,7 @@ export const Recommend = () => {
     return item;
 
     // 修改数组中的对象属性，会引发浅拷贝（影响原 banners?.banners 数组 ），因此需要像24行起这样写
+    // 结果导致，我们本来只想要添加一个s，却添加了多个s
     // ele.imageUrl = getHttp + "s" + getEnd;
     // return ele;
   });
