@@ -16,10 +16,22 @@ export const Recommend = () => {
     console.log(event);
   };
 
+  const adds = banners?.banners.map((ele: any) => {
+    const getHttp = ele.imageUrl.slice(0, 4) as string;
+    const getEnd = ele.imageUrl.slice(4) as string;
+    const item = { ...ele };
+    item.imageUrl = getHttp + "s" + getEnd;
+    return item;
+
+    // 修改数组中的对象属性，会引发浅拷贝（影响原 banners?.banners 数组 ），因此需要像24行起这样写
+    // ele.imageUrl = getHttp + "s" + getEnd;
+    // return ele;
+  });
+
   return (
     <>
       <AntCarousel afterChange={(event) => onChange(event)} autoplay={true}>
-        {banners?.banners.map((item: any) => (
+        {adds?.map((item: any) => (
           <ImgContainer key={item.encodeId}>
             <Bannerimg src={item.imageUrl} alt="" />
           </ImgContainer>

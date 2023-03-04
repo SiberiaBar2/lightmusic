@@ -200,6 +200,22 @@ export const Dynamic = (props: {
     setParam(changePlay({ play }));
   }, []);
 
+  // const onKweyDown = useCallback(
+  //   _.debounce((e: KeyboardEvent) => {
+  //     if (e.code === "Space") {
+  //       setTimeout(() => playMusic(!play), 1000);
+  //     }
+  //   }, 1000),
+  //   [play, playMusic, _.debounce]
+  // );
+  // window.addEventListener("keydown", onKweyDown);
+
+  // useEffect(() => {
+  //   return () => {
+  //     window.removeEventListener("keydown", onKweyDown);
+  //   };
+  // }, [onKweyDown]);
+
   // 播放下一首、上一首 同时支持列表循环 、随机数
   const goPrevorNext = useCallback(
     (key: string, reback?: string) => {
