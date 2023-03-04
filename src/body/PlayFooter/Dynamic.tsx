@@ -179,13 +179,18 @@ export const Dynamic = (props: {
     console.log("musicRef.current", musicRef.current.src);
     // console.log("getAttribute", musicRef.current.getAttribute());
 
-    try {
-      play && musicRef.current.src
-        ? musicRef.current.play()
-        : musicRef.current.pause();
-    } catch (err) {
-      console.error("err", err);
-    }
+    // try {˝
+    play && musicRef.current.src
+      ? musicRef.current.play().catch((err: Error) => {
+          console.log("err", err);
+          setTimeout(() => {
+            musicRef.current.play();
+          }, 2000);
+        })
+      : musicRef.current.pause();
+    // } catch (err) {
+    //   console.error("err", err);
+    // }
     // if (play) {
     //   musicRef.current.play();
     // } else {
