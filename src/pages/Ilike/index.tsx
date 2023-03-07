@@ -27,6 +27,8 @@ export const Ilike: React.FC = () => {
 
   const { data: { songs = [] } = {} } = useSongDetail(likes.join(","));
 
+  console.log("songs --->", songs);
+
   return (
     <div>
       <CardList many={config} dataSource={songs}>

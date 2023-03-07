@@ -45,27 +45,28 @@ export const CardList: React.FC<CardListProps> = ({
     console.error("CardList 必须传入react元素！");
   };
 
+  // 单数、双数行颜色设置
   // 排除 many 、 color ， background 可能为 undefined 的情况 undefined上不存在 [0]、[1]
-  const getStyle = (key: string) => {
-    if (many) {
-      if (key === "color" && many.color) {
-        return many.color;
-      }
-      if (key === "background" && many.background) {
-        return many.background;
-      }
-      return ["", ""];
-    }
-    return ["", ""];
-  };
+  // const getStyle = (key: string) => {
+  //   if (many) {
+  //     if (key === "color" && many.color) {
+  //       return many.color;
+  //     }
+  //     if (key === "background" && many.background) {
+  //       return many.background;
+  //     }
+  //     return ["", ""];
+  //   }
+  //   return ["", ""];
+  // };
 
-  const customStyle = (index: number) => {
-    return {
-      color: index % 2 === 0 ? getStyle("color")[0] : getStyle("color")[1],
-      background:
-        index % 2 === 0 ? getStyle("background")[0] : getStyle("background")[1],
-    };
-  };
+  // const customStyle = (index: number) => {
+  //   return {
+  //     color: index % 2 === 0 ? getStyle("color")[0] : getStyle("color")[1],
+  //     background:
+  //       index % 2 === 0 ? getStyle("background")[0] : getStyle("background")[1],
+  //   };
+  // };
 
   return (
     <>

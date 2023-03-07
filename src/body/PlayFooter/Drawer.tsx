@@ -17,6 +17,8 @@ import { arrAdds, stringAdds } from "utils/utils";
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, time, picUrl, songId } = props;
 
+  // console.log("time ---->", time);
+
   const [visiable, setVisiable] = useState(false);
   const [lrc, setLrc] = useState<string[]>([""]);
 
