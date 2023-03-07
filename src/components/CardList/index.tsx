@@ -72,7 +72,8 @@ export const CardList: React.FC<CardListProps> = ({
       <AntList
         dataSource={dataSource}
         renderItem={(item: any, index: number) => (
-          <List.Item style={customStyle(index)}>
+          // <List.Item style={customStyle(index)}>
+          <List.Item style={{ padding: 0 }}>
             {addConfig(item, index, children)}
           </List.Item>
         )}

@@ -37,11 +37,9 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
   //   : {
   //       onClick: () => message.error("暂无版权", 2),
   //     };
+  // 是否播放的是当前项，如果是 则添加 active 效果，并禁止重复点击的保存！
   const isActive = () => {
-    if (item.id === songId) {
-      return "rgb(228, 151, 157)";
-    }
-    return "";
+    return item.id === songId;
   };
 
   return (
@@ -52,10 +50,14 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         justifyContent: "space-between",
         width: "100%",
         cursor: "pointer",
-        color: isActive(),
+        color: isActive() ? "rgb(136, 58, 30)" : "",
+        padding: "1rem 0.3rem",
+        background: isActive() ? "rgb(228, 151, 157)" : "",
+        borderRadius: "0.3rem",
       }}
       // {...isClick}
       onClick={() => {
+        if (isActive()) return;
         dispatch(
           songsInfo({
             ...songsState,
