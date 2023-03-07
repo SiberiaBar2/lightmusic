@@ -6,7 +6,7 @@ import { LoginState } from "store/login";
 import { arrAdds } from "utils/utils";
 import { useUserPlayList } from "./utils";
 
-export const SongSheet = () => {
+export const SongSheet: React.FC = () => {
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
     (state) => state.login
   );

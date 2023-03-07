@@ -5,7 +5,7 @@ import { AntCard } from "components/AntCard";
 import { CardList } from "components";
 import { arrAdds } from "utils/utils";
 
-export const RecommendSongSheet = () => {
+export const RecommendSongSheet: React.FC = () => {
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
   const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();

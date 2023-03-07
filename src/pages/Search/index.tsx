@@ -6,7 +6,7 @@ import SongsItem from "components/SongsItem";
 import { config } from "utils/customRender";
 const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
-export const Search = () => {
+export const Search: React.FC = () => {
   const { searchparam } = useParams();
   // console.log("parparpar", searchparam);
 

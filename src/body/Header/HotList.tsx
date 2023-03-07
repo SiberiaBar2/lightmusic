@@ -3,7 +3,9 @@ import styled from "@emotion/styled";
 import { useHotList } from "./utils";
 import { useNavigate } from "react-router-dom";
 
-export const HotList = (props: any) => {
+export const HotList: React.FC<{
+  handelBlue: () => void;
+}> = (props) => {
   const { handelBlue } = props;
   const { data: { data } = { data: [] } } = useHotList();
   const navigate = useNavigate();
@@ -40,9 +42,12 @@ const Container = styled.div`
     height: 4rem;
     margin: 1rem 0;
     padding: 0.2rem 1rem;
+    border-radius: 0.5rem;
+    margin: 0 0.3rem;
     cursor: pointer;
+
     &:hover {
-      background: rgb(226, 225, 228);
+      background: rgb(188, 132, 168);
     }
 
     span:nth-of-type(1) {
@@ -56,7 +61,7 @@ const Container = styled.div`
     }
 
     span:nth-of-type(2) {
-      color: rgb(122, 115, 116);
+      color: rgb(50, 47, 59);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

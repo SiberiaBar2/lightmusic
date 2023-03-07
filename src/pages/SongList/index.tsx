@@ -6,7 +6,7 @@ import { CardList } from "components";
 import SongsItem from "components/SongsItem";
 import { config } from "utils/customRender";
 
-export const SongList = () => {
+export const SongList: React.FC = () => {
   const { id } = useParams();
   const { data: songList, isLoading } = useSongList({ data: { id } });
 

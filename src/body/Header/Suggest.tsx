@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useSuggest } from "./utils";
 
-export const Suggest = (props: any) => {
+export const Suggest: React.FC = (props: any) => {
   const { param } = props;
   const { data: { result } = { result: {} } } = useSuggest(param);
 

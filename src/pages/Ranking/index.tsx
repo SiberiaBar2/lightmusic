@@ -5,7 +5,7 @@ import { MusciCard, CardList } from "components";
 import { CardSongs } from "components/CardSongs";
 import { arrAdds } from "utils/utils";
 
-export const Ranking = () => {
+export const Ranking: React.FC = () => {
   const { data: { list: ranking, artistToplist } = RANGKING } = useRanking();
 
   return (

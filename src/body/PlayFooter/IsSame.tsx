@@ -5,7 +5,7 @@ import { changePlay } from "store/play";
 import { songsInfo, songsState } from "store/songs";
 import { stringAdds } from "utils/utils";
 
-export const IsSame = (props: any) => {
+export const IsSame: React.FC<any> = (props) => {
   const { songindex, songidlist, item } = props;
 
   const dispatch = useDispatch();

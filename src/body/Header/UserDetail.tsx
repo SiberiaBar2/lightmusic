@@ -1,7 +1,7 @@
 import { Button, message } from "antd";
 import { useUserDetail } from "users";
 
-export const UserDetail = ({ uid }: { uid: number }) => {
+export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   const {
     data: { level = 0, listenSongs = 0, profile: { vipType = 0 } = {} } = {},
   } = useUserDetail(uid);

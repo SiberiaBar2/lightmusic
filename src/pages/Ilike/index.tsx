@@ -12,7 +12,7 @@ const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
 // 鉴于歌单包含了我喜欢 舍弃ilike
 // 再次启用
-export const Ilike = () => {
+export const Ilike: React.FC = () => {
   // const loginState = useSelector<RootState, Pick<LoginState, "data">>(
   //   (state) => state.login
   // );

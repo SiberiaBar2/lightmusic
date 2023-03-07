@@ -5,7 +5,7 @@ import { message } from "antd";
 import stroe from "store";
 import { loginSlice } from "store/login";
 
-const Qrcode = () => {
+const Qrcode: React.FC = () => {
   const imgRef: React.MutableRefObject<any> = useRef();
   const userRef: React.MutableRefObject<any> = useRef();
 

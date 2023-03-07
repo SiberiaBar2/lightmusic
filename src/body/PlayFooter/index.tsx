@@ -4,7 +4,7 @@ import { Dynamic } from "./Dynamic";
 import { StaticFooter } from "./StaticFooter";
 import { songsState } from "store/songs";
 
-export const PlayFooter = () => {
+export const PlayFooter: React.FC = () => {
   const dispatch = useDispatch();
   const songsState = useSelector<
     RootState,

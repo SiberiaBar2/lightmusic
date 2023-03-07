@@ -4,7 +4,7 @@ import { config } from "utils/customRender";
 import { CardList, MusciCard } from "../index";
 import { useRankingSongs } from "./utils";
 
-export const CardSongs = (props: any) => {
+export const CardSongs: React.FC<{ item?: any }> = (props) => {
   const { item } = props;
   const { data: { playlist: { tracks } } = { playlist: { tracks: [] } } } =
     useRankingSongs(item.id);

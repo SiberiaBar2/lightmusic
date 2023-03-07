@@ -2,7 +2,13 @@ import styled from "@emotion/styled";
 import { Tag, Tooltip } from "antd";
 import { useNavigate } from "react-router-dom";
 
-export const MusciCard = (props: any) => {
+interface Props {
+  item?: any;
+  customrender?: (value: any) => JSX.Element;
+  songIndex?: number;
+}
+
+export const MusciCard: React.FC<Props> = (props) => {
   const { customrender, songIndex: index, item } = props;
   const navigate = useNavigate();
 
@@ -19,7 +25,7 @@ export const MusciCard = (props: any) => {
       {customrender ? (
         <Tooltip title={item.name}>
           {/* <Name> */}
-          {renderTag(index)}
+          {renderTag(index as number)}
           {/* </Name> */}
         </Tooltip>
       ) : null}

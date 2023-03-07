@@ -11,8 +11,10 @@ import { likeState, changelike } from "store/ilike";
 import { useIlike } from "users";
 import { LoginState } from "store/login";
 
+type SongIdType = string | number | undefined;
 const cookie = localStorage.getItem("cookie");
-export const Like = memo((props: any) => {
+
+export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
   const { songId } = props;
 
   const dispatch = useDispatch();
@@ -98,7 +100,7 @@ export const Like = memo((props: any) => {
 
       const like = _.cloneDeep(likes);
       // unshift 方法会影响原数组！
-      like.unshift(songId);
+      like.unshift(songId as number);
 
       // const like = [songId, ...likes];
       dispatch(

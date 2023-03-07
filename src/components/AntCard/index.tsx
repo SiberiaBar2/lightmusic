@@ -5,11 +5,11 @@ import styled from "@emotion/styled";
 
 type CardProps = React.PropsWithChildren<React.ComponentProps<typeof Card>>;
 
-export const AntCard = ({
+export const AntCard: React.FC<CardProps & { item?: any }> = ({
   children,
   item,
   ...other
-}: CardProps & { item?: any }) => {
+}) => {
   const navigate = useNavigate();
   const { picUrl, name, coverImgUrl, id } = item;
 

@@ -24,7 +24,7 @@ import { songsInfo, songsState } from "store/songs";
 import { RootState } from "store";
 import { changePlay } from "store/play";
 
-export const StaticFooter = () => {
+export const StaticFooter: React.FC = () => {
   const { data: { result = [] } = {} } = useNewSongs();
   const dispatch = useDispatch();
 

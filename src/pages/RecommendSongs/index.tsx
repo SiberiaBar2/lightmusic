@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { LoginState } from "store/login";
 
-export const RecommendSongs = () => {
+export const RecommendSongs: React.FC = () => {
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
     (state) => state.login
   );

@@ -14,7 +14,7 @@ const items: MenuItem[] = asideList.map((aside) => {
   };
 });
 
-export const Aside = () => {
+export const Aside: React.FC = () => {
   // const [current, setCurrent] = useState("1");
   const navigate = useNavigate();
 

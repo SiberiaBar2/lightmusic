@@ -20,13 +20,13 @@ export interface childrenReturnType {
   [x: string]: any;
 }
 
-export const CardList = ({
+export const CardList: React.FC<CardListProps> = ({
   children,
   dataSource,
   custom,
   many,
   ...other
-}: CardListProps) => {
+}) => {
   const songidlist = dataSource?.map((item) => {
     return (item as any).id as number;
   });

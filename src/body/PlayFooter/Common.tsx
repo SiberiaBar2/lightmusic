@@ -7,7 +7,7 @@ import {
 import { Tooltip } from "antd";
 import { stringAdds } from "utils/utils";
 
-export const Common = (props: any) => {
+export const Common: React.FC = (props: any) => {
   const { content, timeStr, user, likedCount } = props;
   const { avatarUrl, nickname } = user;
   return (

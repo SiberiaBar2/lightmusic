@@ -6,7 +6,7 @@ import { changePlay } from "store/play";
 import { songsInfo, songsState } from "store/songs";
 import { RootState } from "store";
 
-const SongsItem = (props: childrenReturnType) => {
+const SongsItem: React.FC<childrenReturnType> = (props) => {
   const { songindex, songidlist, customrender, item, ...other } = props;
   const { id, name } = item;
 
@@ -18,6 +18,7 @@ const SongsItem = (props: childrenReturnType) => {
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
 
+  const { songId } = songsState;
   const isUse = (id: number) => {
     const { data } = check(id);
     return data?.success;
@@ -36,6 +37,12 @@ const SongsItem = (props: childrenReturnType) => {
   //   : {
   //       onClick: () => message.error("暂无版权", 2),
   //     };
+  const isActive = () => {
+    if (item.id === songId) {
+      return "rgb(228, 151, 157)";
+    }
+    return "";
+  };
 
   return (
     <div
@@ -45,6 +52,7 @@ const SongsItem = (props: childrenReturnType) => {
         justifyContent: "space-between",
         width: "100%",
         cursor: "pointer",
+        color: isActive(),
       }}
       // {...isClick}
       onClick={() => {

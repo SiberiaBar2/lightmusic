@@ -92,10 +92,10 @@ const reducer = (state: any, action: any) => {
   }
 };
 
-export const Dynamic = (props: {
+export const Dynamic: React.FC<{
   param: songsState;
   setParam: reduxDispatch<AnyAction>;
-}) => {
+}> = (props) => {
   const { param, setParam } = props;
   const { songId, song, prevornext } = param;
 
@@ -209,20 +209,25 @@ export const Dynamic = (props: {
   //   }, 1000),
   //   [play, playMusic, _.debounce]
   // );
+
   // window.addEventListener("keydown", onKweyDown);
 
+  // useMemo(() => {
+  //   window.removeEventListener("keydown", onKweyDown);
+  //   window.addEventListener("keydown", onKweyDown);
+  // }, [play, onKweyDown]);
   // useEffect(() => {
   //   return () => {
   //     window.removeEventListener("keydown", onKweyDown);
   //   };
-  // }, [onKweyDown]);
+  // }, [onKweyDown, play]);
 
   // 播放下一首、上一首 同时支持列表循环 、随机数
   const goPrevorNext = useCallback(
     (key: string, reback?: string) => {
       let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
 
-      const getSongsId = prevornext.split(",");
+      const getSongsId = prevornext.split(",").map((ele) => Number(ele));
       const min = 0;
       const max = getSongsId?.length - 1;
 
@@ -566,25 +571,25 @@ export const Dynamic = (props: {
 
 Dynamic.whyDidYouRender = true;
 
+interface AudiosProps {
+  musicRef: React.MutableRefObject<any>;
+  songId?: string | number;
+  audioTimeUpdate: () => void;
+  // setDura: Dispatch<SetStateAction<string>>;
+  onDurationChange: () => void;
+  // url: string;
+}
 // 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染2
 // 抽离 audio , 使无关状态改变, 不重新渲染audio
 
 // 避免受到其他组件渲染的影响
-const Audios = memo(
+const Audios: React.FC<AudiosProps> = memo(
   ({
     musicRef,
     songId,
     audioTimeUpdate,
     // setDura,
     onDurationChange,
-  }: // url,
-  {
-    musicRef: React.MutableRefObject<any>;
-    songId?: string | number;
-    audioTimeUpdate: () => void;
-    // setDura: Dispatch<SetStateAction<string>>;
-    onDurationChange: any;
-    // url: string;
   }) =>
     // ref: any
     {
@@ -662,17 +667,8 @@ Audios.whyDidYouRender = true;
 // react 控制反转 使 duration 播放进度变化时 不影响父组件下的其他组件重渲
 
 // 控制进度 与 播放完成的暂停图标
-const FatherHoc = ({
-  children,
-  playMusic,
-  musicRef,
-  // sound,
-  songId,
-  play,
-  setParam,
-  type,
-  goPrevorNext,
-}: {
+
+interface FatherHocProps {
   children: React.ReactNode;
   playMusic: (play: boolean) => void;
   musicRef: React.MutableRefObject<any>;
@@ -682,6 +678,18 @@ const FatherHoc = ({
   setParam: reduxDispatch<AnyAction>;
   type: PlayType;
   goPrevorNext: (key: string, reback?: string) => void;
+}
+
+const FatherHoc: React.FC<FatherHocProps> = ({
+  children,
+  playMusic,
+  musicRef,
+  // sound,
+  songId,
+  play,
+  setParam,
+  type,
+  goPrevorNext,
 }) => {
   const [duration, setDuration] = useState(0);
 

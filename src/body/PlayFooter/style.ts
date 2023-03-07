@@ -20,7 +20,7 @@ export const Container = styled.footer`
   }
 `;
 export const DivOne = styled.div`
-  width: 40%;
+  width: 45%;
   height: 100%;
   display: flex;
   align-items: center;
@@ -154,6 +154,6 @@ export const DivRight = styled.div`
   display: flex;
   justify-content: space-between;
   /* align-items: center; */
-  width: calc(100% - 40%);
+  width: calc(100% - 45%);
   height: 100%;
 `;

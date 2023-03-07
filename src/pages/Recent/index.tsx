@@ -8,7 +8,7 @@ import SongsItem from "components/SongsItem";
 const RESETDATA = { data: { total: 0, list: [] } };
 const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
-export const Recent = () => {
+export const Recent: React.FC = () => {
   const { data: { data: { total, list } } = RESETDATA } = useRecent();
 
   // console.log("list", list);
