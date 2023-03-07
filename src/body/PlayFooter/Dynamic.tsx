@@ -111,8 +111,8 @@ export const Dynamic: React.FC<{
 
   const drawerRef: React.MutableRefObject<any> = useRef();
   const musicRef: React.MutableRefObject<any> = useRef();
-  const timeRef: React.MutableRefObject<any> = useRef();
-  // const [time, setTime] = useState(INITTIME);
+  // const timeRef: React.MutableRefObject<any> = useRef();
+  const [time, setTime] = useState(INITTIME);
   const [dura, setDura] = useState(INITTIME);
 
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
@@ -142,7 +142,8 @@ export const Dynamic: React.FC<{
       ":" +
       (seconds < 10 ? "0" + seconds : seconds);
 
-    return timeStr;
+    // return timeStr;
+    setTime(timeStr);
   }, [musicRef.current]);
   // // 获得播放总时长
   const onDurationChange = useCallback(() => {
@@ -406,7 +407,7 @@ export const Dynamic: React.FC<{
   const DrawerConfig: DrawProps = {
     picUrl: picUrl,
     // time: time,
-    time: timeRef?.current?.time,
+    time: time,
     musicRef: musicRef,
     lyric: lyric,
     songId: songId,
@@ -431,7 +432,7 @@ export const Dynamic: React.FC<{
       songId,
       musicRef,
       // setDura,
-      audioTimeUpdate: timeRef?.current?.audioTimeUpdate,
+      audioTimeUpdate: audioTimeUpdate,
       onDurationChange,
       // url: data[0].url,
       // play,
@@ -474,8 +475,8 @@ export const Dynamic: React.FC<{
                   : songAndAuth()}
               </SongsInfo>
             </Tooltip>
-            {/* <span>{time}</span> */}
-            <TimeChange ref={timeRef} audioTimeUpdate={audioTimeUpdate} />
+            <span>{time}</span>
+            {/* <TimeChange ref={timeRef} audioTimeUpdate={audioTimeUpdate} /> */}
             <span style={{ margin: "0 0.5rem" }}>/</span>
             <span>{dura}</span>
           </div>
@@ -574,33 +575,33 @@ export const Dynamic: React.FC<{
 
 Dynamic.whyDidYouRender = true;
 
-const TimeChange = forwardRef<any, any>((props, ref) => {
-  const { audioTimeUpdate } = props;
-  const [time, setTime] = useState(INITTIME);
+// const TimeChange = forwardRef<any, any>((props, ref) => {
+//   const { audioTimeUpdate } = props;
+//   const [time, setTime] = useState(INITTIME);
 
-  console.log("audioTimeUpdate", audioTimeUpdate());
+//   console.log("audioTimeUpdate", audioTimeUpdate());
 
-  // const audioTimeUpdate = useCallback(() => {
-  //   const { currentTime = 0 } = musicRef.current;
-  //   const minutes = parseInt(currentTime / 60 + "");
-  //   const seconds = parseInt((currentTime % 60) + "");
+//   // const audioTimeUpdate = useCallback(() => {
+//   //   const { currentTime = 0 } = musicRef.current;
+//   //   const minutes = parseInt(currentTime / 60 + "");
+//   //   const seconds = parseInt((currentTime % 60) + "");
 
-  //   const timeStr =
-  //     (minutes < 10 ? "0" + minutes : minutes) +
-  //     ":" +
-  //     (seconds < 10 ? "0" + seconds : seconds);
+//   //   const timeStr =
+//   //     (minutes < 10 ? "0" + minutes : minutes) +
+//   //     ":" +
+//   //     (seconds < 10 ? "0" + seconds : seconds);
 
-  //   setTime(timeStr);
-  // }, [setTime, musicRef.current]);
+//   //   setTime(timeStr);
+//   // }, [setTime, musicRef.current]);
 
-  useImperativeHandle(ref, () => {
-    return {
-      // audioTimeUpdate,
-      time,
-    };
-  });
-  return <span>{time}</span>;
-});
+//   useImperativeHandle(ref, () => {
+//     return {
+//       // audioTimeUpdate,
+//       time,
+//     };
+//   });
+//   return <span>{time}</span>;
+// });
 
 interface AudiosProps {
   musicRef: React.MutableRefObject<any>;
