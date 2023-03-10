@@ -49,7 +49,7 @@ const Drawer = (props: DrawProps, ref: any) => {
     const regex = /\[(\d{2}:\d{2})\.\d{2,3}\](.+)/g;
     // console.log("regex.exec(lyric)", regex.exec(lyric));
     let tmp = regex.exec(lyric);
-    // console.log("tmp", tmp);
+    console.log("tmp", tmp);
 
     // console.log("time", time);
 
@@ -73,7 +73,7 @@ const Drawer = (props: DrawProps, ref: any) => {
     // console.log("divdivdiv", div);
 
     if (index !== -1 && div) {
-      div.style.top = -index * 3.5 + 15 + "rem";
+      div.style.top = -index * 3 + 12.5 + "rem";
       [...div.children].forEach((item) => {
         if (item) {
           item.className = "";
@@ -192,6 +192,7 @@ const Lyric = styled.div`
   position: relative;
   font-size: 1.4rem;
   text-align: center;
+  height: 25rem;
 
   /* > div {
     position: absolute;
@@ -202,7 +203,7 @@ const Lyric = styled.div`
     top: 15rem;
 
     li {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       height: 2rem;
       list-style: none;
       width: 100%;

@@ -1,6 +1,12 @@
 import styled from "@emotion/styled";
 import { Carousel } from "antd";
-import { useBanner, useRecommend, useRecommendSongs } from "./utils";
+import {
+  cookie,
+  useBanner,
+  useRecommend,
+  useRecommendResource,
+  useRecommendSongs,
+} from "./utils";
 import { AntCard } from "components/AntCard";
 import { CardList } from "components";
 import { arrAdds } from "utils/utils";
@@ -9,8 +15,11 @@ export const RecommendSongSheet: React.FC = () => {
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
   const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
+  const { data: { recommend: recommends = [] } = {} } = useRecommendResource();
   console.log("recommendSongs", dailySongs);
   console.log("recommend", recommend);
+
+  console.log("推荐歌单", recommends);
 
   // const getNewList = recommend?.result.unshit()
   const onChange = (event: any) => {
@@ -43,7 +52,7 @@ export const RecommendSongSheet: React.FC = () => {
       </AntCarousel>
       <CardList
         grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
-        dataSource={arrAdds(recommend?.result, "picUrl")}
+        dataSource={arrAdds(cookie ? recommends : recommend?.result, "picUrl")}
       >
         <AntCard />
       </CardList>

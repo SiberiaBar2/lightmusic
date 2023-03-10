@@ -1,6 +1,6 @@
 import { useHttp } from "utils";
 import { useQuery } from "react-query";
-const cookie = localStorage.getItem("cookie");
+export const cookie = localStorage.getItem("cookie");
 
 export const useRecommend = () => {
   const client = useHttp();
