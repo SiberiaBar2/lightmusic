@@ -102,6 +102,8 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
       // unshift 方法会影响原数组！
       like.unshift(songId as number);
 
+      console.log("songId", songId, "likelist", like);
+
       // const like = [songId, ...likes];
       dispatch(
         changelike({

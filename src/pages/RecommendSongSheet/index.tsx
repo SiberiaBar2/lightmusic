@@ -16,10 +16,10 @@ export const RecommendSongSheet: React.FC = () => {
   const { data: banners } = useBanner();
   const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
   const { data: { recommend: recommends = [] } = {} } = useRecommendResource();
-  console.log("recommendSongs", dailySongs);
-  console.log("recommend", recommend);
+  // console.log("recommendSongs", dailySongs);
+  // console.log("recommend", recommend);
 
-  console.log("推荐歌单", recommends);
+  // console.log("推荐歌单", recommends);
 
   // const getNewList = recommend?.result.unshit()
   const onChange = (event: any) => {
@@ -61,18 +61,18 @@ export const RecommendSongSheet: React.FC = () => {
 };
 
 const AntCarousel = styled(Carousel)`
-  width: 90%;
-  height: 25rem;
+  width: 60rem;
+  height: 20rem;
   cursor: pointer;
-  margin: 2rem;
+  /* margin: 0 1rem; */
 `;
 
 const ImgContainer = styled.div`
-  width: 100%;
-  height: 25rem;
+  width: 60rem;
+  height: 20rem;
 `;
 
 const Bannerimg = styled.img`
   width: 100%;
-  height: 25rem;
+  height: 100%;
 `;

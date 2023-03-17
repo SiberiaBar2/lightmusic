@@ -5,6 +5,7 @@ export const asideList = [
   "最近播放",
   "我喜欢",
   "我的歌单",
+  // "其他",
 ];
 
 export const ROUTERPATH: { [x: string]: string } = {
@@ -14,4 +15,5 @@ export const ROUTERPATH: { [x: string]: string } = {
   最近播放: "recent",
   我喜欢: "ilike",
   我的歌单: "songsheet",
+  // 其他: "other",
 };

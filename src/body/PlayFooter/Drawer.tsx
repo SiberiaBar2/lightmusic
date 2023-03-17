@@ -49,7 +49,7 @@ const Drawer = (props: DrawProps, ref: any) => {
     const regex = /\[(\d{2}:\d{2})\.\d{2,3}\](.+)/g;
     // console.log("regex.exec(lyric)", regex.exec(lyric));
     let tmp = regex.exec(lyric);
-    console.log("tmp", tmp);
+    // console.log("tmp", tmp);
 
     // console.log("time", time);
 

@@ -1,3 +1,4 @@
+import { Empty } from "antd";
 import { CardList } from "components";
 import { AntCard } from "components/AntCard";
 import { useSelector } from "react-redux";
@@ -14,7 +15,7 @@ export const SongSheet: React.FC = () => {
 
   const { data: { playlist = [] } = {} } = useUserPlayList(profile.userId);
 
-  console.log("data ---->", playlist);
+  // console.log("data ---->", playlist);
 
   const renderFunc = () => {
     if (profile?.userId) {
@@ -27,7 +28,7 @@ export const SongSheet: React.FC = () => {
         </CardList>
       );
     }
-    return <span>暂无数据</span>;
+    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
   };
 
   return <div>{renderFunc()}</div>;

@@ -6,3 +6,4 @@ export * from "./Recent";
 export * from "./Search";
 export * from "./Ilike";
 export * from "./SongSheet";
+export * from "./Other";

@@ -17,13 +17,16 @@ import {
   Ilike,
   SongSheet,
   RecommendSongs,
+  Other,
 } from "pages";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { Affix } from "antd";
-import store, { persist } from "../store";
+import store, { persist, RootState } from "../store";
 import { ReactQueryDevtools } from "react-query-devtools";
 import { PersistGate } from "redux-persist/integration/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { LoginState } from "store/login";
+import _ from "lodash";
 
 const Entries = () => {
   const [scroll, setScroll] = useState(false);
@@ -104,6 +107,7 @@ const Entries = () => {
                     <Route path="search/:searchparam" element={<Search />} />
                     <Route path="ilike" element={<Ilike />} />
                     <Route path="songsheet" element={<SongSheet />} />
+                    <Route path="other" element={<Other />} />
                     <Route
                       path="/"
                       element={<Navigate to={"recommendsongsheet"} replace />}
@@ -146,6 +150,7 @@ const Header = styled.header`
 `;
 
 const Aside = styled.aside`
+  /* width: 22rem; */
   width: 20%;
   height: 100%;
   display: flex;
@@ -162,6 +167,7 @@ const Main = styled.main`
 
 const Section = styled.section`
   flex: 1;
+  /* width: calc(100% - 22rem); */
   /* overflow-y: hidden; */
   /* &:hover { */
   overflow-y: auto;

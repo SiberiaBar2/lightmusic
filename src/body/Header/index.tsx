@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search } from "@icon-park/react";
@@ -8,21 +8,54 @@ import _ from "lodash";
 import { HotList } from "./HotList";
 // import { Suggest } from "./Suggest";
 import Qrcode from "./Qrcode";
-import { RootState } from "store";
-import { LoginState } from "store/login";
+import store, { RootState } from "store";
+import { LoginState, loginSlice } from "store/login";
 import { UserDetail } from "./UserDetail";
 import { stringAdds } from "utils/utils";
+import { useMount } from "hooks";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const loginState = useSelector<RootState, Pick<LoginState, "data">>(
-    (state) => state.login
-  );
+  const loginState = useSelector<
+    RootState,
+    Pick<LoginState, "data" | "islogin">
+  >((state) => state.login);
+  const { changeLogin } = loginSlice.actions;
+
+  // const validRef = useRef(true);
 
   // 解构赋值 真正的默认值
-  const { data: { data: { profile = {} } = {} } = {} } = loginState;
+  const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
+  const once = useCallback(() => {
+    console.error("执行了一次");
+    window.location.reload();
+  }, []);
+
+  // useMount(() => {
+
+  // })
+
+  // const once = () => {
+  //   let num = 0;
+  //   return function () {
+  //     num++;
+  //     if (num === 1) {
+  //       window.location.reload();
+  //     }
+  //   };
+  // };
+
+  // const res = once();
+
+  useEffect(() => {
+    if (!_.isEmpty(profile) && islogin) {
+      console.error("刷新");
+      once();
+      store.dispatch(changeLogin({ islogin: false }));
+    }
+  }, [profile, once, islogin]);
   // const getHttp = !_.isEmpty(profile)
   //   ? (profile.avatarUrl.slice(0, 4) as string)
   //   : "";
