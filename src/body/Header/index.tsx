@@ -170,20 +170,18 @@ export const Header = () => {
           />
         </IconWrap>
         <User>
-          <Tooltip title="搜索">
-            <Input
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-              addonAfter={searchIcon()}
-              placeholder="搜索"
-              style={{ width: "25%", marginRight: "2rem" }}
-              onBlur={() => setTimeout(() => handelBlue(), 1000)}
-              onFocus={handelBlue}
-              onPressEnter={(e) => handelEnter(e)}
-            />
-          </Tooltip>
+          <Input
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            addonAfter={searchIcon()}
+            placeholder="搜索"
+            style={{ width: "25%", marginRight: "2rem" }}
+            onBlur={() => setTimeout(() => handelBlue(), 1000)}
+            onFocus={handelBlue}
+            onPressEnter={(e) => handelEnter(e)}
+          />
           <Popover
             destroyTooltipOnHide
             content={
@@ -203,6 +201,7 @@ export const Header = () => {
                     cursor: "pointer",
                     borderRadius: "5rem",
                   }}
+                  type="dashed"
                 >
                   请登录
                 </Button>

@@ -551,7 +551,9 @@ export const Dynamic: React.FC<{
                   : songAndAuth()}
               </SongsInfo>
             </Tooltip>
-            <span>{time}</span>
+            <span style={{ width: "3.4rem", display: "inline-block" }}>
+              {time}
+            </span>
             {/* <TimeChange ref={timeRef} audioTimeUpdate={audioTimeUpdate} /> */}
             <span style={{ margin: "0 0.5rem" }}>/</span>
             <span>{dura}</span>

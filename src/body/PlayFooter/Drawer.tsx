@@ -20,10 +20,10 @@ const Drawer = (props: DrawProps, ref: any) => {
   // console.log("time ---->", time);
 
   const [visiable, setVisiable] = useState(false);
-  const [lrc, setLrc] = useState<string[]>([""]);
+  // const [lrc, setLrc] = useState<string[]>([""]);
 
-  const { hotComments, comments, userId, topComments, songs } =
-    useSongs(songId);
+  // const { hotComments, comments, userId, topComments, songs } =
+  //   useSongs(songId);
 
   /**
    *
@@ -42,6 +42,54 @@ const Drawer = (props: DrawProps, ref: any) => {
   useImperativeHandle(ref, () => ({
     changeVisiable,
   }));
+
+  const LryicConfig = {
+    lyric,
+    time,
+  };
+
+  return (
+    <AntDrawer
+      getContainer={false}
+      keyboard
+      placement="bottom"
+      height={"100vh"}
+      open={visiable}
+      onClose={onClose}
+      mask={false}
+      closeIcon={null}
+      style={{ background: "rgb(227, 180, 184)", color: "rgb(43, 51, 62)" }}
+    >
+      <Wrap>
+        <Container>
+          <RoundWrap picUrl={picUrl} />
+          <LyricWrap {...LryicConfig} />
+        </Container>
+        <CommonWrap songId={songId} />
+      </Wrap>
+    </AntDrawer>
+  );
+};
+
+const RoundWrap: React.FC<Pick<DrawProps, "picUrl">> = React.memo(
+  ({ picUrl }) => {
+    return (
+      <Round>
+        <div>
+          <img src={stringAdds(picUrl)} alt="" />
+        </div>
+        <div></div>
+      </Round>
+    );
+  }
+);
+
+// 抽离组件，将频繁渲染的状态单独提出， 自身状态变化 不影响其他组件重复渲染
+const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
+  lyric,
+  time,
+}) => {
+  const [lrc, setLrc] = useState<string[]>([""]);
 
   useMemo(() => {
     const timeArr: any = [];
@@ -85,61 +133,44 @@ const Drawer = (props: DrawProps, ref: any) => {
     }
     // console.log("index----->", index);
   }, [lyric, time]);
-
   return (
-    <AntDrawer
-      getContainer={false}
-      keyboard
-      placement="bottom"
-      height={"100vh"}
-      open={visiable}
-      onClose={onClose}
-      mask={false}
-      closeIcon={null}
-      style={{ background: "rgb(227, 180, 184)", color: "rgb(43, 51, 62)" }}
-    >
-      <Wrap>
-        <Container>
-          <Round>
-            <div>
-              <img src={stringAdds(picUrl)} alt="" />
-            </div>
-            <div></div>
-          </Round>
-          <Lyric>
-            {/* <div> */}
-            <ul id="lyricdiv">
-              {lrc.map((item: any, index: number) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-            {/* </div> */}
-          </Lyric>
-        </Container>
-        <Comment>
-          <CommentList>
-            <Divider orientation="left">热评</Divider>
-            {Array.isArray(hotComments) &&
-              hotComments.map((ele: any) => (
-                <Common key={ele.commentId} {...ele} />
-              ))}
-            <Divider orientation="left">最新评论</Divider>
-            {Array.isArray(comments) &&
-              comments.map((ele: any) => (
-                <Common key={ele.commentId} {...ele} />
-              ))}
-          </CommentList>
-          <Revelant>
-            <Divider orientation="left">相关</Divider>
-            <CardList grid={{ column: 1, gutter: 1 }} dataSource={songs}>
-              <IsSame />
-            </CardList>
-          </Revelant>
-        </Comment>
-      </Wrap>
-    </AntDrawer>
+    <Lyric>
+      <ul id="lyricdiv">
+        {lrc.map((item: any, index: number) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    </Lyric>
   );
 };
+
+const CommonWrap: React.FC<Pick<DrawProps, "songId">> = React.memo(
+  ({ songId }) => {
+    const { hotComments, comments, userId, topComments, songs } =
+      useSongs(songId);
+
+    return (
+      <Comment>
+        <CommentList>
+          <Divider orientation="left">热评</Divider>
+          {Array.isArray(hotComments) &&
+            hotComments.map((ele: any) => (
+              <Common key={ele.commentId} {...ele} />
+            ))}
+          <Divider orientation="left">最新评论</Divider>
+          {Array.isArray(comments) &&
+            comments.map((ele: any) => <Common key={ele.commentId} {...ele} />)}
+        </CommentList>
+        <Revelant>
+          <Divider orientation="left">相关</Divider>
+          <CardList grid={{ column: 1, gutter: 1 }} dataSource={songs}>
+            <IsSame />
+          </CardList>
+        </Revelant>
+      </Comment>
+    );
+  }
+);
 
 export default forwardRef(Drawer);
 
