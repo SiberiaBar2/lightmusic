@@ -182,6 +182,7 @@ export const Header = () => {
             />
           </Tooltip>
           <Popover
+            destroyTooltipOnHide
             content={
               _.isEmpty(profile) ? (
                 <Qrcode />

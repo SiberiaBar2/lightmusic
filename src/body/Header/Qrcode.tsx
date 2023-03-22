@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { message } from "antd";
 import stroe from "store";
 import { loginSlice } from "store/login";
+import { useMount } from "hooks";
 
 const Qrcode: React.FC = () => {
   const imgRef: React.MutableRefObject<any> = useRef();
@@ -65,7 +66,16 @@ const Qrcode: React.FC = () => {
       }
     }, 3000);
   }
+
+  // useMount(() => {
   login();
+  // });
+
+  // useEffect(() => {
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, []);
   return (
     <Content>
       <div>

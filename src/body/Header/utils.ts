@@ -16,6 +16,15 @@ export const useSuggest = (keywords: string) => {
   );
 };
 
+export const useLogout = () => {
+  const client = useHttp();
+  return useMutation(() =>
+    client("logout", {
+      method: "GET",
+    })
+  );
+};
+
 // 搜索结果
 export const useCloudsearch = ({
   keywords,

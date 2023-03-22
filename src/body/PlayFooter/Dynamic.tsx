@@ -167,41 +167,113 @@ export const Dynamic: React.FC<{
   //   play ? musicRef.current.play() : musicRef.current.pause();
   //   setParam(changePlay({ play }));
   // }, []);
-  const playMusic = useCallback((play: boolean) => {
-    // if (sound !== null) {
-    //   sound.pause();
-    // }
-    // const sound = new Audio();
-    // sound.src = data[0].url;
-    // if (sound !== null) {
-    //   sound.pause();
-    //   sound.src = data[0].url;
-    // }
-    // 在切歌时这里会报错 Uncaught (in promise) DOMException: The element has no supported sources
-    // 是因为 data[0].url 为空字符串
-    console.log("musicRef.current", musicRef.current.src);
-    // console.log("getAttribute", musicRef.current.getAttribute());
 
-    // try {˝
-    play && musicRef.current.src
-      ? musicRef.current.play().catch((err: Error) => {
-          console.log("err", err);
-          setTimeout(() => {
-            musicRef.current.play();
-          }, 2000);
-        })
-      : musicRef.current.pause();
-    // } catch (err) {
-    //   console.error("err", err);
-    // }
-    // if (play) {
-    //   musicRef.current.play();
-    // } else {
-    //   musicRef.current.pause();
-    // }
+  // const queryFn = useCallback((fn: any, num: number) => {
+  //   return new Promise(function (reslove, reject) {
+  //     setTimeout(async function () {
+  //       // reslove(false);
+  //       try {
+  //         await fn;
+  //       } catch (error) {
+  //         console.log("error --->", error);
+  //         reject(false);
+  //       }
+  //       reslove(true);
+  //     }, num);
+  //   });
+  // }, []);
+  const playMusic = useCallback(
+    (play: boolean) => {
+      // if (sound !== null) {
+      //   sound.pause();
+      // }
+      // const sound = new Audio();
+      // sound.src = data[0].url;
+      // if (sound !== null) {
+      //   sound.pause();
+      //   sound.src = data[0].url;
+      // }
+      // 在切歌时这里会报错 Uncaught (in promise) DOMException: The element has no supported sources
+      // 是因为 data[0].url 为空字符串
+      console.log("musicRef.current", musicRef.current.src);
+      // console.log("getAttribute", musicRef.current.getAttribute());
+      // const content = () => {
+      //   queryFn(musicRef.current.play, 1000)
+      //     .then((res) => {
+      //       if (res) {
+      //         musicRef.current.play();
+      //       }
+      //     })
+      //     .catch((err) => {
+      //       console.log("errsxasxas", err);
 
-    setParam(changePlay({ play }));
-  }, []);
+      //       if (!err) {
+      //         content();
+      //       }
+      //     });
+      // };
+      // content();
+      // try {˝
+
+      const isAuto = async () => {
+        let flag = true;
+        try {
+          await musicRef.current.play();
+        } catch (err) {
+          console.log("err ---> ");
+          flag = false;
+        }
+        return flag;
+      };
+
+      // console.log("isAuto", isAuto());
+      const content = () => {
+        isAuto()
+          .then((res) => {
+            if (play && musicRef.current.src && res) {
+              console.log("success");
+              return;
+            }
+          })
+          .catch((err) => {
+            console.log("醋五", err);
+            setTimeout(() => {
+              content();
+            }, 1000);
+          });
+      };
+
+      content();
+      // (async () => {
+      //   try {
+      //     play && musicRef.current.src
+      //       ? await musicRef.current.play().catch((err: Error) => {
+      //           console.log("err", err);
+      //           // setTimeout(() => {
+      //           //   musicRef.current.play();
+      //           // }, 2000);
+      //         })
+      //       : musicRef.current.pause();
+      //   } catch (error) {
+      //     console.log("error --->", error);
+      //     setTimeout(() => {
+      //       musicRef.current.play();
+      //     }, 1000);
+      //   }
+      // })();
+      // } catch (err) {
+      //   console.error("err", err);
+      // }
+      // if (play) {
+      //   musicRef.current.play();
+      // } else {
+      //   musicRef.current.pause();
+      // }
+
+      setParam(changePlay({ play }));
+    },
+    [musicRef.current, setParam, changePlay]
+  );
 
   // const onKweyDown = useCallback(
   //   _.debounce((e: KeyboardEvent) => {

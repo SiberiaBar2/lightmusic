@@ -1,17 +1,43 @@
-import { Button, message } from "antd";
+import { Button, message, Popconfirm } from "antd";
+import { useMemo } from "react";
 import { useUserDetail } from "users";
+import { useLogout } from "./utils";
 
 export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   const {
     data: { level = 0, listenSongs = 0, profile: { vipType = 0 } = {} } = {},
   } = useUserDetail(uid);
 
+  const { mutate: logout, data } = useLogout();
+
+  useMemo(() => {
+    if (data?.code === 200) {
+      message.success("退出成功");
+      localStorage.clear();
+      window.location.reload();
+    }
+  }, [data]);
+
+  const confirm = () => {
+    logout();
+  };
+
   return (
     <div>
       <p>等级： {level}</p>
       <p>听歌数： {listenSongs}</p>
       <p>viptype： {vipType}</p>
-      <Button onClick={() => message.warning("暂不支持", 1)}>退出登录</Button>
+      <Popconfirm
+        title="退出登录"
+        description="确认退出"
+        onConfirm={confirm}
+        placement="left"
+        // onCancel={cancel}
+        okText="确定"
+        cancelText="取消"
+      >
+        <Button>退出登录</Button>
+      </Popconfirm>
     </div>
   );
 };
