@@ -185,7 +185,7 @@ const Round = styled.div`
 
 const Lyric = styled.div`
   /* flex: 1; */
-  width: calc(100% - 30rem);
+  width: 100%;
   /* width: 40rem; */
   overflow-y: auto;
   /* padding: 2rem; */
@@ -201,10 +201,12 @@ const Lyric = styled.div`
     width: 100%;
     position: absolute;
     top: 15rem;
+    left: 0;
+    padding: 0;
 
     li {
       margin-bottom: 1rem;
-      height: 2rem;
+      min-height: 2rem;
       list-style: none;
       width: 100%;
       line-height: 2rem;

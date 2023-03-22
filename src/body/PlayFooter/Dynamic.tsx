@@ -218,7 +218,10 @@ export const Dynamic: React.FC<{
       const isAuto = async () => {
         let flag = true;
         try {
-          await musicRef.current.play();
+          play && musicRef.current.src
+            ? await musicRef.current.play()
+            : await musicRef.current.pause();
+          setParam(changePlay({ play }));
         } catch (err) {
           console.log("err ---> ");
           flag = false;
@@ -230,7 +233,7 @@ export const Dynamic: React.FC<{
       const content = () => {
         isAuto()
           .then((res) => {
-            if (play && musicRef.current.src && res) {
+            if (res) {
               console.log("success");
               return;
             }
@@ -270,7 +273,7 @@ export const Dynamic: React.FC<{
       //   musicRef.current.pause();
       // }
 
-      setParam(changePlay({ play }));
+      // setParam(changePlay({ play }));
     },
     [musicRef.current, setParam, changePlay]
   );
