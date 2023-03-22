@@ -150,7 +150,10 @@ export const Header = () => {
 
   return (
     <Container>
-      <H4>you-music</H4>
+      <H4>
+        you-music
+        <span>（franz的音乐站）</span>
+      </H4>
       <RightContent>
         <IconWrap>
           <Left
@@ -167,14 +170,14 @@ export const Header = () => {
           />
         </IconWrap>
         <User>
-          <Tooltip title="输入歌曲名、歌手">
+          <Tooltip title="搜索">
             <Input
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
               }}
               addonAfter={searchIcon()}
-              placeholder="输入歌曲名或歌手"
+              placeholder="搜索"
               style={{ width: "25%", marginRight: "2rem" }}
               onBlur={() => setTimeout(() => handelBlue(), 1000)}
               onFocus={handelBlue}
@@ -264,6 +267,10 @@ const H4 = styled.h2`
   text-align: center;
   position: relative;
   color: rgb(62, 56, 65);
+
+  > span {
+    font-size: 0.1rem;
+  }
 `;
 
 const RightContent = styled.div`

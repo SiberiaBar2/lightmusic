@@ -215,6 +215,7 @@ export const Dynamic: React.FC<{
       // content();
       // try {˝
 
+      // 使用 async await 辅助 try catch 捕获异步错误
       const isAuto = async () => {
         let flag = true;
         try {
@@ -529,7 +530,7 @@ export const Dynamic: React.FC<{
                 <img src={stringAdds(picUrl)} alt="" />
                 <div
                   style={{
-                    display: upOrDown ? "block" : "none",
+                    display: !upOrDown ? "block" : "none",
                   }}
                 >
                   <ArrowUp theme="outline" size="16" fill="#fff" />
