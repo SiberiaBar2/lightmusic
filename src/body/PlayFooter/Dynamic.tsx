@@ -26,8 +26,6 @@ import {
   Dispatch,
   SetStateAction,
   useEffect,
-  forwardRef,
-  useImperativeHandle,
 } from "react";
 import { useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
@@ -168,52 +166,11 @@ export const Dynamic: React.FC<{
   //   setParam(changePlay({ play }));
   // }, []);
 
-  // const queryFn = useCallback((fn: any, num: number) => {
-  //   return new Promise(function (reslove, reject) {
-  //     setTimeout(async function () {
-  //       // reslove(false);
-  //       try {
-  //         await fn;
-  //       } catch (error) {
-  //         console.log("error --->", error);
-  //         reject(false);
-  //       }
-  //       reslove(true);
-  //     }, num);
-  //   });
-  // }, []);
   const playMusic = useCallback(
     (play: boolean) => {
-      // if (sound !== null) {
-      //   sound.pause();
-      // }
-      // const sound = new Audio();
-      // sound.src = data[0].url;
-      // if (sound !== null) {
-      //   sound.pause();
-      //   sound.src = data[0].url;
-      // }
       // 在切歌时这里会报错 Uncaught (in promise) DOMException: The element has no supported sources
-      // 是因为 data[0].url 为空字符串
+      // 是因为 data[0].url 为空字符串 不对
       console.log("musicRef.current", musicRef.current.src);
-      // console.log("getAttribute", musicRef.current.getAttribute());
-      // const content = () => {
-      //   queryFn(musicRef.current.play, 1000)
-      //     .then((res) => {
-      //       if (res) {
-      //         musicRef.current.play();
-      //       }
-      //     })
-      //     .catch((err) => {
-      //       console.log("errsxasxas", err);
-
-      //       if (!err) {
-      //         content();
-      //       }
-      //     });
-      // };
-      // content();
-      // try {˝
 
       // 使用 async await 辅助 try catch 捕获异步错误
       const isAuto = async () => {
@@ -224,57 +181,27 @@ export const Dynamic: React.FC<{
             : await musicRef.current.pause();
           setParam(changePlay({ play }));
         } catch (err) {
-          console.log("err ---> ");
+          console.error("err ---> ", err);
           flag = false;
         }
         return flag;
       };
 
-      // console.log("isAuto", isAuto());
       const content = () => {
-        isAuto()
-          .then((res) => {
-            if (res) {
-              console.log("success");
-              return;
-            }
-          })
-          .catch((err) => {
-            console.log("醋五", err);
-            setTimeout(() => {
-              content();
-            }, 1000);
-          });
+        isAuto().then((res) => {
+          if (res) {
+            console.log("success");
+            return;
+          }
+          // 失败就一直调用，直到成功为止！
+          console.error("error", res);
+          setTimeout(() => {
+            content();
+          }, 1000);
+        });
       };
 
       content();
-      // (async () => {
-      //   try {
-      //     play && musicRef.current.src
-      //       ? await musicRef.current.play().catch((err: Error) => {
-      //           console.log("err", err);
-      //           // setTimeout(() => {
-      //           //   musicRef.current.play();
-      //           // }, 2000);
-      //         })
-      //       : musicRef.current.pause();
-      //   } catch (error) {
-      //     console.log("error --->", error);
-      //     setTimeout(() => {
-      //       musicRef.current.play();
-      //     }, 1000);
-      //   }
-      // })();
-      // } catch (err) {
-      //   console.error("err", err);
-      // }
-      // if (play) {
-      //   musicRef.current.play();
-      // } else {
-      //   musicRef.current.pause();
-      // }
-
-      // setParam(changePlay({ play }));
     },
     [musicRef.current, setParam, changePlay]
   );

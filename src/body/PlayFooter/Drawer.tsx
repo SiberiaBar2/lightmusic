@@ -20,10 +20,6 @@ const Drawer = (props: DrawProps, ref: any) => {
   // console.log("time ---->", time);
 
   const [visiable, setVisiable] = useState(false);
-  // const [lrc, setLrc] = useState<string[]>([""]);
-
-  // const { hotComments, comments, userId, topComments, songs } =
-  //   useSongs(songId);
 
   /**
    *
@@ -91,7 +87,22 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
 }) => {
   const [lrc, setLrc] = useState<string[]>([""]);
 
+  const div = document.getElementById("lyricdiv") as HTMLElement;
+
+  // console.log("div", div);
+
+  // const containerHeight = document.querySelector("#container")
+  //   ?.clientHeight as number;
+  // const liHeight = div?.children[0].clientHeight as number;
+
+  // console.log("liHeight", liHeight);
+
+  // const maxOffset = (div?.clientHeight as number) - containerHeight;
+
   useMemo(() => {
+    // const lines = lyric.split("\n");
+    // console.log("lines", lines);
+
     const timeArr: any = [];
     const lrcArr: any = [];
     const regex = /\[(\d{2}:\d{2})\.\d{2,3}\](.+)/g;
@@ -116,25 +127,50 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
 
       return item === time;
     });
+
+    // console.log("index", index);
+
     // console.log("time---->", time);
-    const div = document.getElementById("lyricdiv");
     // console.log("divdivdiv", div);
+
+    // let offset = liHeight * index + liHeight / 2 - containerHeight / 2;
+    // // 处理边界问题
+
+    // if (offset < 0) {
+    //   offset = 0;
+    // }
+    // if (offset > maxOffset) {
+    //   offset = maxOffset;
+    // }
+    // if (div) {
+    //   div.style.transform = `translateY(-${offset})rem`;
+    //   // 去除之前的active
+    //   let li = div.querySelector(".active");
+    //   if (li) {
+    //     li.classList.remove("active");
+    //   }
+
+    //   li = div.children[index];
+    //   if (li) {
+    //     li.classList.add("active");
+    //   }
+    // }
 
     if (index !== -1 && div) {
       div.style.top = -index * 3 + 12.5 + "rem";
       [...div.children].forEach((item) => {
         if (item) {
-          item.className = "";
+          item.classList.remove("active");
         }
       });
       if (div.children[index]) {
-        div.children[index].className = "active";
+        div.children[index].classList.add("active");
       }
     }
     // console.log("index----->", index);
   }, [lyric, time]);
   return (
-    <Lyric>
+    <Lyric id="container">
       <ul id="lyricdiv">
         {lrc.map((item: any, index: number) => (
           <li key={index}>{item}</li>
@@ -218,7 +254,7 @@ const Lyric = styled.div`
   /* flex: 1; */
   width: 100%;
   /* width: 40rem; */
-  overflow-y: auto;
+  overflow: hidden;
   /* padding: 2rem; */
   position: relative;
   font-size: 1.4rem;
@@ -231,7 +267,7 @@ const Lyric = styled.div`
   ul {
     width: 100%;
     position: absolute;
-    top: 15rem;
+    /* top: 15rem; */
     left: 0;
     padding: 0;
 
@@ -241,6 +277,7 @@ const Lyric = styled.div`
       list-style: none;
       width: 100%;
       line-height: 2rem;
+      transition: 0.6s;
       /* text-overflow: ; */
       /* text-align: center; */
     }
