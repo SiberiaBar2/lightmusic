@@ -7,48 +7,62 @@ const cookie = localStorage.getItem("cookie");
 // 播放地址
 export const useSongUrl = (id: IdType) => {
   const client = useHttp();
-  return useQuery(["songurl", id], () =>
-    client("song/url", { data: { id, cookie } })
-  );
+  return useQuery({
+    queryKey: ["songurl", id],
+    queryFn: () => client("song/url", { data: { id, cookie } }),
+    enabled: !!id, // 惰性请求 只有参数不为 undefined 、 null 、 ''时发起请求
+  });
 };
 
 // 歌曲详情
 export const useSongDetail = (ids: IdType) => {
   const client = useHttp();
-  return useQuery(["songdetail", ids], () =>
-    client("song/detail", { data: { ids } })
-  );
+  return useQuery({
+    queryKey: ["songdetail", ids],
+    queryFn: () => client("song/detail", { data: { ids } }),
+    enabled: !!ids,
+  });
 };
 
 // 歌词
 export const useSonglyric = (id: IdType) => {
   const client = useHttp();
-  return useQuery(["lyric", id], () => client("lyric", { data: { id } }));
+  return useQuery({
+    queryKey: ["lyric", id],
+    queryFn: () => client("lyric", { data: { id } }),
+    enabled: !!id,
+  });
 };
 
 // 评论
 export const useSongComment = (id: IdType) => {
   const client = useHttp();
-  return useQuery(["comment/music", id], () =>
-    client("comment/music", { data: { id } })
-  );
+  return useQuery({
+    queryKey: ["comment/music", id],
+    queryFn: () => client("comment/music", { data: { id } }),
+    enabled: !!id,
+  });
 };
 
 // 相似歌曲
 export const useSongsimi = (id: IdType) => {
   const client = useHttp();
-  return useQuery(["simi/song", id], () =>
-    client("simi/song", { data: { id } })
-  );
+  return useQuery({
+    queryKey: ["simi/song", id],
+    queryFn: () => client("simi/song", { data: { id } }),
+    enabled: !!id,
+  });
 };
 
 // 检测歌曲是否可用
 export const useCheckMusic = () => {
   const client = useHttp();
   return (id: IdType) =>
-    useQuery(["checkmusic", id], () =>
-      client("check/music", { data: { id, cookie } })
-    );
+    useQuery({
+      queryKey: ["checkmusic", id],
+      queryFn: () => client("check/music", { data: { id, cookie } }),
+      enabled: !!id,
+    });
 };
 
 export const useCheckMusictwo = () => {
@@ -81,7 +95,8 @@ export const useLike = () => {
 // 推荐新歌曲
 export const useNewSongs = () => {
   const client = useHttp();
-  return useQuery(["personalizednewsong"], () =>
-    client("personalized/newsong")
-  );
+  return useQuery({
+    queryKey: ["personalizednewsong"],
+    queryFn: () => client("personalized/newsong"),
+  });
 };

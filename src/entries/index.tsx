@@ -80,12 +80,20 @@ const Entries = () => {
   // 为什么写为true就能触发？
   document.addEventListener("scroll", handelScroll, true);
 
+  const queryClients = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persist}>
         {/* {getScrollBarColor} */}
         <Container>
-          <QueryPrivider client={new QueryClient()}>
+          <QueryPrivider client={queryClients}>
             <Router>
               <Header>
                 <BodyHeader />
