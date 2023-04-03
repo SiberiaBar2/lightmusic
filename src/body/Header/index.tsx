@@ -13,6 +13,7 @@ import { LoginState, loginSlice } from "store/login";
 import { UserDetail } from "./UserDetail";
 import { stringAdds } from "utils/utils";
 import { useMount } from "hooks";
+import busuanzi from "busuanzi.pure.js";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -33,9 +34,9 @@ export const Header = () => {
     window.location.reload();
   }, []);
 
-  // useMount(() => {
-
-  // })
+  useMount(() => {
+    busuanzi.fetch();
+  });
 
   // const once = () => {
   //   let num = 0;
@@ -148,97 +149,114 @@ export const Header = () => {
     );
   };
 
+  const renderUser = () => (
+    <User>
+      <Input
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+        }}
+        addonAfter={searchIcon()}
+        placeholder="搜索"
+        style={{ width: "25%", marginRight: "2rem" }}
+        onBlur={() => setTimeout(() => handelBlue(), 1000)}
+        onFocus={handelBlue}
+        onPressEnter={(e) => handelEnter(e)}
+      />
+      <Popover
+        destroyTooltipOnHide
+        content={
+          _.isEmpty(profile) ? <Qrcode /> : <UserDetail uid={profile.userId} />
+        }
+        trigger="hover"
+      >
+        <Users>
+          {_.isEmpty(profile) ? (
+            <Button
+              style={{
+                fontSize: "0.9rem",
+                cursor: "pointer",
+                borderRadius: "5rem",
+              }}
+              type="dashed"
+            >
+              请登录
+            </Button>
+          ) : (
+            <>
+              <Avatar
+                style={{ backgroundColor: "pink", verticalAlign: "middle" }}
+                size="large"
+                icon={
+                  <img
+                    src={
+                      !_.isEmpty(profile) ? stringAdds(profile.avatarUrl) : ""
+                    }
+                  />
+                }
+              />
+              <Tooltip title={profile.nickname}>
+                <span
+                  style={{
+                    margin: "0 0.5rem",
+                    display: "inline-block",
+                    fontSize: "0.8rem",
+                    lineHeight: "100%",
+                    color: "rgb(62, 56, 65)",
+                  }}
+                >
+                  {!_.isEmpty(profile) ? profile.nickname : null}
+                </span>
+              </Tooltip>
+            </>
+          )}
+        </Users>
+      </Popover>
+    </User>
+  );
+
+  const renderBusuanzi = () => (
+    <Busuanzi className="busuanzi">
+      <span id="busuanzi_container_site_pv" style={{ display: "none" }}>
+        总访问量
+        <span id="busuanzi_value_site_pv"></span>次
+        <span className="post-meta-divider"> | </span>
+      </span>
+      <span id="busuanzi_container_site_uv" style={{ display: "none" }}>
+        访客数
+        <span id="busuanzi_value_site_uv"></span>人
+      </span>
+    </Busuanzi>
+  );
+
+  const renderRightContent = () => (
+    <RightContent>
+      <IconWrap>
+        <Left
+          theme="outline"
+          size="24"
+          fill="rgb(62, 56, 65)"
+          onClick={() => window.history.back()}
+        />
+        <Right
+          theme="outline"
+          size="24"
+          fill="rgb(62, 56, 65)"
+          onClick={() => window.history.forward()}
+        />
+      </IconWrap>
+      {renderBusuanzi()}
+      {renderUser()}
+    </RightContent>
+  );
+
   return (
     <Container>
       <H4>
         you-music
         <span>（franz的音乐站）</span>
       </H4>
-      <RightContent>
-        <IconWrap>
-          <Left
-            theme="outline"
-            size="24"
-            fill="rgb(62, 56, 65)"
-            onClick={() => window.history.back()}
-          />
-          <Right
-            theme="outline"
-            size="24"
-            fill="rgb(62, 56, 65)"
-            onClick={() => window.history.forward()}
-          />
-        </IconWrap>
-        <User>
-          <Input
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-            addonAfter={searchIcon()}
-            placeholder="搜索"
-            style={{ width: "25%", marginRight: "2rem" }}
-            onBlur={() => setTimeout(() => handelBlue(), 1000)}
-            onFocus={handelBlue}
-            onPressEnter={(e) => handelEnter(e)}
-          />
-          <Popover
-            destroyTooltipOnHide
-            content={
-              _.isEmpty(profile) ? (
-                <Qrcode />
-              ) : (
-                <UserDetail uid={profile.userId} />
-              )
-            }
-            trigger="hover"
-          >
-            <Users>
-              {_.isEmpty(profile) ? (
-                <Button
-                  style={{
-                    fontSize: "0.9rem",
-                    cursor: "pointer",
-                    borderRadius: "5rem",
-                  }}
-                  type="dashed"
-                >
-                  请登录
-                </Button>
-              ) : (
-                <>
-                  <Avatar
-                    style={{ backgroundColor: "pink", verticalAlign: "middle" }}
-                    size="large"
-                    icon={
-                      <img
-                        src={
-                          !_.isEmpty(profile)
-                            ? stringAdds(profile.avatarUrl)
-                            : ""
-                        }
-                      />
-                    }
-                  />
-                  <Tooltip title={profile.nickname}>
-                    <span
-                      style={{
-                        margin: "0 0.5rem",
-                        display: "inline-block",
-                        fontSize: "0.8rem",
-                        lineHeight: "100%",
-                        color: "rgb(62, 56, 65)",
-                      }}
-                    >
-                      {!_.isEmpty(profile) ? profile.nickname : null}
-                    </span>
-                  </Tooltip>
-                </>
-              )}
-            </Users>
-          </Popover>
-        </User>
-      </RightContent>
+      {renderRightContent()}
       {!search && (
         <SearchContent style={{ display: open ? "" : "none" }}>
           {/* {!search ? ( */}
@@ -302,12 +320,18 @@ const SearchContent = styled.div`
 
 const IconWrap = styled.div`
   /* margin-left: 2.2rem; */
-  width: 40%;
+  width: 10%;
 
   span {
     margin: 0 0.5rem;
     cursor: pointer;
   }
+`;
+
+const Busuanzi = styled.div`
+  width: 30%;
+  text-align: right;
+  color: rgb(62, 56, 65);
 `;
 
 const Users = styled.div`

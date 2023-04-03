@@ -7,15 +7,17 @@ import React, {
 import { Divider, Drawer as AntDrawer } from "antd";
 import styled from "@emotion/styled";
 import { DrawProps } from "./Dynamic";
-import "./index.css";
 import { Common } from "./Common";
 import { IsSame } from "./IsSame";
 import { useSongs } from "./useSongs";
 import { CardList } from "components";
 import { arrAdds, stringAdds } from "utils/utils";
+import "./index.css";
 
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, time, picUrl, songId } = props;
+
+  console.log("dadad大", picUrl);
 
   // console.log("time ---->", time);
 
@@ -58,7 +60,7 @@ const Drawer = (props: DrawProps, ref: any) => {
     >
       <Wrap>
         <Container>
-          <RoundWrap picUrl={picUrl} />
+          <RoundWrap picUrl={stringAdds(picUrl)} />
           <LyricWrap {...LryicConfig} />
         </Container>
         <CommonWrap songId={songId} />
