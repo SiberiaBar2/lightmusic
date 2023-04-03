@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search } from "@icon-park/react";
@@ -215,18 +215,21 @@ export const Header = () => {
     </User>
   );
 
-  const renderBusuanzi = () => (
-    <Busuanzi className="busuanzi">
-      <span id="busuanzi_container_site_pv" style={{ display: "none" }}>
-        总访问量
-        <span id="busuanzi_value_site_pv"></span>次
+  const renderBusuanzi = useMemo(
+    () => (
+      <Busuanzi className="busuanzi">
+        <span id="busuanzi_container_site_pv" style={{ display: "none" }}>
+          总访问量
+          <span id="busuanzi_value_site_pv"></span>次
+        </span>
         <span className="post-meta-divider"> | </span>
-      </span>
-      <span id="busuanzi_container_site_uv" style={{ display: "none" }}>
-        访客数
-        <span id="busuanzi_value_site_uv"></span>人
-      </span>
-    </Busuanzi>
+        <span id="busuanzi_container_site_uv" style={{ display: "none" }}>
+          访客数
+          <span id="busuanzi_value_site_uv"></span>人
+        </span>
+      </Busuanzi>
+    ),
+    []
   );
 
   const renderRightContent = () => (
@@ -245,7 +248,7 @@ export const Header = () => {
           onClick={() => window.history.forward()}
         />
       </IconWrap>
-      {renderBusuanzi()}
+      {renderBusuanzi}
       {renderUser()}
     </RightContent>
   );
