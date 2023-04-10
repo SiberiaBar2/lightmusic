@@ -13,7 +13,7 @@ import { LoginState, loginSlice } from "store/login";
 import { UserDetail } from "./UserDetail";
 import { stringAdds } from "utils/utils";
 import { useMount } from "hooks";
-import busuanzi from "busuanzi.pure.js";
+// import busuanzi from "busuanzi.pure.js";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -34,9 +34,9 @@ export const Header = () => {
     window.location.reload();
   }, []);
 
-  useMount(() => {
-    busuanzi.fetch();
-  });
+  // useMount(() => {
+  //   busuanzi.fetch();
+  // });
 
   // const once = () => {
   //   let num = 0;
@@ -248,7 +248,7 @@ export const Header = () => {
           onClick={() => window.history.forward()}
         />
       </IconWrap>
-      {renderBusuanzi}
+      {/* {renderBusuanzi} */}
       {renderUser()}
     </RightContent>
   );
@@ -319,6 +319,7 @@ const SearchContent = styled.div`
   z-index: 20;
   overflow-y: auto;
   border-radius: 1rem;
+  transition: 0.6s;
 `;
 
 const IconWrap = styled.div`
