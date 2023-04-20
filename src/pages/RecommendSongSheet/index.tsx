@@ -63,6 +63,7 @@ export const RecommendSongSheet: React.FC = () => {
 const AntCarousel = styled(Carousel)`
   width: 60rem;
   height: 20rem;
+  margin-left: 5rem;
   cursor: pointer;
   /* margin: 0 1rem; */
 `;

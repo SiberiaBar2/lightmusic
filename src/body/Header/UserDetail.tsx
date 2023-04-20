@@ -1,5 +1,6 @@
-import { Button, message, Popconfirm } from "antd";
-import { useMemo } from "react";
+import styled from "@emotion/styled";
+import { Button, message, Modal, Typography } from "antd";
+import { useMemo, useState } from "react";
 import { useUserDetail } from "users";
 import { useLogout } from "./utils";
 
@@ -9,6 +10,27 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   } = useUserDetail(uid);
 
   const { mutate: logout, data } = useLogout();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const confirm = () => {
+    logout();
+    localStorage.clear();
+    window.location.reload();
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+    confirm();
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   useMemo(() => {
     if (data?.code === 200) {
@@ -21,28 +43,41 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
     }
   }, [data]);
 
-  const confirm = () => {
-    logout();
-    localStorage.clear();
-    window.location.reload();
-  };
-
-  return (
-    <div>
+  const renderInfo = () => (
+    <>
       <p>等级： {level}</p>
       <p>听歌数： {listenSongs}</p>
       <p>viptype： {vipType}</p>
-      <Popconfirm
-        title="退出登录"
-        description="确认退出"
-        onConfirm={confirm}
-        placement="left"
-        // onCancel={cancel}
-        okText="确定"
-        cancelText="取消"
-      >
-        <Button>退出登录</Button>
-      </Popconfirm>
-    </div>
+      <Button onClick={() => showModal()}>退出登录</Button>
+    </>
+  );
+
+  const renderModal = () => (
+    <Modal
+      okText={"确定"}
+      title="退出登录？"
+      cancelText={"取消"}
+      onOk={handleOk}
+      open={isModalOpen}
+      maskClosable={false}
+      onCancel={handleCancel}
+    >
+      <Content>
+        <Typography.Text>亲，确认退出吗？</Typography.Text>
+      </Content>
+    </Modal>
+  );
+
+  return (
+    <>
+      {renderInfo()}
+      {renderModal()}
+    </>
   );
 };
+
+const Content = styled.div`
+  height: 8rem;
+  line-height: 5rem;
+  padding: 2rem;
+`;

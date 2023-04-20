@@ -1,20 +1,35 @@
-import { Card } from "antd";
+import styled from "@emotion/styled";
+import { Card, Space } from "antd";
 
+const OTHERLIST = [
+  { text: "服务", link: "NeteaseCloudMusicApi" },
+  { text: "博客", link: "https://karlfranz.cn/" },
+  { text: "github", link: "https://github.com/SiberiaBar2/" },
+  { text: "color", link: "http://zhongguose.com/" },
+  { text: "ui", link: "ant-designV5" },
+];
 export const Other = () => {
   return (
-    <Card style={{ width: "110rem" }}>
-      <p>此项目仅用于学习使用</p>
-      {/* <p>qq: 1215204550</p>
-      <p>微信: 17393845392</p> */}
-      <p>
-        博客：<a href="https://karlfranz.cn/">https://karlfranz.cn/</a>{" "}
-      </p>
-      <p>
-        github:{" "}
-        <a href="https://github.com/SiberiaBar2">
-          https://github.com/SiberiaBar2
-        </a>
-      </p>
-    </Card>
+    <AntCard>
+      {OTHERLIST.map(function (ele) {
+        return (
+          <p key={ele.text}>
+            <Space>
+              <span>{ele.text}: </span>
+              <Span>{ele.link}</Span>
+            </Space>
+          </p>
+        );
+      })}
+    </AntCard>
   );
 };
+
+const AntCard = styled(Card)`
+  width: 110rem;
+  height: 50rem;
+`;
+
+const Span = styled.span`
+  color: rgb(93, 49, 49);
+`;

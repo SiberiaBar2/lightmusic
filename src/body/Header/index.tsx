@@ -257,7 +257,9 @@ export const Header = () => {
     <Container>
       <H4>
         you-music
-        <span>（franz的音乐站）</span>
+        <span>
+          （<A href="https://karlfranz.cn/">karlfranz</A>）
+        </span>
       </H4>
       {renderRightContent()}
       {!search && (
@@ -344,4 +346,12 @@ const Users = styled.div`
   display: flex;
   align-items: center;
   margin-right: 1rem;
+`;
+
+const A = styled.a`
+  text-decoration: none;
+  color: rgb(43, 51, 62);
+  &:focus {
+    color: rgb(43, 51, 62);
+  }
 `;
