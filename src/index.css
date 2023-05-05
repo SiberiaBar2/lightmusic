@@ -30,3 +30,7 @@ html {
 .App {
   height: 100%;
 }
+
+::-webkit-scrollbar {
+  width: 0 !important;
+}

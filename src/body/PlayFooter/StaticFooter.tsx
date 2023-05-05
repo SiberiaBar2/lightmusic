@@ -22,7 +22,6 @@ import { Like } from "./like";
 import { useNewSongs } from "./utils";
 import { songsInfo, songsState } from "store/songs";
 import { RootState } from "store";
-import { changePlay } from "store/play";
 
 export const StaticFooter: React.FC = () => {
   const { data: { result = [] } = {} } = useNewSongs();
@@ -33,10 +32,7 @@ export const StaticFooter: React.FC = () => {
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
 
-  // console.log("新歌曲", result);
-
   const getIds = result.map((ele: any) => ele.id);
-  // console.log("getIds", getIds);
 
   const init = () => {
     // message.success("开始播放最新音乐");

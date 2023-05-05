@@ -7,7 +7,7 @@ import { loginSlice } from "store/login";
 import { useMount } from "hooks";
 
 const Qrcode: React.FC = () => {
-  const imgRef: React.MutableRefObject<any> = useRef();
+  const imgRef = useRef() as React.MutableRefObject<HTMLImageElement>;
   const userRef: React.MutableRefObject<any> = useRef();
 
   const { getUserInfo } = loginSlice.actions;

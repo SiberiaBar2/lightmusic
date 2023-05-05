@@ -23,7 +23,6 @@ export const SongList: React.FC = () => {
         <Span>歌曲数：{songList?.playlist?.tracks?.length}</Span>
         <Span>;</Span>
         <Span>
-          {" "}
           播放数：
           {songList?.playlist?.playCount}
         </Span>

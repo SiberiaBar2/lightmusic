@@ -11,13 +11,11 @@ import { Common } from "./Common";
 import { IsSame } from "./IsSame";
 import { useSongs } from "./useSongs";
 import { CardList } from "components";
-import { arrAdds, stringAdds } from "utils/utils";
+import { stringAdds } from "utils/utils";
 import "./index.css";
 
 const Drawer = (props: DrawProps, ref: any) => {
   const { lyric, time, picUrl, songId } = props;
-
-  console.log("dadad大", picUrl);
 
   // console.log("time ---->", time);
 
@@ -105,8 +103,8 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
     // const lines = lyric.split("\n");
     // console.log("lines", lines);
 
-    const timeArr: any = [];
-    const lrcArr: any = [];
+    const timeArr: string[] = [];
+    const lrcArr: string[] = [];
     const regex = /\[(\d{2}:\d{2})\.\d{2,3}\](.+)/g;
     // console.log("regex.exec(lyric)", regex.exec(lyric));
     let tmp = regex.exec(lyric);
@@ -223,12 +221,15 @@ const Container = styled.div`
   height: 30rem;
   display: flex;
   margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* border: 1px solid salmon; */
   /* justify-content: space-between; */
 `;
 
 const Round = styled.div`
-  width: 20rem;
+  width: 40rem;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -237,8 +238,8 @@ const Round = styled.div`
   /* margin-right: 15rem; */
 
   div:nth-of-type(1) {
-    width: 22rem;
-    height: 22rem;
+    width: 25rem;
+    height: 25rem;
 
     img:nth-of-type(1) {
       width: 100%;
@@ -254,14 +255,16 @@ const Round = styled.div`
 
 const Lyric = styled.div`
   /* flex: 1; */
-  width: 100%;
+  /* width: 100%; */
+  width: 50rem;
   /* width: 40rem; */
   overflow: hidden;
   /* padding: 2rem; */
   position: relative;
   font-size: 1.4rem;
-  text-align: center;
+  /* text-align: center; */
   height: 25rem;
+  overflow-y: auto;
 
   /* > div {
     position: absolute;
@@ -279,7 +282,7 @@ const Lyric = styled.div`
       list-style: none;
       width: 100%;
       line-height: 2rem;
-      transition: 0.6s;
+      /* transition: 0.6s; */
       /* text-overflow: ; */
       /* text-align: center; */
     }

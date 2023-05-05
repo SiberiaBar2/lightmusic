@@ -107,8 +107,10 @@ export const Dynamic: React.FC<{
   const [volume, setVolume] = useState(50);
   const [upOrDown, setUpOrDown] = useState(false);
 
-  const drawerRef: React.MutableRefObject<any> = useRef();
-  const musicRef: React.MutableRefObject<any> = useRef();
+  const drawerRef = useRef() as React.MutableRefObject<{
+    changeVisiable: () => void;
+  }>;
+  const musicRef = useRef() as React.MutableRefObject<HTMLAudioElement>;
   // const timeRef: React.MutableRefObject<any> = useRef();
   const [time, setTime] = useState(INITTIME);
   const [dura, setDura] = useState(INITTIME);

@@ -78,13 +78,6 @@ export const Header = () => {
     setOpen(!open);
   };
 
-  const handelEnter = (e: any) => {
-    if (e.key === "Enter") {
-      search && navigate(`search/${search}`);
-      handelBlue();
-    }
-  };
-
   // const { data: { data: { unikey } } = { data: { unikey: "" } } } = useQrKey();
   // // console.log("loginKey", unikey);
 
@@ -161,7 +154,12 @@ export const Header = () => {
         style={{ width: "25%", marginRight: "2rem" }}
         onBlur={() => setTimeout(() => handelBlue(), 1000)}
         onFocus={handelBlue}
-        onPressEnter={(e) => handelEnter(e)}
+        onPressEnter={(e) => {
+          if (e.key === "Enter") {
+            search && navigate(`search/${search}`);
+            handelBlue();
+          }
+        }}
       />
       <Popover
         destroyTooltipOnHide
