@@ -1,46 +1,45 @@
-# Getting Started with Create React App
+# You-music 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+本项目使用React、Typescript，Css-in-js搭建
 
-## Available Scripts
+### Demo
+http://you-music.top/
 
-In the project directory, you can run:
+### 安装依赖
+npm install
 
-### `npm start`
+yarn
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 构建
+npm build
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+yarn build
 
-### `npm test`
+### 运行
+npm start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+yarn start
 
-### `npm run build`
+### 功能
+·歌词随播放进度滚动
+·单曲、随机、顺序，列表循环
+·音量调节
+·移动端基础适配
+·每日推荐歌曲
+·推荐歌单
+·歌曲评论
+·调整播放进度
+·网易云音乐扫码登录
+·排行榜
+·我喜欢的音乐(需要登录)
+·最近播放(需要登录)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 部署
+基于 NeteaseCloudMusicApi vercel部署
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 免责声明
+本项目使用了网易云音乐的第三方 API 服务，仅供个人学习研究使用，禁止用于商业及非法用途。 本项目旨在提供一个前端练手的实战项目，用于帮助开发者提升技能水平和对前端技术的理解
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+同时，本项目开发者承诺 严格遵守相关法律法规和网易云音乐 API 使用协议，不会利用本项目进行任何违法活动。 如因使用本项目而引起的任何纠纷或责任，均由使用者自行承担。本项目开发者不承担任何因使用本项目而导致的任何直接或间接责任，并保留追究使用者违法行为的权利
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+请使用者在使用本项目时遵守相关法律法规，不要将本项目用于任何商业及非法用途。如有违反，一切后果由使用者自负。 同时，使用者应该自行承担因使用本项目而带来的风险和责任。本项目开发者不对本项目所提供的服务和内容做出任何保证

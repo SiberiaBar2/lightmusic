@@ -1,5 +1,7 @@
+import { CSSProperties } from "react";
 import styled from "@emotion/styled";
-import { Carousel } from "antd";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper";
 import {
   cookie,
   useBanner,
@@ -11,66 +13,70 @@ import { AntCard } from "components/AntCard";
 import { CardList } from "components";
 import { arrAdds } from "utils/utils";
 
+import "swiper/css/bundle";
+
 export const RecommendSongSheet: React.FC = () => {
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
   const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
   const { data: { recommend: recommends = [] } = {} } = useRecommendResource();
-  // console.log("recommendSongs", dailySongs);
-  // console.log("recommend", recommend);
 
-  // console.log("推荐歌单", recommends);
+  const renderSwiper = () => (
+    <Swiper
+      style={
+        {
+          "--swiper-navigation-color": "#fff",
+          "--swiper-pagination-color": "#fff",
+        } as CSSProperties
+      }
+      spaceBetween={30}
+      centeredSlides={true}
+      autoplay={{
+        delay: 2500,
+        disableOnInteraction: false,
+      }}
+      pagination={{
+        clickable: true,
+      }}
+      autoHeight={true}
+      navigation={true}
+      modules={[Autoplay, Pagination, Navigation]}
+    >
+      {arrAdds(banners?.banners, "imageUrl")?.map(
+        (item: any, index: number) => (
+          <SwiperSlide
+            style={{ width: "100%" }}
+            key={item.encodeId}
+            virtualIndex={index}
+          >
+            <ImgContainer>
+              <Bannerimg src={item.imageUrl} alt="" />
+            </ImgContainer>
+          </SwiperSlide>
+        )
+      )}
+    </Swiper>
+  );
 
-  // const getNewList = recommend?.result.unshit()
-  const onChange = (event: any) => {
-    console.log(event);
-  };
-
-  // console.log("banners?.banners,", banners?.banners);
-
-  // const adds = banners?.banners.map((ele: any) => {
-  //   const getHttp = ele.imageUrl.slice(0, 4) as string;
-  //   const getEnd = ele.imageUrl.slice(4) as string;
-  //   const item = { ...ele };
-  //   item.imageUrl = getHttp + "s" + getEnd;
-  //   return item;
-
-  //   // 修改数组中的对象属性，会引发浅拷贝（影响原 banners?.banners 数组 ），因此需要像24行起这样写
-  //   // 结果导致，我们本来只想要添加一个s，却添加了多个s
-  //   // ele.imageUrl = getHttp + "s" + getEnd;
-  //   // return ele;
-  // });
+  const renderCardList = () => (
+    <CardList
+      grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
+      dataSource={arrAdds(cookie ? recommends : recommend?.result, "picUrl")}
+    >
+      <AntCard />
+    </CardList>
+  );
 
   return (
     <>
-      <AntCarousel afterChange={(event) => onChange(event)} autoplay={true}>
-        {arrAdds(banners?.banners, "imageUrl")?.map((item: any) => (
-          <ImgContainer key={item.encodeId}>
-            <Bannerimg src={item.imageUrl} alt="" />
-          </ImgContainer>
-        ))}
-      </AntCarousel>
-      <CardList
-        grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
-        dataSource={arrAdds(cookie ? recommends : recommend?.result, "picUrl")}
-      >
-        <AntCard />
-      </CardList>
+      {renderSwiper()}
+      {renderCardList()}
     </>
   );
 };
 
-const AntCarousel = styled(Carousel)`
-  width: 60rem;
-  height: 20rem;
-  margin-left: 5rem;
-  cursor: pointer;
-  /* margin: 0 1rem; */
-`;
-
 const ImgContainer = styled.div`
-  width: 60rem;
-  height: 20rem;
+  height: 33rem;
 `;
 
 const Bannerimg = styled.img`

@@ -1,19 +1,17 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search } from "@icon-park/react";
-import { Avatar, Button, Input, message, Popover, Tooltip } from "antd";
+import { Avatar, Button, Input, Popover, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
 import { HotList } from "./HotList";
-// import { Suggest } from "./Suggest";
+// import { Suggest } from"./Suggest";
 import Qrcode from "./Qrcode";
 import store, { RootState } from "store";
 import { LoginState, loginSlice } from "store/login";
 import { UserDetail } from "./UserDetail";
 import { stringAdds } from "utils/utils";
-import { useMount } from "hooks";
-// import busuanzi from "busuanzi.pure.js";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -24,8 +22,6 @@ export const Header = () => {
   >((state) => state.login);
   const { changeLogin } = loginSlice.actions;
 
-  // const validRef = useRef(true);
-
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
@@ -34,22 +30,12 @@ export const Header = () => {
     window.location.reload();
   }, []);
 
-  // useMount(() => {
-  //   busuanzi.fetch();
-  // });
-
-  // const once = () => {
-  //   let num = 0;
-  //   return function () {
-  //     num++;
-  //     if (num === 1) {
-  //       window.location.reload();
-  //     }
-  //   };
-  // };
-
-  // const res = once();
-
+  /**
+   * 第一次登录后 刷新页面
+   * 以后登录情况下 不再刷新
+   * !_.isEmpty(profile): 表示首次扫描登录成功
+   * islogin: 为true 表示首次的标识
+   */
   useEffect(() => {
     if (!_.isEmpty(profile) && islogin) {
       console.error("刷新");
@@ -73,10 +59,6 @@ export const Header = () => {
   // const debouncedParam = useDebounce(search, 500);
 
   const navigate = useNavigate();
-
-  const handelBlue = () => {
-    setOpen(!open);
-  };
 
   // const { data: { data: { unikey } } = { data: { unikey: "" } } } = useQrKey();
   // // console.log("loginKey", unikey);
@@ -133,7 +115,7 @@ export const Header = () => {
       <Search
         onClick={() => {
           search && navigate(`search/${search}`);
-          handelBlue();
+          setOpen(false);
         }}
         theme="outline"
         size="18"
@@ -152,12 +134,12 @@ export const Header = () => {
         addonAfter={searchIcon()}
         placeholder="搜索"
         style={{ width: "25%", marginRight: "2rem" }}
-        onBlur={() => setTimeout(() => handelBlue(), 1000)}
-        onFocus={handelBlue}
+        onBlur={() => setTimeout(() => setOpen(false), 1000)}
+        onFocus={() => setOpen(true)}
         onPressEnter={(e) => {
           if (e.key === "Enter") {
             search && navigate(`search/${search}`);
-            handelBlue();
+            setOpen(false);
           }
         }}
       />
@@ -213,23 +195,6 @@ export const Header = () => {
     </User>
   );
 
-  const renderBusuanzi = useMemo(
-    () => (
-      <Busuanzi className="busuanzi">
-        <span id="busuanzi_container_site_pv" style={{ display: "none" }}>
-          总访问量
-          <span id="busuanzi_value_site_pv"></span>次
-        </span>
-        <span className="post-meta-divider"> | </span>
-        <span id="busuanzi_container_site_uv" style={{ display: "none" }}>
-          访客数
-          <span id="busuanzi_value_site_uv"></span>人
-        </span>
-      </Busuanzi>
-    ),
-    []
-  );
-
   const renderRightContent = () => (
     <RightContent>
       <IconWrap>
@@ -246,7 +211,6 @@ export const Header = () => {
           onClick={() => window.history.forward()}
         />
       </IconWrap>
-      {/* {renderBusuanzi} */}
       {renderUser()}
     </RightContent>
   );
@@ -263,7 +227,7 @@ export const Header = () => {
       {!search && (
         <SearchContent style={{ display: open ? "" : "none" }}>
           {/* {!search ? ( */}
-          <HotList handelBlue={handelBlue} />
+          <HotList handelBlue={() => setOpen(false)} />
           {/* ) :  */}
           {/* // <Suggest param={debouncedParam} />
           // null} */}
@@ -281,7 +245,6 @@ const Container = styled.div`
 const H4 = styled.h2`
   margin: 0;
   width: 19%;
-  /* background: yellowgreen; */
   height: 100%;
   line-height: 4.75rem;
   text-align: center;
@@ -306,7 +269,6 @@ const User = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  /* margin-right: 2.5rem; */
 `;
 
 const SearchContent = styled.div`
@@ -323,7 +285,6 @@ const SearchContent = styled.div`
 `;
 
 const IconWrap = styled.div`
-  /* margin-left: 2.2rem; */
   width: 10%;
 
   span {
@@ -332,14 +293,7 @@ const IconWrap = styled.div`
   }
 `;
 
-const Busuanzi = styled.div`
-  width: 30%;
-  text-align: right;
-  color: rgb(62, 56, 65);
-`;
-
 const Users = styled.div`
-  /* width: calc(100% - 60%); */
   height: 100%;
   display: flex;
   align-items: center;

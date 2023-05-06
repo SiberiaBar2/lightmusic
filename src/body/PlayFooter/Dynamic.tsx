@@ -31,8 +31,9 @@ import { useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
 import { Slider, Tooltip, message } from "antd";
 import _ from "lodash";
+
 import Drawer from "./Drawer";
-import { useMount, useInterVal } from "hooks";
+import { useMount } from "hooks";
 import { Like } from "./like";
 import { useSongs } from "./useSongs";
 import { RootState } from "store";
@@ -69,13 +70,21 @@ const PLAYTYPE = {
 
 export interface DrawProps {
   picUrl: string;
-  time: any;
-  musicRef: React.MutableRefObject<any>;
+  time: string;
+  musicRef: React.MutableRefObject<HTMLAudioElement>;
   lyric: string;
   songId?: number | string;
 }
 
-const reducer = (state: any, action: any) => {
+type StateActionType = { type: PlayType };
+type ReducerType = (
+  state: StateActionType,
+  action: StateActionType
+) => {
+  type: PlayType;
+};
+
+const reducer = (_: StateActionType, action: StateActionType) => {
   switch (action.type) {
     case PlayType.dan:
       return { type: PlayType.shun };
@@ -100,7 +109,7 @@ export const Dynamic: React.FC<{
   const [open, setOpen] = useState(true);
 
   // 持久化存储播放类型
-  const [type, dispatch] = useReducer(reducer, {
+  const [type, dispatch] = useReducer<ReducerType>(reducer, {
     type: Number(localStorage.getItem("playtype")) || PlayType.liexun,
   });
 
@@ -114,6 +123,8 @@ export const Dynamic: React.FC<{
   // const timeRef: React.MutableRefObject<any> = useRef();
   const [time, setTime] = useState(INITTIME);
   const [dura, setDura] = useState(INITTIME);
+
+  const [duration, setDuration] = useState(0);
 
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
@@ -137,6 +148,7 @@ export const Dynamic: React.FC<{
     const minutes = parseInt(currentTime / 60 + "");
     const seconds = parseInt((currentTime % 60) + "");
 
+    console.log("currentTime", currentTime);
     const timeStr =
       (minutes < 10 ? "0" + minutes : minutes) +
       ":" +
@@ -144,7 +156,10 @@ export const Dynamic: React.FC<{
 
     // return timeStr;
     setTime(timeStr);
-  }, [musicRef.current]);
+    setDuration(parseInt(currentTime + ""));
+  }, [musicRef.current, setTime, setDuration]);
+  console.log("duddddd", duration);
+
   // // 获得播放总时长
   const onDurationChange = useCallback(() => {
     // 时长发生变化时执行的函数 确保时长不为NAN
@@ -411,36 +426,30 @@ export const Dynamic: React.FC<{
 
   const DrawerConfig: DrawProps = {
     picUrl: picUrl,
-    // time: time,
     time: time,
     musicRef: musicRef,
     lyric: lyric,
     songId: songId,
   };
 
-  const hocConfig = useMemo(() => {
-    return {
-      playMusic: playMusic,
-      musicRef: musicRef,
-      // sound,
-      songId: songId,
-      play: play,
-      setParam: setParam,
-      type: type.type,
-      goPrevorNext,
-    };
-  }, [playMusic, musicRef, songId, play, setParam, type.type, goPrevorNext]);
+  const hocConfig = {
+    playMusic: playMusic,
+    musicRef: musicRef,
+    songId: songId,
+    setParam: setParam,
+    type: type.type,
+    goPrevorNext,
+    duration,
+    setDuration,
+  };
 
   // 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染1
   const audioConfig = useMemo(() => {
     return {
       songId,
       musicRef,
-      // setDura,
       audioTimeUpdate: audioTimeUpdate,
       onDurationChange,
-      // url: data[0].url,
-      // play,
     };
   }, [songId]);
 
@@ -611,94 +620,81 @@ Dynamic.whyDidYouRender = true;
 // });
 
 interface AudiosProps {
-  musicRef: React.MutableRefObject<any>;
+  musicRef: React.MutableRefObject<HTMLAudioElement>;
   songId?: string | number;
   audioTimeUpdate: () => void;
-  // setDura: Dispatch<SetStateAction<string>>;
   onDurationChange: () => void;
-  // url: string;
 }
 // 使用react memo 和usememo 优化audio组件 避免audio不必要的渲染2
 // 抽离 audio , 使无关状态改变, 不重新渲染audio
 
 // 避免受到其他组件渲染的影响
 const Audios: React.FC<AudiosProps> = memo(
-  ({
-    musicRef,
-    songId,
-    audioTimeUpdate,
-    // setDura,
-    onDurationChange,
-  }) =>
-    // ref: any
-    {
-      const playState = useSelector<RootState, Pick<playState, "play">>(
-        (state) => _.pick(state.play, "play")
-      );
-      const { play } = playState;
-      const { data } = useSongs(songId);
+  ({ musicRef, songId, audioTimeUpdate, onDurationChange }) => {
+    const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
+      _.pick(state.play, "play")
+    );
+    const { play } = playState;
+    const { data } = useSongs(songId);
 
-      console.log("render", dayjs().format("YYYY-MM-DD:HH:mm:ss"));
+    console.log("render", dayjs().format("YYYY-MM-DD:HH:mm:ss"));
 
-      const listenFunc = useCallback(() => {
-        console.log("刷新");
-        localStorage.setItem("currentTime", "0");
-      }, []);
+    const listenFunc = useCallback(() => {
+      console.log("刷新");
+      localStorage.setItem("currentTime", "0");
+    }, []);
 
-      addEventListener("load", listenFunc);
+    addEventListener("load", listenFunc);
 
-      // const sound = new Audio();
+    // const sound = new Audio();
 
-      // sound.src = data[0].url;
-      // useImperativeHandle(ref, () => {
-      //   return {
-      //     play: sound.play,
-      //     pause: sound.pause,
-      //   };
-      // });
-      // 保存上一次的有效currentTime信息
-      // 在状态为播放且 currentTime 因重渲重置为零的情况下 恢复之前的 currentTime
-      useEffect(() => {
-        if (musicRef.current) {
-          const { currentTime } = musicRef.current;
-          // 只保存不为零的 有效值
-          if (currentTime) {
-            localStorage.setItem("currentTime", currentTime);
-          }
-
-          if (
-            play &&
-            currentTime === 0 &&
-            Number(localStorage.getItem("currentTime"))
-          ) {
-            // 恢复因为重渲而变为0的 currentTime 并调用 play 重新开始播放
-            musicRef.current.currentTime = Number(
-              localStorage.getItem("currentTime")
-            );
-            musicRef.current.play();
-            console.log("再赋值", musicRef.current.currentTime);
-          }
+    // sound.src = data[0].url;
+    // useImperativeHandle(ref, () => {
+    //   return {
+    //     play: sound.play,
+    //     pause: sound.pause,
+    //   };
+    // });
+    // 保存上一次的有效currentTime信息
+    // 在状态为播放且 currentTime 因重渲重置为零的情况下 恢复之前的 currentTime
+    useEffect(() => {
+      if (musicRef.current) {
+        const { currentTime } = musicRef.current;
+        // 只保存不为零的 有效值
+        if (currentTime) {
+          localStorage.setItem("currentTime", currentTime + "");
         }
-        return () => {
-          removeEventListener("load", listenFunc);
-        };
-      });
 
-      // return <>{createAudio}</>;
-      return (
-        <audio
-          controls
-          ref={musicRef}
-          src={data[0].url}
-          preload="auto"
-          // onCanPlayThrough
-          // crossOrigin="anonymous"
-          style={{ display: "none" }}
-          onTimeUpdate={audioTimeUpdate}
-          onDurationChange={onDurationChange}
-        />
-      );
-    }
+        if (
+          play &&
+          currentTime === 0 &&
+          Number(localStorage.getItem("currentTime"))
+        ) {
+          // 恢复因为重渲而变为0的 currentTime 并调用 play 重新开始播放
+          musicRef.current.currentTime = Number(
+            localStorage.getItem("currentTime")
+          );
+          musicRef.current.play();
+          console.log("再赋值", musicRef.current.currentTime);
+        }
+      }
+      return () => {
+        removeEventListener("load", listenFunc);
+      };
+    });
+
+    return (
+      <audio
+        controls
+        ref={musicRef}
+        src={data[0].url}
+        preload="auto"
+        style={{ display: "none" }}
+        onTimeUpdate={audioTimeUpdate}
+        onDurationChange={onDurationChange}
+      />
+    );
+  }
 );
 
 Audios.whyDidYouRender = true;
@@ -710,73 +706,57 @@ Audios.whyDidYouRender = true;
 interface FatherHocProps {
   children: React.ReactNode;
   playMusic: (play: boolean) => void;
-  musicRef: React.MutableRefObject<any>;
-  // sound: any;
+  musicRef: React.MutableRefObject<HTMLAudioElement>;
   songId?: number | string;
-  play: boolean | undefined;
   setParam: reduxDispatch<AnyAction>;
   type: PlayType;
   goPrevorNext: (key: string, reback?: string) => void;
+  duration: number;
+  setDuration: Dispatch<SetStateAction<number>>;
 }
 
 const FatherHoc: React.FC<FatherHocProps> = ({
   children,
   playMusic,
   musicRef,
-  // sound,
   songId,
-  play,
   setParam,
   type,
   goPrevorNext,
+  duration,
+  setDuration,
 }) => {
-  const [duration, setDuration] = useState(0);
-
-  // const { data } = useSongs(songId);
-  // console.log("data 播放地址", data[0].url);
-
   // 切歌时重置播放进度
   useMemo(() => {
     setDuration(0);
     localStorage.setItem("currentTime", "0");
   }, [songId]);
 
-  // 随着音乐播放，进度条自动行进
-  useInterVal(() => {
-    // 这里 && musicRef.current 之后播放就稳定了
-    // 不会再出现切歌后进度条在走，也显示播放图标，但音频时而播放时而不播放的问题
-    // 做到了同步
-    // 但同时也必须配合2.5s
-    if (play && musicRef.current.src && musicRef.current.currentTime) {
-      setDuration((dura) => dura + 1);
-      // 播放完毕 重置播放状态 | 从新播放
-      // console.log("musicRef.times", musicRef.current.currentTime);
-
-      if (duration >= musicRef.current?.duration) {
-        // 重置播放进度从新播放
-        setDuration(0);
-        setParam(changePlay({ play: false }));
-        // 播放完毕 清除 currentTime 记忆值
-        localStorage.setItem("currentTime", "0");
-        if (type === PlayType.dan) {
-          playMusic(true);
-          return;
-        }
-        if (type === PlayType.shun) {
-          goPrevorNext("next");
-          return;
-        }
-        if (type === PlayType.liexun) {
-          setTimeout(() => goPrevorNext("next", "reback"));
-          return;
-        }
-        if (type === PlayType.sui) {
-          goPrevorNext("next", "random");
-          return;
-        }
+  useCallback(() => {
+    if (duration >= musicRef.current?.duration) {
+      // 重置播放进度从新播放
+      setDuration(0);
+      setParam(changePlay({ play: false }));
+      // 播放完毕 清除 currentTime 记忆值
+      localStorage.setItem("currentTime", "0");
+      if (type === PlayType.dan) {
+        playMusic(true);
+        return;
+      }
+      if (type === PlayType.shun) {
+        goPrevorNext("next");
+        return;
+      }
+      if (type === PlayType.liexun) {
+        setTimeout(() => goPrevorNext("next", "reback"));
+        return;
+      }
+      if (type === PlayType.sui) {
+        goPrevorNext("next", "random");
+        return;
       }
     }
-  }, 1000);
+  }, [setDuration, goPrevorNext, setParam, changePlay]);
 
   return (
     <>

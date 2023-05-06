@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import styled from "@emotion/styled";
@@ -15,7 +15,6 @@ const items: MenuItem[] = asideList.map((aside) => {
 });
 
 export const Aside: React.FC = () => {
-  // const [current, setCurrent] = useState("1");
   const navigate = useNavigate();
 
   const nowSecKey =
@@ -25,7 +24,6 @@ export const Aside: React.FC = () => {
   const onClick: MenuProps["onClick"] = (e) => {
     sessionStorage.setItem("subMenu", e.keyPath[1]);
     sessionStorage.setItem("secondKeys", e.key);
-    // setCurrent(e.key);
     navigate(`${ROUTERPATH[e.key]}`);
   };
   return (
@@ -33,7 +31,6 @@ export const Aside: React.FC = () => {
       theme={"light"}
       onClick={onClick}
       defaultOpenKeys={[defaultMenu]}
-      // selectedKeys={[current]}
       mode="inline"
       items={items}
       selectedKeys={[nowSecKey]}
