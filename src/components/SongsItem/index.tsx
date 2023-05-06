@@ -4,13 +4,13 @@ import { childrenReturnType } from "components/CardList";
 import { changePlay } from "store/play";
 import { songsInfo, songsState } from "store/songs";
 import { RootState } from "store";
-import { useMemo, useRef } from "react";
+// import { useMemo, useRef } from "react";
 
 const SongsItem: React.FC<childrenReturnType> = (props) => {
   const { songindex, songidlist, customrender, item, ...other } = props;
   const { id, name } = item;
 
-  const clickRef = useRef(0);
+  // const clickRef = useRef(0);
 
   const check = useCheckMusic();
   const dispatch = useDispatch();
@@ -26,9 +26,9 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     return data?.success;
   };
 
-  useMemo(() => {
-    console.log("clickRef.current", clickRef.current);
-  }, [clickRef.current]);
+  // useMemo(() => {
+  //   console.log("clickRef.current", clickRef.current);
+  // }, [clickRef.current]);
 
   // const isClick = isUse(id)
   //   ? {
@@ -73,7 +73,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
           })
         );
         dispatch(changePlay({ play: false }));
-        clickRef.current += 1;
+        // clickRef.current += 1;
       }}
     >
       <span>{name}</span>

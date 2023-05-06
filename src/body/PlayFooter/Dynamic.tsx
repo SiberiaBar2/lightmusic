@@ -148,7 +148,6 @@ export const Dynamic: React.FC<{
     const minutes = parseInt(currentTime / 60 + "");
     const seconds = parseInt((currentTime % 60) + "");
 
-    console.log("currentTime", currentTime);
     const timeStr =
       (minutes < 10 ? "0" + minutes : minutes) +
       ":" +
@@ -158,7 +157,6 @@ export const Dynamic: React.FC<{
     setTime(timeStr);
     setDuration(parseInt(currentTime + ""));
   }, [musicRef.current, setTime, setDuration]);
-  console.log("duddddd", duration);
 
   // // 获得播放总时长
   const onDurationChange = useCallback(() => {
@@ -732,8 +730,8 @@ const FatherHoc: React.FC<FatherHocProps> = ({
     localStorage.setItem("currentTime", "0");
   }, [songId]);
 
-  useCallback(() => {
-    if (duration >= musicRef.current?.duration) {
+  useMemo(() => {
+    if (duration >= parseInt(musicRef.current?.duration + "")) {
       // 重置播放进度从新播放
       setDuration(0);
       setParam(changePlay({ play: false }));
@@ -756,7 +754,15 @@ const FatherHoc: React.FC<FatherHocProps> = ({
         return;
       }
     }
-  }, [setDuration, goPrevorNext, setParam, changePlay]);
+  }, [
+    setDuration,
+    goPrevorNext,
+    setParam,
+    changePlay,
+    musicRef.current?.duration,
+    playMusic,
+    duration,
+  ]);
 
   return (
     <>
