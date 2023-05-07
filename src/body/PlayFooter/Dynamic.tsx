@@ -30,7 +30,7 @@ import {
 import { useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
 import { Slider, Tooltip, message } from "antd";
-import _, { debounce } from "lodash";
+import _ from "lodash";
 
 import Drawer from "./Drawer";
 import { useMount } from "hooks";
@@ -201,6 +201,7 @@ export const Dynamic: React.FC<{
       return flag;
     };
 
+    // 这里在组件重渲后会反复执行函数 待解决
     const content = () => {
       isAuto().then((res) => {
         if (res) {
@@ -218,15 +219,14 @@ export const Dynamic: React.FC<{
     content();
   }, [musicRef.current?.src, setParam, changePlay, play]);
 
+  /**
+   * musicRef.current?.src 确保播放源存在
+   * duration >= musicRef.current?.duration 播放完毕后的操作
+   */
   useEffect(() => {
-    if (
-      musicRef.current?.src ||
-      duration >= parseInt(musicRef.current?.duration + "")
-    ) {
+    if (musicRef.current?.src || duration >= musicRef.current?.duration) {
       playMusic();
     }
-    // musicRef.current?.src ||
-    //   (duration >= parseInt(musicRef.current.duration + "") && playMusic());
   }, [play, musicRef.current?.src, duration, musicRef.current?.duration]);
   // const onKweyDown = useCallback(
   //   _.debounce((e: KeyboardEvent) => {
