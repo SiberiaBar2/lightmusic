@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { MouseEvent } from "react";
 
 const isVoid = (value: unknown) =>
   value === undefined || value === null || value === "";
@@ -42,3 +43,19 @@ export const stringAdds = (str: string) => {
   const getEnd = str.slice(4);
   return getHttp + "s" + getEnd;
 };
+
+// 传参的防抖
+export function debounce<T extends (e: unknown) => void>(
+  fn: T,
+  delaty: number
+) {
+  let timer: null | NodeJS.Timeout = null;
+  return function (this: object, ...args: [key: unknown]) {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, delaty);
+  };
+}

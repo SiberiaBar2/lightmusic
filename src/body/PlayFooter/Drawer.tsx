@@ -3,10 +3,11 @@ import React, {
   useImperativeHandle,
   useMemo,
   useState,
+  ForwardedRef,
 } from "react";
 import { Divider, Drawer as AntDrawer } from "antd";
 import styled from "@emotion/styled";
-import { DrawProps } from "./Dynamic";
+import { DrawProps, DrawRefType } from "./Dynamic";
 import { Common } from "./Common";
 import { IsSame } from "./IsSame";
 import { useSongs } from "./useSongs";
@@ -14,7 +15,7 @@ import { CardList } from "components";
 import { stringAdds } from "utils/utils";
 import "./index.css";
 
-const Drawer = (props: DrawProps, ref: any) => {
+const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   const { lyric, time, picUrl, songId } = props;
 
   // console.log("time ---->", time);

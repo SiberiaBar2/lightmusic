@@ -30,7 +30,7 @@ import {
 import { useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
 import { Slider, Tooltip, message } from "antd";
-import _ from "lodash";
+import _, { debounce } from "lodash";
 
 import Drawer from "./Drawer";
 import { useMount } from "hooks";
@@ -84,6 +84,10 @@ type ReducerType = (
   type: PlayType;
 };
 
+export type DrawRefType = {
+  changeVisiable: () => void;
+};
+
 const reducer = (_: StateActionType, action: StateActionType) => {
   switch (action.type) {
     case PlayType.dan:
@@ -116,9 +120,7 @@ export const Dynamic: React.FC<{
   const [volume, setVolume] = useState(50);
   const [upOrDown, setUpOrDown] = useState(false);
 
-  const drawerRef = useRef() as React.MutableRefObject<{
-    changeVisiable: () => void;
-  }>;
+  const drawerRef = useRef() as React.MutableRefObject<DrawRefType>;
   const musicRef = useRef() as React.MutableRefObject<HTMLAudioElement>;
   // const timeRef: React.MutableRefObject<any> = useRef();
   const [time, setTime] = useState(INITTIME);
@@ -155,7 +157,7 @@ export const Dynamic: React.FC<{
 
     // return timeStr;
     setTime(timeStr);
-    setDuration(parseInt(currentTime + ""));
+    setDuration(currentTime);
   }, [musicRef.current, setTime, setDuration]);
 
   // // 获得播放总时长
@@ -181,46 +183,51 @@ export const Dynamic: React.FC<{
   //   setParam(changePlay({ play }));
   // }, []);
 
-  const playMusic = useCallback(
-    (play: boolean) => {
-      // 在切歌时这里会报错 Uncaught (in promise) DOMException: The element has no supported sources
-      // 是因为 data[0].url 为空字符串 不对
-      console.log("musicRef.current", musicRef.current.src);
+  const playMusic = useCallback(() => {
+    // 在切歌时这里会报错 Uncaught (in promise) DOMException: The element has no supported sources
+    // 是因为 data[0].url 为空字符串 不对
+    // 使用 async await 辅助 try catch 捕获异步错误
+    const isAuto = async () => {
+      let flag = true;
+      try {
+        play && musicRef.current?.src
+          ? await musicRef.current.play()
+          : await musicRef.current.pause();
+        // setParam(changePlay({ play }));
+      } catch (err) {
+        console.error("err ---> ", err);
+        flag = false;
+      }
+      return flag;
+    };
 
-      // 使用 async await 辅助 try catch 捕获异步错误
-      const isAuto = async () => {
-        let flag = true;
-        try {
-          play && musicRef.current.src
-            ? await musicRef.current.play()
-            : await musicRef.current.pause();
-          setParam(changePlay({ play }));
-        } catch (err) {
-          console.error("err ---> ", err);
-          flag = false;
+    const content = () => {
+      isAuto().then((res) => {
+        if (res) {
+          console.log("success");
+          return;
         }
-        return flag;
-      };
+        // 失败就一直调用，直到成功为止！
+        console.error("error", res);
+        setTimeout(() => {
+          content();
+        }, 1000);
+      });
+    };
 
-      const content = () => {
-        isAuto().then((res) => {
-          if (res) {
-            console.log("success");
-            return;
-          }
-          // 失败就一直调用，直到成功为止！
-          console.error("error", res);
-          setTimeout(() => {
-            content();
-          }, 1000);
-        });
-      };
+    content();
+  }, [musicRef.current?.src, setParam, changePlay, play]);
 
-      content();
-    },
-    [musicRef.current, setParam, changePlay]
-  );
-
+  useEffect(() => {
+    if (
+      musicRef.current?.src ||
+      duration >= parseInt(musicRef.current?.duration + "")
+    ) {
+      playMusic();
+    }
+    // musicRef.current?.src ||
+    //   (duration >= parseInt(musicRef.current.duration + "") && playMusic());
+  }, [play, musicRef.current?.src, duration, musicRef.current?.duration]);
   // const onKweyDown = useCallback(
   //   _.debounce((e: KeyboardEvent) => {
   //     if (e.code === "Space") {
@@ -246,6 +253,8 @@ export const Dynamic: React.FC<{
   const goPrevorNext = useCallback(
     (key: string, reback?: string) => {
       let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
+
+      console.log("1sddasdsahasjcascnaibsasucbauycasdjasdoas");
 
       const getSongsId = prevornext.split(",").map((ele) => Number(ele));
       const min = 0;
@@ -275,18 +284,10 @@ export const Dynamic: React.FC<{
           song: togo,
         })
       );
-
-      // if (sound !== null) {
-      //   sound.pause();
-      //   sound = null as any;
-      //   sound = new Audio(data[0].url);
-      // }
       // 下一首 、上一首切换、播放 success
-      setTimeout(() => {
-        playMusic(true);
-      }, 2500);
+      setParam(changePlay({ play: true }));
     },
-    [setParam, songsInfo, playMusic, prevornext, songsState, song]
+    [setParam, songsInfo, prevornext, songsState, song]
   );
 
   /**
@@ -431,7 +432,6 @@ export const Dynamic: React.FC<{
   };
 
   const hocConfig = {
-    playMusic: playMusic,
     musicRef: musicRef,
     songId: songId,
     setParam: setParam,
@@ -506,7 +506,7 @@ export const Dynamic: React.FC<{
             />
             {!play ? (
               <Play
-                onClick={() => playMusic(true)}
+                onClick={() => setParam(changePlay({ play: true }))}
                 theme="filled"
                 size="24"
                 fill="rgb(237, 195, 194)"
@@ -514,7 +514,7 @@ export const Dynamic: React.FC<{
               />
             ) : (
               <PauseOne
-                onClick={() => playMusic(false)}
+                onClick={() => setParam(changePlay({ play: false }))}
                 theme="filled"
                 size="24"
                 fill="rgb(192, 44, 56)"
@@ -588,35 +588,6 @@ export const Dynamic: React.FC<{
 };
 
 Dynamic.whyDidYouRender = true;
-
-// const TimeChange = forwardRef<any, any>((props, ref) => {
-//   const { audioTimeUpdate } = props;
-//   const [time, setTime] = useState(INITTIME);
-
-//   console.log("audioTimeUpdate", audioTimeUpdate());
-
-//   // const audioTimeUpdate = useCallback(() => {
-//   //   const { currentTime = 0 } = musicRef.current;
-//   //   const minutes = parseInt(currentTime / 60 + "");
-//   //   const seconds = parseInt((currentTime % 60) + "");
-
-//   //   const timeStr =
-//   //     (minutes < 10 ? "0" + minutes : minutes) +
-//   //     ":" +
-//   //     (seconds < 10 ? "0" + seconds : seconds);
-
-//   //   setTime(timeStr);
-//   // }, [setTime, musicRef.current]);
-
-//   useImperativeHandle(ref, () => {
-//     return {
-//       // audioTimeUpdate,
-//       time,
-//     };
-//   });
-//   return <span>{time}</span>;
-// });
-
 interface AudiosProps {
   musicRef: React.MutableRefObject<HTMLAudioElement>;
   songId?: string | number;
@@ -703,7 +674,6 @@ Audios.whyDidYouRender = true;
 
 interface FatherHocProps {
   children: React.ReactNode;
-  playMusic: (play: boolean) => void;
   musicRef: React.MutableRefObject<HTMLAudioElement>;
   songId?: number | string;
   setParam: reduxDispatch<AnyAction>;
@@ -715,7 +685,6 @@ interface FatherHocProps {
 
 const FatherHoc: React.FC<FatherHocProps> = ({
   children,
-  playMusic,
   musicRef,
   songId,
   setParam,
@@ -730,39 +699,34 @@ const FatherHoc: React.FC<FatherHocProps> = ({
     localStorage.setItem("currentTime", "0");
   }, [songId]);
 
-  useMemo(() => {
-    if (duration >= parseInt(musicRef.current?.duration + "")) {
+  // 使用策略模式替换 if else
+  const songsType = useMemo(
+    () => ({
+      [PlayType.dan]: function () {
+        setParam(changePlay({ play: true }));
+      },
+      [PlayType.shun]: function () {
+        goPrevorNext("next");
+      },
+      [PlayType.liexun]: function () {
+        goPrevorNext("next", "reback");
+      },
+      [PlayType.sui]: function () {
+        goPrevorNext("next", "random");
+      },
+    }),
+    [setParam, goPrevorNext, changePlay]
+  );
+
+  useEffect(() => {
+    if (duration >= musicRef.current?.duration) {
+      songsType[type]();
       // 重置播放进度从新播放
       setDuration(0);
-      setParam(changePlay({ play: false }));
       // 播放完毕 清除 currentTime 记忆值
       localStorage.setItem("currentTime", "0");
-      if (type === PlayType.dan) {
-        playMusic(true);
-        return;
-      }
-      if (type === PlayType.shun) {
-        goPrevorNext("next");
-        return;
-      }
-      if (type === PlayType.liexun) {
-        setTimeout(() => goPrevorNext("next", "reback"));
-        return;
-      }
-      if (type === PlayType.sui) {
-        goPrevorNext("next", "random");
-        return;
-      }
     }
-  }, [
-    setDuration,
-    goPrevorNext,
-    setParam,
-    changePlay,
-    musicRef.current?.duration,
-    playMusic,
-    duration,
-  ]);
+  }, [setDuration, duration, musicRef.current?.duration, songsType]);
 
   return (
     <>
@@ -771,7 +735,7 @@ const FatherHoc: React.FC<FatherHocProps> = ({
           value={duration}
           onChange={(dura) => {
             setDuration(dura);
-            playMusic(true);
+            setParam(changePlay({ play: true }));
             musicRef.current.currentTime = dura;
           }}
           tooltip={{ open: false }}

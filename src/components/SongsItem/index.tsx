@@ -1,24 +1,27 @@
-import { useDispatch, useSelector } from "react-redux";
+import { MouseEvent } from "react";
+import { useSelector } from "react-redux";
 import { useCheckMusic } from "body/PlayFooter/utils";
 import { childrenReturnType } from "components/CardList";
-import { changePlay } from "store/play";
-import { songsInfo, songsState } from "store/songs";
+import { songsState } from "store/songs";
 import { RootState } from "store";
-// import { useMemo, useRef } from "react";
+import { useDouble } from "body/utils";
 
 const SongsItem: React.FC<childrenReturnType> = (props) => {
   const { songindex, songidlist, customrender, item, ...other } = props;
   const { id, name } = item;
 
-  // const clickRef = useRef(0);
-
   const check = useCheckMusic();
-  const dispatch = useDispatch();
 
   const songsState = useSelector<
     RootState,
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
+
+  const [strategy, debounce] = useDouble<
+    string | number,
+    number | undefined,
+    string | undefined
+  >(id, songindex, String(songidlist));
 
   const { songId } = songsState;
   const isUse = (id: number) => {
@@ -26,9 +29,31 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     return data?.success;
   };
 
-  // useMemo(() => {
-  //   console.log("clickRef.current", clickRef.current);
-  // }, [clickRef.current]);
+  // const strategy: StrategyType = {
+  //   [Keys.single]: function () {
+  //     dispatch(
+  //       songsInfo({
+  //         ...songsState,
+  //         songId: id,
+  //         song: songindex,
+  //         prevornext: String(songidlist),
+  //       })
+  //     );
+  //     dispatch(changePlay({ play: false }));
+  //   },
+  //   [Keys.double]: function () {
+  //     console.log("double");
+  //     dispatch(
+  //       songsInfo({
+  //         ...songsState,
+  //         songId: id,
+  //         song: songindex,
+  //         prevornext: String(songidlist),
+  //       })
+  //     );
+  //     dispatch(changePlay({ play: true }));
+  //   },
+  // };
 
   // const isClick = isUse(id)
   //   ? {
@@ -62,19 +87,12 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         borderRadius: "0.3rem",
       }}
       // {...isClick}
-      onClick={() => {
+      // 双击可能触发单击 因此使用传参式防抖
+      // 也可以使用lodash防抖，同样支持传参
+      onClick={debounce((e) => {
         // if (isActive()) return;
-        dispatch(
-          songsInfo({
-            ...songsState,
-            songId: id,
-            song: songindex,
-            prevornext: String(songidlist),
-          })
-        );
-        dispatch(changePlay({ play: false }));
-        // clickRef.current += 1;
-      }}
+        strategy[(e as MouseEvent<Element, MouseEvent>).detail]();
+      }, 300)}
     >
       <span>{name}</span>
       {customrender ? customrender(item) : null}

@@ -1,36 +1,26 @@
+import { MouseEvent } from "react";
 import styled from "@emotion/styled";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "store";
-import { changePlay } from "store/play";
-import { songsInfo, songsState } from "store/songs";
+import { useDouble } from "body/utils";
 import { stringAdds } from "utils/utils";
 
 export const IsSame: React.FC<any> = (props) => {
   const { songindex, songidlist, item } = props;
 
-  const dispatch = useDispatch();
-  const songsState = useSelector<
-    RootState,
-    Pick<songsState, "songId" | "song" | "prevornext">
-  >((state) => state.songs);
-
   const { name, artists, album, id } = item;
   const { name: authname } = artists[0];
   const { picUrl } = album;
 
+  const [strategy, debounce] = useDouble<
+    string | number,
+    number | undefined,
+    string | undefined
+  >(id, songindex, String(songidlist));
+
   return (
     <Container
-      onClick={() => {
-        dispatch(
-          songsInfo({
-            ...songsState,
-            songId: id,
-            song: songindex,
-            prevornext: String(songidlist),
-          })
-        );
-        dispatch(changePlay({ play: false }));
-      }}
+      onClick={debounce((e) => {
+        strategy[(e as MouseEvent<Element, MouseEvent>).detail]();
+      }, 300)}
     >
       <ImageWrap>
         <img src={stringAdds(picUrl)} alt="" />
