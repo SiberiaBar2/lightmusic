@@ -54,6 +54,11 @@ import { stringAdds } from "utils/utils";
 
 const INITTIME = "00:00";
 
+enum PlayPause {
+  play = "play",
+  pause = "pause",
+}
+
 enum PlayType {
   dan = 1,
   shun,
@@ -155,7 +160,6 @@ export const Dynamic: React.FC<{
       ":" +
       (seconds < 10 ? "0" + seconds : seconds);
 
-    // return timeStr;
     setTime(timeStr);
     setDuration(currentTime);
   }, [musicRef.current, setTime, setDuration]);
@@ -190,10 +194,9 @@ export const Dynamic: React.FC<{
     const isAuto = async () => {
       let flag = true;
       try {
-        play && musicRef.current?.src
+        play === "play" && musicRef.current?.src
           ? await musicRef.current.play()
           : await musicRef.current.pause();
-        // setParam(changePlay({ play }));
       } catch (err) {
         console.error("err ---> ", err);
         flag = false;
@@ -201,7 +204,7 @@ export const Dynamic: React.FC<{
       return flag;
     };
 
-    // 这里在组件重渲后会反复执行函数 待解决
+    // 这里为什么没有在声明函数的时候调用
     const content = () => {
       isAuto().then((res) => {
         if (res) {
@@ -220,14 +223,20 @@ export const Dynamic: React.FC<{
   }, [musicRef.current?.src, setParam, changePlay, play]);
 
   /**
-   * musicRef.current?.src 确保播放源存在
-   * duration >= musicRef.current?.duration 播放完毕后的操作
+   * duration >= musicRef.current?.duration 播放完毕后的操作 主要用于单曲
    */
   useEffect(() => {
-    if (musicRef.current?.src || duration >= musicRef.current?.duration) {
+    if (duration >= musicRef.current?.duration) {
       playMusic();
     }
-  }, [play, musicRef.current?.src, duration, musicRef.current?.duration]);
+  }, [duration, musicRef.current?.duration, play]);
+  // 这里必须写两个effect 不然 duration 的变化 会触发 play === "play" 调用 playMusic
+  useEffect(() => {
+    if (play === "play" || play === "pause") {
+      playMusic();
+    }
+  }, [playMusic, play]);
+
   // const onKweyDown = useCallback(
   //   _.debounce((e: KeyboardEvent) => {
   //     if (e.code === "Space") {
@@ -253,9 +262,6 @@ export const Dynamic: React.FC<{
   const goPrevorNext = useCallback(
     (key: string, reback?: string) => {
       let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
-
-      console.log("1sddasdsahasjcascnaibsasucbauycasdjasdoas");
-
       const getSongsId = prevornext.split(",").map((ele) => Number(ele));
       const min = 0;
       const max = getSongsId?.length - 1;
@@ -266,8 +272,10 @@ export const Dynamic: React.FC<{
         return;
       }
       if (togo > max) {
-        reback === "reback" ? (togo = 0) : (togo = max);
-        if (!reback) {
+        reback === "reback" || type.type === PlayType.liexun
+          ? (togo = 0)
+          : (togo = max);
+        if (!reback && type.type !== PlayType.liexun) {
           message.warning("到底再也没有了！", 2);
           return;
         }
@@ -285,7 +293,7 @@ export const Dynamic: React.FC<{
         })
       );
       // 下一首 、上一首切换、播放 success
-      setParam(changePlay({ play: true }));
+      setParam(changePlay({ play: "play" }));
     },
     [setParam, songsInfo, prevornext, songsState, song]
   );
@@ -504,9 +512,9 @@ export const Dynamic: React.FC<{
               fill="rgb(237, 195, 194)"
               style={{ cursor: "pointer" }}
             />
-            {!play ? (
+            {play !== "play" ? (
               <Play
-                onClick={() => setParam(changePlay({ play: true }))}
+                onClick={() => setParam(changePlay({ play: "play" }))}
                 theme="filled"
                 size="24"
                 fill="rgb(237, 195, 194)"
@@ -514,7 +522,7 @@ export const Dynamic: React.FC<{
               />
             ) : (
               <PauseOne
-                onClick={() => setParam(changePlay({ play: false }))}
+                onClick={() => setParam(changePlay({ play: "pause" }))}
                 theme="filled"
                 size="24"
                 fill="rgb(192, 44, 56)"
@@ -635,7 +643,7 @@ const Audios: React.FC<AudiosProps> = memo(
         }
 
         if (
-          play &&
+          play === "play" &&
           currentTime === 0 &&
           Number(localStorage.getItem("currentTime"))
         ) {
@@ -703,7 +711,7 @@ const FatherHoc: React.FC<FatherHocProps> = ({
   const songsType = useMemo(
     () => ({
       [PlayType.dan]: function () {
-        setParam(changePlay({ play: true }));
+        setParam(changePlay({ play: "play" }));
       },
       [PlayType.shun]: function () {
         goPrevorNext("next");
@@ -735,7 +743,7 @@ const FatherHoc: React.FC<FatherHocProps> = ({
           value={duration}
           onChange={(dura) => {
             setDuration(dura);
-            setParam(changePlay({ play: true }));
+            setParam(changePlay({ play: "play" }));
             musicRef.current.currentTime = dura;
           }}
           tooltip={{ open: false }}

@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface playState {
-  play?: boolean;
+  play?: string;
 }
 
 const initialState: playState = {
-  play: false,
+  play: "init",
 };
 
 export const playSlice = createSlice({

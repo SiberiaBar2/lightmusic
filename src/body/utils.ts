@@ -24,7 +24,7 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
           prevornext: String(songidlist),
         })
       );
-      dispatch(changePlay({ play: false }));
+      dispatch(changePlay({ play: "init" }));
     },
     [Keys.double]: function () {
       console.log("double");
@@ -36,7 +36,7 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
           prevornext: String(songidlist),
         })
       );
-      dispatch(changePlay({ play: true }));
+      dispatch(changePlay({ play: "play" }));
     },
   };
 
