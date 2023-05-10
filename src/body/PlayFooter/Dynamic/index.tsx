@@ -206,14 +206,18 @@ export const Dynamic: React.FC<{
    * duration >= musicRef.current?.duration 播放完毕后的操作 用于单曲
    */
   useEffect(() => {
-    if (duration >= musicRef.current?.duration && data[0].url) {
+    if (
+      duration >= musicRef.current?.duration &&
+      data[0].url &&
+      !data[0].url.includes("localhost")
+    ) {
       playMusic();
     }
   }, [duration, musicRef.current?.duration, data[0].url]);
   // 这里必须写两个effect 不然 duration 的变化 会触发 play === "play" 调用 playMusic
   // data[0].url 避免播放源错误
   useEffect(() => {
-    if (play !== "init" && data[0].url) {
+    if (play !== "init" && data[0].url && !data[0].url.includes("localhost")) {
       playMusic();
     }
     // return () => {
