@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search } from "@icon-park/react";
@@ -12,6 +18,7 @@ import store, { RootState } from "store";
 import { LoginState, loginSlice } from "store/login";
 import { UserDetail } from "./UserDetail";
 import { stringAdds } from "utils/utils";
+import { CommonModal } from "./component/CommonModal";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -24,7 +31,7 @@ export const Header = () => {
 
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
-
+  const modalRef = useRef() as MutableRefObject<{ openModal: () => void }>;
   const once = useCallback(() => {
     console.error("执行了一次");
     window.location.reload();
@@ -143,55 +150,62 @@ export const Header = () => {
           }
         }}
       />
-      <Popover
+      {/* <Popover
         destroyTooltipOnHide
+        getPopupContainer={(triggerNode) =>
+          triggerNode.parentNode as HTMLElement
+        }
         content={
           _.isEmpty(profile) ? <Qrcode /> : <UserDetail uid={profile.userId} />
         }
-        trigger="hover"
-      >
-        <Users>
-          {_.isEmpty(profile) ? (
-            <Button
+        trigger="click"
+      > */}
+      <Users>
+        {_.isEmpty(profile) ? (
+          <Button
+            style={{
+              fontSize: "0.9rem",
+              cursor: "pointer",
+              borderRadius: "5rem",
+            }}
+            type="dashed"
+            onClick={() => modalRef.current?.openModal()}
+          >
+            请登录
+          </Button>
+        ) : (
+          <>
+            <Avatar
               style={{
-                fontSize: "0.9rem",
+                backgroundColor: "pink",
+                verticalAlign: "middle",
                 cursor: "pointer",
-                borderRadius: "5rem",
               }}
-              type="dashed"
-            >
-              请登录
-            </Button>
-          ) : (
-            <>
-              <Avatar
-                style={{ backgroundColor: "pink", verticalAlign: "middle" }}
-                size="large"
-                icon={
-                  <img
-                    src={
-                      !_.isEmpty(profile) ? stringAdds(profile.avatarUrl) : ""
-                    }
-                  />
-                }
-              />
-              <Tooltip title={profile.nickname}>
-                <span
-                  style={{
-                    margin: "0 0.5rem",
-                    display: "inline-block",
-                    fontSize: "0.8rem",
-                    lineHeight: "100%",
-                    color: "rgb(62, 56, 65)",
-                  }}
-                >
-                  {!_.isEmpty(profile) ? profile.nickname : null}
-                </span>
-              </Tooltip>
-            </>
-          )}
-        </Users>
-      </Popover>
+              size="large"
+              icon={
+                <img
+                  src={!_.isEmpty(profile) ? stringAdds(profile.avatarUrl) : ""}
+                />
+              }
+              onClick={() => modalRef.current?.openModal()}
+            />
+            <Tooltip title={profile.nickname}>
+              <span
+                style={{
+                  margin: "0 0.5rem",
+                  display: "inline-block",
+                  fontSize: "0.8rem",
+                  lineHeight: "100%",
+                  color: "rgb(62, 56, 65)",
+                }}
+              >
+                {!_.isEmpty(profile) ? profile.nickname : null}
+              </span>
+            </Tooltip>
+          </>
+        )}
+      </Users>
+      {/* </Popover> */}
     </User>
   );
 
@@ -215,6 +229,10 @@ export const Header = () => {
     </RightContent>
   );
 
+  const modalConfig = {
+    title: _.isEmpty(profile) ? "登录" : "info",
+  };
+
   return (
     <Container>
       <H4>
@@ -233,6 +251,9 @@ export const Header = () => {
           // null} */}
         </SearchContent>
       )}
+      <CommonModal {...modalConfig} ref={modalRef}>
+        {_.isEmpty(profile) ? <Qrcode /> : <UserDetail uid={profile.userId} />}
+      </CommonModal>
     </Container>
   );
 };

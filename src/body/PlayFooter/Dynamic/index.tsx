@@ -4,7 +4,6 @@ import {
   Play,
   PauseOne,
   // Like,
-  ShareOne,
   Acoustic,
   PlayOnce,
   LoopOnce,
@@ -13,8 +12,6 @@ import {
   ListBottom,
   VolumeSmall,
   VolumeMute,
-  ArrowUp,
-  ArrowDown,
 } from "@icon-park/react";
 import {
   useCallback,
@@ -31,9 +28,9 @@ import _ from "lodash";
 
 import { Audio } from "./component/Audio";
 
-import Drawer from "../Drawer";
+import Drawer from "./component/Drawer";
 import { useMount } from "hooks";
-import { Like } from "../like";
+import { Like } from "./component/like";
 import { useSongs } from "../useSongs";
 import { RootState } from "store";
 import { playState, changePlay } from "store/play";
@@ -116,7 +113,6 @@ export const Dynamic: React.FC<{
   });
 
   const [volume, setVolume] = useState(50);
-  const [upOrDown, setUpOrDown] = useState(false);
 
   const drawerRef = useRef() as React.MutableRefObject<DrawRefType>;
   const musicRef = useRef() as React.MutableRefObject<HTMLAudioElement>;
@@ -172,11 +168,15 @@ export const Dynamic: React.FC<{
     const isAuto = async () => {
       let flag = true;
       try {
-        console.log("musicRef.current", musicRef.current, "play", play);
-        console.log("data--=-==-=>", data[0].url);
-        play === "play" && musicRef.current
-          ? await musicRef.current.play()
-          : await musicRef.current.pause();
+        console.log("musicRef.current", musicRef.current?.src, "play", play);
+        if (
+          musicRef.current?.src &&
+          !musicRef.current?.src.includes("localhost")
+        ) {
+          play === "play"
+            ? await musicRef.current.play()
+            : await musicRef.current.pause();
+        }
       } catch (err) {
         console.error("err ---> ", err);
         flag = false;
@@ -200,42 +200,14 @@ export const Dynamic: React.FC<{
     };
 
     content();
-  }, [musicRef.current, play]);
+  }, [play, musicRef.current?.src]);
 
-  /**
-   * duration >= musicRef.current?.duration 播放完毕后的操作 用于单曲
-   */
+  // 播放暂停
   useEffect(() => {
-    if (
-      duration >= musicRef.current?.duration &&
-      data[0].url &&
-      !data[0].url.includes("localhost")
-    ) {
+    if (play !== "init") {
       playMusic();
     }
-  }, [duration, musicRef.current?.duration, data[0].url]);
-  // 这里必须写两个effect 不然 duration 的变化 会触发 play === "play" 调用 playMusic
-  // data[0].url 避免播放源错误
-  useEffect(() => {
-    if (play !== "init" && data[0].url && !data[0].url.includes("localhost")) {
-      playMusic();
-    }
-    // return () => {
-    //   removeEventListener("keydown", onKeyDown);
-    // };
-  }, [playMusic, play, data[0].url]);
-
-  // const onKeyDown = _.debounce((e: KeyboardEvent) => {
-  //   removeEventListener("keydown", onKeyDown);
-  //   if (e.code === "Space") {
-  //     play === "play"
-  //       ? setParam(changePlay({ play: "pause" }))
-  //       : setParam(changePlay({ play: "play" }));
-  //     setTimeout(() => playMusic(), 1000);
-  //   }
-  // }, 1000);
-
-  // window.addEventListener("keydown", onKeyDown);
+  }, [playMusic, play]);
 
   // 播放下一首、上一首 同时支持列表循环 、随机数
   const goPrevorNext = useCallback(
@@ -263,9 +235,9 @@ export const Dynamic: React.FC<{
           song: togo,
         })
       );
-      setParam(changePlay({ play: "play" }));
+      play !== "play" && setParam(changePlay({ play: "play" }));
     },
-    [setParam, songsInfo, prevornext, songsState, song]
+    [setParam, songsInfo, prevornext, songsState, song, play]
   );
 
   /**
@@ -329,7 +301,7 @@ export const Dynamic: React.FC<{
             onClick={() => handeChangeType(PlayType.dan)}
             theme="outline"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
           />
         );
       case PlayType.shun:
@@ -339,7 +311,7 @@ export const Dynamic: React.FC<{
             onClick={() => handeChangeType(PlayType.shun)}
             theme="outline"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
           />
         );
       case PlayType.liexun:
@@ -349,7 +321,7 @@ export const Dynamic: React.FC<{
             onClick={() => handeChangeType(PlayType.liexun)}
             theme="outline"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
           />
         );
       case PlayType.sui:
@@ -359,7 +331,7 @@ export const Dynamic: React.FC<{
             onClick={() => handeChangeType(PlayType.sui)}
             theme="outline"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
           />
         );
 
@@ -388,11 +360,12 @@ export const Dynamic: React.FC<{
     goPrevorNext,
     duration,
     setDuration,
+    play,
   };
 
   const audioConfig = {
     musicRef,
-    audioTimeUpdate: audioTimeUpdate,
+    audioTimeUpdate,
     onDurationChange,
     play,
     data,
@@ -401,24 +374,13 @@ export const Dynamic: React.FC<{
   const renderDivOne = () => (
     <DivOne>
       {picUrl ? (
-        <Tooltip title="打开、关闭歌词">
-          <div
-            onClick={() => {
-              drawerRef.current.changeVisiable();
-              setUpOrDown(!upOrDown);
-            }}
-          >
-            <img src={stringAdds(picUrl)} alt="" />
-            <div
-              style={{
-                display: upOrDown ? "block" : "none",
-              }}
-            >
-              <ArrowUp theme="outline" size="16" fill="#fff" />
-              <ArrowDown theme="outline" size="16" fill="#fff" />
-            </div>
-          </div>
-        </Tooltip>
+        <div
+          onClick={() => {
+            drawerRef.current.changeVisiable();
+          }}
+        >
+          <img src={stringAdds(picUrl)} alt="" />
+        </div>
       ) : (
         <div onClick={() => drawerRef.current.changeVisiable()}>
           <p>music</p>
@@ -447,7 +409,7 @@ export const Dynamic: React.FC<{
           onClick={() => goPrevorNext("prev")}
           theme="outline"
           size="24"
-          fill="rgb(237, 195, 194)"
+          fill="rgb(192, 44, 56)"
           style={{ cursor: "pointer" }}
         />
         {play !== "play" ? (
@@ -455,7 +417,7 @@ export const Dynamic: React.FC<{
             onClick={() => setParam(changePlay({ play: "play" }))}
             theme="filled"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
             style={{ cursor: "pointer" }}
           />
         ) : (
@@ -471,7 +433,7 @@ export const Dynamic: React.FC<{
           onClick={() => goPrevorNext("next")}
           theme="outline"
           size="24"
-          fill="rgb(237, 195, 194)"
+          fill="rgb(192, 44, 56)"
           style={{ cursor: "pointer" }}
         />
         <Like songId={useMemo(() => songId, [songId])} />
@@ -511,14 +473,14 @@ export const Dynamic: React.FC<{
               theme="outline"
               onClick={() => changeOpen(false)}
               size="24"
-              fill="rgb(237, 195, 194)"
+              fill="rgb(192, 44, 56)"
             />
           ) : (
             <VolumeMute
               theme="outline"
               onClick={() => changeOpen(true)}
               size="24"
-              fill="rgb(237, 195, 194)"
+              fill="rgb(192, 44, 56)"
             />
           )}
         </VolumeWrap>

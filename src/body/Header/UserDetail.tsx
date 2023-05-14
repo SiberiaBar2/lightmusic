@@ -1,8 +1,9 @@
 import styled from "@emotion/styled";
-import { Button, message, Modal, Typography } from "antd";
-import { useMemo, useState } from "react";
+import { Button, message, Typography } from "antd";
+import { MutableRefObject, useMemo, useRef } from "react";
 import { useUserDetail } from "users";
 import { useLogout } from "./utils";
+import { CommonModal } from "./component/CommonModal";
 
 export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   const {
@@ -10,26 +11,12 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   } = useUserDetail(uid);
 
   const { mutate: logout, data } = useLogout();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  const modalRef = useRef() as MutableRefObject<{ openModal: () => void }>;
 
   const confirm = () => {
     logout();
     localStorage.clear();
     window.location.reload();
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-    confirm();
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
   };
 
   useMemo(() => {
@@ -48,30 +35,23 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
       <p>等级： {level}</p>
       <p>听歌数： {listenSongs}</p>
       <p>viptype： {vipType}</p>
-      <Button onClick={() => showModal()}>退出登录</Button>
+      <Button onClick={() => modalRef.current?.openModal()}>退出登录</Button>
     </>
   );
 
-  const renderModal = () => (
-    <Modal
-      okText={"确定"}
-      title="退出登录？"
-      cancelText={"取消"}
-      onOk={handleOk}
-      open={isModalOpen}
-      maskClosable={false}
-      onCancel={handleCancel}
-    >
-      <Content>
-        <Typography.Text>亲，确认退出吗？</Typography.Text>
-      </Content>
-    </Modal>
-  );
+  const modalConfig = {
+    title: "退出登录？",
+    onOkNext: confirm,
+  };
 
   return (
     <>
       {renderInfo()}
-      {renderModal()}
+      <CommonModal {...modalConfig} ref={modalRef}>
+        <Content>
+          <Typography.Text>亲，确认退出吗？</Typography.Text>
+        </Content>
+      </CommonModal>
     </>
   );
 };

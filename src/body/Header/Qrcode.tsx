@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { message } from "antd";
 import stroe from "store";
 import { loginSlice } from "store/login";
-import { useMount } from "hooks";
 
 const Qrcode: React.FC = () => {
   const imgRef = useRef() as React.MutableRefObject<HTMLImageElement>;
@@ -67,28 +66,19 @@ const Qrcode: React.FC = () => {
     }, 3000);
   }
 
-  // useMount(() => {
   login();
-  // });
 
-  // useEffect(() => {
-  //   return () => {
-  //     clearInterval(timer);
-  //   };
-  // }, []);
   return (
     <Content>
       <div>
-        <span>使用网易云app扫码登录</span>
-        <img id="#qrImg" ref={imgRef} alt="" />
+        <span style={{ marginBottom: "2rem" }}>使用网易云app登录</span>
+        <img color="red" id="#qrImg" ref={imgRef} alt="" />
       </div>
     </Content>
   );
 };
 
 const Content = styled.div`
-  width: 20rem;
-  height: 20rem;
   display: flex;
   justify-content: center;
   align-items: center;

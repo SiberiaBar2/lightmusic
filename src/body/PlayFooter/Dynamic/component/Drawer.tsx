@@ -6,11 +6,12 @@ import React, {
   ForwardedRef,
 } from "react";
 import { Divider, Drawer as AntDrawer } from "antd";
+import { DoubleDown } from "@icon-park/react";
 import styled from "@emotion/styled";
-import { DrawProps, DrawRefType } from "./Dynamic";
-import { Common } from "./Common";
-import { IsSame } from "./IsSame";
-import { useSongs } from "./useSongs";
+import { DrawProps, DrawRefType } from "..";
+import { Common } from "../../Common";
+import { IsSame } from "../../IsSame";
+import { useSongs } from "../../useSongs";
 import { CardList } from "components";
 import { stringAdds } from "utils/utils";
 import "./index.css";
@@ -47,7 +48,6 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
 
   return (
     <AntDrawer
-      getContainer={false}
       keyboard
       placement="bottom"
       height={"100vh"}
@@ -55,9 +55,23 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       onClose={onClose}
       mask={false}
       closeIcon={null}
+      zIndex={100}
+      headerStyle={{ display: "none" }}
       style={{ background: "rgb(227, 180, 184)", color: "rgb(43, 51, 62)" }}
     >
       <Wrap>
+        <DoubleDown
+          style={{
+            top: 0,
+            left: "15rem",
+            cursor: "pointer",
+            position: "absolute",
+          }}
+          theme="outline"
+          size="24"
+          fill="rgb(192, 44, 56)"
+          onClick={() => changeVisiable()}
+        />
         <Container>
           <RoundWrap picUrl={stringAdds(picUrl)} />
           <LyricWrap {...LryicConfig} />
@@ -216,7 +230,9 @@ const Wrap = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
+
 const Container = styled.div`
   width: 90rem;
   height: 30rem;

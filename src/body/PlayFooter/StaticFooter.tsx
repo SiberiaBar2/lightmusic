@@ -1,13 +1,11 @@
-import {
-  GoEnd,
-  GoStart,
-  // Like,
-  LoopOnce,
-  Play,
-  VolumeSmall,
-} from "@icon-park/react";
+import { Slider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { Slider, message } from "antd";
+import { GoEnd, GoStart, LoopOnce, Play, VolumeSmall } from "@icon-park/react";
+
+import { Like } from "./Dynamic/component/like";
+import { useNewSongs } from "./utils";
+import { songsInfo, songsState } from "store/songs";
+import { RootState } from "store";
 
 import {
   Container,
@@ -18,10 +16,6 @@ import {
   Progress,
   DivRight,
 } from "./style";
-import { Like } from "./like";
-import { useNewSongs } from "./utils";
-import { songsInfo, songsState } from "store/songs";
-import { RootState } from "store";
 
 export const StaticFooter: React.FC = () => {
   const { data: { result = [] } = {} } = useNewSongs();
@@ -70,19 +64,19 @@ export const StaticFooter: React.FC = () => {
           <GoStart
             theme="outline"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
             style={{ cursor: "pointer" }}
           />
           <Play
             theme="filled"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
             style={{ cursor: "pointer" }}
           />
           <GoEnd
             theme="outline"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
             style={{ cursor: "pointer" }}
           />
           <Like songId={""} />
@@ -92,20 +86,20 @@ export const StaticFooter: React.FC = () => {
               title="音效"
               theme="outline"
               size="24"
-              fill="rgb(237, 195, 194)"
+              fill="rgb(192, 44, 56)"
             /> */}
           {/* {getElement(type.type)} */}
           <LoopOnce
             title="顺序播放"
             theme="outline"
             size="24"
-            fill="rgb(237, 195, 194)"
+            fill="rgb(192, 44, 56)"
           />
           {/* <ListBottom
               title="播放列表"
               theme="outline"
               size="24"
-              fill="rgb(237, 195, 194)"
+              fill="rgb(192, 44, 56)"
             /> */}
           <VolumeWrap>
             <div>
@@ -115,7 +109,7 @@ export const StaticFooter: React.FC = () => {
                 style={{ height: "85% !important", bottom: "none" }}
               />
             </div>
-            <VolumeSmall theme="outline" size="24" fill="rgb(237, 195, 194)" />
+            <VolumeSmall theme="outline" size="24" fill="rgb(192, 44, 56)" />
           </VolumeWrap>
         </DivThree>
       </DivRight>

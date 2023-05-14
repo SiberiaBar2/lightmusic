@@ -15,6 +15,7 @@ interface FatherHocProps {
   goPrevorNext: (key: string, reback?: string) => void;
   duration: number;
   setDuration: Dispatch<SetStateAction<number>>;
+  play: string | undefined;
 }
 
 export const FatherHoc: React.FC<FatherHocProps> = ({
@@ -26,6 +27,7 @@ export const FatherHoc: React.FC<FatherHocProps> = ({
   goPrevorNext,
   duration,
   setDuration,
+  play,
 }) => {
   // 切歌时重置播放进度
   useMemo(() => {
@@ -37,30 +39,29 @@ export const FatherHoc: React.FC<FatherHocProps> = ({
   const songsType = useMemo(
     () => ({
       [PlayType.dan]: function () {
-        setParam(changePlay({ play: "play" }));
+        musicRef.current.currentTime = 0;
+        musicRef.current?.play();
       },
       [PlayType.shun]: function () {
         goPrevorNext("next");
       },
       [PlayType.liexun]: function () {
-        goPrevorNext("next", "reback");
+        goPrevorNext("next");
       },
       [PlayType.sui]: function () {
         goPrevorNext("next", "random");
       },
     }),
-    [setParam, goPrevorNext, changePlay]
+    [goPrevorNext, musicRef.current?.currentTime]
   );
 
   useEffect(() => {
     if (duration >= musicRef.current?.duration) {
-      songsType[type]();
-      // 重置播放进度从新播放
       setDuration(0);
-      // 播放完毕 清除 currentTime 记忆值
       localStorage.setItem("currentTime", "0");
+      songsType[type]();
     }
-  }, [setDuration, duration, musicRef.current?.duration, songsType]);
+  }, [setDuration, duration, musicRef.current?.duration, songsType, type]);
 
   return (
     <>
@@ -69,7 +70,7 @@ export const FatherHoc: React.FC<FatherHocProps> = ({
           value={duration}
           onChange={(dura) => {
             setDuration(dura);
-            setParam(changePlay({ play: "play" }));
+            play !== "play" && setParam(changePlay({ play: "play" }));
             musicRef.current.currentTime = dura;
           }}
           tooltip={{ open: false }}

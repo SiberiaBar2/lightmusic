@@ -1,11 +1,10 @@
 import { useCallback, useMemo, memo } from "react";
 import { Like as ParkLike } from "@icon-park/react";
-
-import { useLike } from "./utils";
 import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 
+import { useLike } from "../../utils";
 import { RootState } from "store";
 import { likeState, changelike } from "store/ilike";
 import { useIlike } from "users";
@@ -121,7 +120,7 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
       onClick={() => likeMusci()}
       theme={islike ? "filled" : "outline"}
       size="24"
-      fill={islike ? "rgb(192, 44, 56)" : "rgb(237, 195, 194)"}
+      fill="rgb(192, 44, 56)"
       style={{ cursor: "pointer" }}
     />
   );

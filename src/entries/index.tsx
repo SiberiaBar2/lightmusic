@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { Global, css } from "@emotion/react";
 import { Aside as BodyAside, PlayFooter, Header as BodyHeader } from "body";
 import {
   BrowserRouter as Router,
@@ -20,7 +19,6 @@ import {
   Other,
 } from "pages";
 import { Provider } from "react-redux";
-import { Affix } from "antd";
 import store, { persist } from "../store";
 // import { ReactQueryDevtools } from "react-query-devtools";
 import { PersistGate } from "redux-persist/integration/react";
@@ -44,39 +42,40 @@ const Entries = () => {
         <Container>
           <QueryPrivider client={queryClients}>
             <Router>
-              <Header>
-                <BodyHeader />
-              </Header>
-              <Main>
-                <Aside>
-                  <BodyAside />
-                </Aside>
-                <Section>
-                  <Routes>
-                    <Route
-                      path="recommendsongsheet"
-                      element={<RecommendSongSheet />}
-                    />
-                    <Route path="recommendsongs" element={<RecommendSongs />} />
-                    <Route path="ranking" element={<Ranking />} />
-                    <Route path="songList/:id" element={<SongList />} />
-                    <Route path="recent" element={<Recent />} />
-                    <Route path="search/:searchparam" element={<Search />} />
-                    <Route path="ilike" element={<Ilike />} />
-                    <Route path="songsheet" element={<SongSheet />} />
-                    <Route path="other" element={<Other />} />
-                    <Route
-                      path="/"
-                      element={<Navigate to={"recommendsongsheet"} replace />}
-                    />
-                  </Routes>
-                </Section>
-              </Main>
-              <AntAffix
-                style={{ position: "fixed", bottom: "3rem", zIndex: 1 }}
-              >
+              <CenterContent>
+                <Header>
+                  <BodyHeader />
+                </Header>
+                <Main>
+                  <Aside>
+                    <BodyAside />
+                  </Aside>
+                  <Section>
+                    <Routes>
+                      <Route
+                        path="recommendsongsheet"
+                        element={<RecommendSongSheet />}
+                      />
+                      <Route
+                        path="recommendsongs"
+                        element={<RecommendSongs />}
+                      />
+                      <Route path="ranking" element={<Ranking />} />
+                      <Route path="songList/:id" element={<SongList />} />
+                      <Route path="recent" element={<Recent />} />
+                      <Route path="search/:searchparam" element={<Search />} />
+                      <Route path="ilike" element={<Ilike />} />
+                      <Route path="songsheet" element={<SongSheet />} />
+                      <Route path="other" element={<Other />} />
+                      <Route
+                        path="/"
+                        element={<Navigate to={"recommendsongsheet"} replace />}
+                      />
+                    </Routes>
+                  </Section>
+                </Main>
                 <PlayFooter />
-              </AntAffix>
+              </CenterContent>
             </Router>
           </QueryPrivider>
           {/* <ReactQueryDevtools initialIsOpen={true} /> */}
@@ -94,11 +93,14 @@ const Container = styled.div`
 `;
 
 const Header = styled.header`
-  height: 4.75rem;
+  height: 5.5rem;
   background: rgb(241, 147, 155);
+  /* background: rgb(237, 221, 231); */
+  box-shadow: 0 0.1rem 0.1rem #ccc;
   top: 0;
   width: 100%;
   z-index: 99;
+  margin-bottom: 2px;
 `;
 
 const Aside = styled.aside`
@@ -111,8 +113,7 @@ const Aside = styled.aside`
 
 const Main = styled.main`
   display: flex;
-  height: 80%;
-  margin-top: 4.75rem;
+  height: calc(100% - 10.9rem);
 `;
 
 const Section = styled.section`
@@ -120,7 +121,7 @@ const Section = styled.section`
   overflow-y: auto;
 `;
 
-const AntAffix = styled(Affix)`
-  width: 100%;
-  height: 2rem;
+const CenterContent = styled.div`
+  height: 100%;
+  position: relative;
 `;
