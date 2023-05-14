@@ -16,7 +16,7 @@ export const Common: React.FC = (props: any) => {
       </div>
       <div>
         <p>
-          <span style={{ color: "rgb(100, 88, 34)" }}>{nickname}:</span>
+          <span style={{ color: "rgb(54, 41, 47)" }}>{nickname}:</span>
           {content}
         </p>
         <p>
@@ -65,7 +65,7 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-around;
     /* align-items: center; */
-    border-bottom: 1px solid rgb(192, 142, 175);
+    border-bottom: 1px solid #ccc;
     box-sizing: border-box;
     font-size: 1.4rem;
 

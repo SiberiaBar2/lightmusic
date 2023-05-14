@@ -41,4 +41,5 @@ export const Aside: React.FC = () => {
 const AntMenu = styled(Menu)`
   width: 90%;
   height: 100%;
+  background: rgb(250, 250, 252);
 `;

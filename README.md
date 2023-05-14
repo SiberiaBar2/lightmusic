@@ -1,4 +1,4 @@
-# You-music
+# light-music
 
 ```tex
 本项目使用React、Typescript，Css-in-js搭建

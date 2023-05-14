@@ -64,19 +64,19 @@ export const StaticFooter: React.FC = () => {
           <GoStart
             theme="outline"
             size="24"
-            fill="rgb(192, 44, 56)"
+            fill="rgb(239, 130, 160)"
             style={{ cursor: "pointer" }}
           />
           <Play
             theme="filled"
             size="24"
-            fill="rgb(192, 44, 56)"
+            fill="rgb(239, 130, 160)"
             style={{ cursor: "pointer" }}
           />
           <GoEnd
             theme="outline"
             size="24"
-            fill="rgb(192, 44, 56)"
+            fill="rgb(239, 130, 160)"
             style={{ cursor: "pointer" }}
           />
           <Like songId={""} />
@@ -86,20 +86,20 @@ export const StaticFooter: React.FC = () => {
               title="音效"
               theme="outline"
               size="24"
-              fill="rgb(192, 44, 56)"
+              fill="rgb(239, 130, 160)"
             /> */}
           {/* {getElement(type.type)} */}
           <LoopOnce
             title="顺序播放"
             theme="outline"
             size="24"
-            fill="rgb(192, 44, 56)"
+            fill="rgb(239, 130, 160)"
           />
           {/* <ListBottom
               title="播放列表"
               theme="outline"
               size="24"
-              fill="rgb(192, 44, 56)"
+              fill="rgb(239, 130, 160)"
             /> */}
           <VolumeWrap>
             <div>
@@ -109,7 +109,7 @@ export const StaticFooter: React.FC = () => {
                 style={{ height: "85% !important", bottom: "none" }}
               />
             </div>
-            <VolumeSmall theme="outline" size="24" fill="rgb(192, 44, 56)" />
+            <VolumeSmall theme="outline" size="24" fill="rgb(239, 130, 160)" />
           </VolumeWrap>
         </DivThree>
       </DivRight>

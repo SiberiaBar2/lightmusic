@@ -27,7 +27,7 @@ export const Ilike: React.FC = () => {
 
   const { data: { songs = [] } = {} } = useSongDetail(likes.join(","));
 
-  // console.log("songs --->", songs);
+  console.log("songs --->", songs);
 
   return (
     <div>

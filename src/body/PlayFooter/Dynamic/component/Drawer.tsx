@@ -5,7 +5,7 @@ import React, {
   useState,
   ForwardedRef,
 } from "react";
-import { Divider, Drawer as AntDrawer } from "antd";
+import { Divider, Drawer as AntDrawer, DrawerProps } from "antd";
 import { DoubleDown } from "@icon-park/react";
 import styled from "@emotion/styled";
 import { DrawProps, DrawRefType } from "..";
@@ -57,19 +57,22 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       closeIcon={null}
       zIndex={100}
       headerStyle={{ display: "none" }}
-      style={{ background: "rgb(227, 180, 184)", color: "rgb(43, 51, 62)" }}
+      style={{
+        color: "rgb(43, 51, 62)",
+      }}
+      bodyStyle={{ padding: 0 }}
     >
-      <Wrap>
+      <Wrap color={stringAdds(picUrl)}>
         <DoubleDown
           style={{
-            top: 0,
+            top: "2rem",
             left: "15rem",
             cursor: "pointer",
             position: "absolute",
           }}
           theme="outline"
           size="24"
-          fill="rgb(192, 44, 56)"
+          fill="#ccc"
           onClick={() => changeVisiable()}
         />
         <Container>
@@ -231,6 +234,21 @@ const Wrap = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  background: url(${(props) => props.color});
+  background-size: cover;
+  ::after {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    content: "";
+    background: url(${(props) => props.color});
+    background-size: cover;
+    z-index: -1;
+    filter: blur(37px);
+  }
+  z-index: 1;
 `;
 
 const Container = styled.div`

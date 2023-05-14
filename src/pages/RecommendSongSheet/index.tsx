@@ -2,6 +2,9 @@ import { CSSProperties } from "react";
 import styled from "@emotion/styled";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper";
+import { AntCard } from "components/AntCard";
+import { CardList } from "components";
+import { arrAdds } from "utils/utils";
 import {
   cookie,
   useBanner,
@@ -9,9 +12,6 @@ import {
   useRecommendResource,
   useRecommendSongs,
 } from "./utils";
-import { AntCard } from "components/AntCard";
-import { CardList } from "components";
-import { arrAdds } from "utils/utils";
 
 import "swiper/css/bundle";
 

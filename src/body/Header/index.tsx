@@ -236,7 +236,7 @@ export const Header = () => {
   return (
     <Container>
       <H4>
-        you-music
+        light-music
         <span>
           （<A href="https://karlfranz.cn/">karlfranz</A>）
         </span>
@@ -270,7 +270,7 @@ const H4 = styled.h2`
   line-height: 4.75rem;
   text-align: center;
   position: relative;
-  color: rgb(62, 56, 65);
+  color: rgb(237, 85, 106);
 
   > span {
     font-size: 0.1rem;

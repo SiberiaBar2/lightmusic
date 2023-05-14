@@ -94,7 +94,7 @@ const Container = styled.div`
 
 const Header = styled.header`
   height: 5.5rem;
-  background: rgb(241, 147, 155);
+  /* background: rgb(241, 147, 1 55); */
   /* background: rgb(237, 221, 231); */
   box-shadow: 0 0.1rem 0.1rem #ccc;
   top: 0;
@@ -114,6 +114,7 @@ const Aside = styled.aside`
 const Main = styled.main`
   display: flex;
   height: calc(100% - 10.9rem);
+  background: rgb(250, 250, 252);
 `;
 
 const Section = styled.section`

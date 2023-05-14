@@ -120,7 +120,7 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
       onClick={() => likeMusci()}
       theme={islike ? "filled" : "outline"}
       size="24"
-      fill="rgb(192, 44, 56)"
+      fill="rgb(237, 90, 101)"
       style={{ cursor: "pointer" }}
     />
   );
