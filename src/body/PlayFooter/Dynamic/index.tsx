@@ -23,7 +23,7 @@ import {
 } from "react";
 import { useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
-import { Slider, Tooltip, message } from "antd";
+import { Slider, Tooltip } from "antd";
 import _ from "lodash";
 
 import { Audio } from "./component/Audio";
@@ -46,6 +46,8 @@ import {
 } from "../style";
 import { stringAdds } from "utils/utils";
 import { FatherHoc } from "./component/FatherHoc";
+
+const singer = process.env.REACT_APP_SPA_URL as string;
 
 const INITTIME = "00:00";
 
@@ -169,10 +171,7 @@ export const Dynamic: React.FC<{
       let flag = true;
       try {
         console.log("musicRef.current", musicRef.current?.src, "play", play);
-        if (
-          musicRef.current?.src &&
-          !musicRef.current?.src.includes("localhost")
-        ) {
+        if (musicRef.current?.src && !musicRef.current?.src.includes(singer)) {
           play === "play"
             ? await musicRef.current.play()
             : await musicRef.current.pause();

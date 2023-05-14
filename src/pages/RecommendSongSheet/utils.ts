@@ -26,7 +26,7 @@ export const useBanner = () => {
   });
 };
 
-// 每日推荐歌曲
+// 推荐歌曲
 export const useRecommendSongs = () => {
   const client = useHttp();
   return useQuery({

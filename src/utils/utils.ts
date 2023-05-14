@@ -1,6 +1,3 @@
-import _ from "lodash";
-import { MouseEvent } from "react";
-
 const isVoid = (value: unknown) =>
   value === undefined || value === null || value === "";
 export const cleanObject = (obj?: { [key: string]: unknown }) => {
