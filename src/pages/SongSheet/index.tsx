@@ -1,6 +1,7 @@
 import { Empty } from "antd";
 import { CardList } from "components";
 import { AntCard } from "components/AntCard";
+import { useBackTop } from "hooks";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { LoginState } from "store/login";
@@ -8,6 +9,7 @@ import { arrAdds } from "utils/utils";
 import { useUserPlayList } from "./utils";
 
 export const SongSheet: React.FC = () => {
+  useBackTop();
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
     (state) => state.login
   );

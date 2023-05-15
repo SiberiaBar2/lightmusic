@@ -1,13 +1,14 @@
-import { MouseEvent } from "react";
+import { MouseEvent, MutableRefObject, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { useCheckMusic } from "body/PlayFooter/utils";
 import { childrenReturnType } from "components/CardList";
 import { songsState } from "store/songs";
 import { RootState } from "store";
 import { useDouble } from "body/utils";
-import { Tag } from "antd";
+import { FloatButton, Tag } from "antd";
 import { Keys } from "types";
 import styled from "@emotion/styled";
+import { useBackTop } from "hooks";
 
 const SONGSTYPE: { [x: number]: string } = {
   [Keys.zero]: "", // 免费或无版权
@@ -20,6 +21,8 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
   const { songindex, songidlist, customrender, item, ...other } = props;
   const { id, name, fee } = item;
 
+  // const backTopRef = useRef() as MutableRefObject<any>;
+  // const backTopInstance = backTopRef.current;
   const check = useCheckMusic();
 
   const songsState = useSelector<
@@ -39,33 +42,10 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     return data?.success;
   };
 
-  // console.log("isUse", isUse(id));
+  useBackTop();
 
-  // const strategy: StrategyType = {
-  //   [Keys.single]: function () {
-  //     dispatch(
-  //       songsInfo({
-  //         ...songsState,
-  //         songId: id,
-  //         song: songindex,
-  //         prevornext: String(songidlist),
-  //       })
-  //     );
-  //     dispatch(changePlay({ play: false }));
-  //   },
-  //   [Keys.double]: function () {
-  //     console.log("double");
-  //     dispatch(
-  //       songsInfo({
-  //         ...songsState,
-  //         songId: id,
-  //         song: songindex,
-  //         prevornext: String(songidlist),
-  //       })
-  //     );
-  //     dispatch(changePlay({ play: true }));
-  //   },
-  // };
+  // const canUse = isUse(id);
+  // console.log("isUse", isUse(id));
 
   // const isClick = isUse(id)
   //   ? {
@@ -88,11 +68,15 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
   return (
     <div
       style={{
-        // color: !isUse(id) ? "rgb(116, 120, 122)" : "",
         display: "flex",
         justifyContent: "space-between",
         width: "100%",
         cursor: "pointer",
+        // color: canUse
+        //   ? isActive()
+        //     ? "rgb(136, 58, 30)"
+        //     : ""
+        //   : "rgb(116, 120, 122)",
         color: isActive() ? "rgb(136, 58, 30)" : "",
         padding: "1rem 0.3rem",
         background: isActive() ? "rgb(228, 151, 157)" : "",
@@ -102,7 +86,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
       // 双击可能触发单击 因此使用传参式防抖
       // 也可以使用lodash防抖，同样支持传参
       onClick={debounce((e) => {
-        // if (isActive()) return;
+        // if (!canUse) return message.warning("暂无版权", 1);
         strategy[(e as MouseEvent<Element, MouseEvent>).detail]();
       }, 300)}
     >

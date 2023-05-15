@@ -115,3 +115,12 @@ export const useDebounce = <V>(value: V, delay: number) => {
 
   return debouncedValue;
 };
+
+export const useBackTop = () => {
+  useMount(() => {
+    const backTopInstance = document.querySelector(
+      ".ant-float-btn"
+    ) as HTMLButtonElement;
+    backTopInstance?.click();
+  });
+};

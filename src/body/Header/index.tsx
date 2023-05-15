@@ -235,12 +235,7 @@ export const Header = () => {
 
   return (
     <Container>
-      <H4>
-        light-music
-        <span>
-          （<A href="https://karlfranz.cn/">karlfranz</A>）
-        </span>
-      </H4>
+      <H4>light-music</H4>
       {renderRightContent()}
       {!search && (
         <SearchContent style={{ display: open ? "" : "none" }}>
@@ -319,12 +314,4 @@ const Users = styled.div`
   display: flex;
   align-items: center;
   margin-right: 1rem;
-`;
-
-const A = styled.a`
-  text-decoration: none;
-  color: rgb(43, 51, 62);
-  &:focus {
-    color: rgb(43, 51, 62);
-  }
 `;

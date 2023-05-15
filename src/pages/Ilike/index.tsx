@@ -21,13 +21,16 @@ export const Ilike: React.FC = () => {
   );
 
   const { likes } = likeState;
+
   // 解构赋值 真正的默认值
   // const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
   // loginState;
+  console.log("likes", likes);
 
-  const { data: { songs = [] } = {} } = useSongDetail(likes.join(","));
-
-  console.log("songs --->", songs);
+  const { data: { songs = [] } = {} } = useSongDetail(
+    likes.slice(30).join(",")
+  );
+  console.log("songs", songs);
 
   return (
     <div>

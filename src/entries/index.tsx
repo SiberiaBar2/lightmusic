@@ -7,6 +7,9 @@ import {
   Navigate,
 } from "react-router-dom";
 import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { FloatButton } from "antd";
 import {
   RecommendSongSheet,
   Ranking,
@@ -18,15 +21,12 @@ import {
   RecommendSongs,
   Other,
 } from "pages";
-import { Provider } from "react-redux";
 import store, { persist } from "../store";
 // import { ReactQueryDevtools } from "react-query-devtools";
-import { PersistGate } from "redux-persist/integration/react";
 
 const Entries = () => {
   // 为什么写为true就能触发？
   // document.addEventListener("scroll", handelScroll, true);
-
   const queryClients = new QueryClient({
     defaultOptions: {
       queries: {
@@ -50,7 +50,7 @@ const Entries = () => {
                   <Aside>
                     <BodyAside />
                   </Aside>
-                  <Section>
+                  <Section id={"section"}>
                     <Routes>
                       <Route
                         path="recommendsongsheet"
@@ -72,6 +72,13 @@ const Entries = () => {
                         element={<Navigate to={"recommendsongsheet"} replace />}
                       />
                     </Routes>
+                    <FloatButton.BackTop
+                      visibilityHeight={20}
+                      style={{ bottom: "6.5rem" }}
+                      target={() =>
+                        document.getElementById("section") as HTMLElement
+                      }
+                    />
                   </Section>
                 </Main>
                 <PlayFooter />
@@ -95,7 +102,6 @@ const Container = styled.div`
 const Header = styled.header`
   height: 5.5rem;
   /* background: rgb(241, 147, 1 55); */
-  /* background: rgb(237, 221, 231); */
   box-shadow: 0 0.1rem 0.1rem #ccc;
   top: 0;
   width: 100%;
@@ -118,7 +124,8 @@ const Main = styled.main`
 `;
 
 const Section = styled.section`
-  flex: 1;
+  width: calc(100% - 20%);
+  height: 100%;
   overflow-y: auto;
 `;
 

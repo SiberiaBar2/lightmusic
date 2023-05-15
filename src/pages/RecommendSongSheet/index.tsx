@@ -14,8 +14,11 @@ import {
 } from "./utils";
 
 import "swiper/css/bundle";
+import { Divider } from "antd";
+import { useBackTop } from "hooks";
 
 export const RecommendSongSheet: React.FC = () => {
+  useBackTop();
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
   const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
@@ -59,12 +62,22 @@ export const RecommendSongSheet: React.FC = () => {
   );
 
   const renderCardList = () => (
-    <CardList
-      grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
-      dataSource={arrAdds(cookie ? recommends : recommend?.result, "picUrl")}
-    >
-      <AntCard />
-    </CardList>
+    <>
+      {cookie && (
+        <CardList
+          grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
+          dataSource={arrAdds(recommends, "picUrl")}
+        >
+          <AntCard />
+        </CardList>
+      )}
+      <CardList
+        grid={{ column: 4, lg: 4, xs: 2, xxl: 5 }}
+        dataSource={arrAdds(recommend?.result, "picUrl")}
+      >
+        <AntCard />
+      </CardList>
+    </>
   );
 
   return (

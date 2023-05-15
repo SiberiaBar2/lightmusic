@@ -6,8 +6,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { LoginState } from "store/login";
 import { Empty } from "antd";
+import { useBackTop } from "hooks";
 
 export const RecommendSongs: React.FC = () => {
+  useBackTop();
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
     (state) => state.login
   );

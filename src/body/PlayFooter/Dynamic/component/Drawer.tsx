@@ -244,7 +244,7 @@ const Wrap = styled.div`
     right: 0;
     content: "";
     background: url(${(props) => props.color});
-    background-size: cover;
+    /* background-size: cover; */
     z-index: -1;
     filter: blur(37px);
   }

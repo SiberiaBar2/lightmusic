@@ -4,9 +4,11 @@ import { useRanking } from "./utils";
 import { MusciCard, CardList } from "components";
 import { CardSongs } from "components/CardSongs";
 import { arrAdds } from "utils/utils";
+import { useBackTop } from "hooks";
 
 export const Ranking: React.FC = () => {
   const { data: { list: ranking, artistToplist } = RANGKING } = useRanking();
+  useBackTop();
 
   return (
     <Fragment>
