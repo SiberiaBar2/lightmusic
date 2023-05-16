@@ -7,8 +7,6 @@ const cookie = localStorage.getItem("cookie");
 // 歌曲详情
 export const useSongDetail = (ids: IdType) => {
   const client = useHttp();
-  console.log("idx----->", ids);
-
   return useQuery({
     queryKey: ["songdetaililike", ids],
     queryFn: () => client("song/detail", { data: { ids, cookie } }),

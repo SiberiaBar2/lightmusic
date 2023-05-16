@@ -54,8 +54,6 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
 
   const islike = likes.find((item) => item === Number(songId));
 
-  console.log("islike", islike);
-
   const { mutate: tolike } = useLike();
 
   const likeMusci = useCallback(() => {

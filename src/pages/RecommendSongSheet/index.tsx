@@ -30,6 +30,7 @@ export const RecommendSongSheet: React.FC = () => {
         {
           "--swiper-navigation-color": "#fff",
           "--swiper-pagination-color": "#fff",
+          zIndex: 0,
         } as CSSProperties
       }
       spaceBetween={30}

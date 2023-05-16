@@ -1,6 +1,13 @@
 import { Slider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { GoEnd, GoStart, LoopOnce, Play, VolumeSmall } from "@icon-park/react";
+import {
+  GoEnd,
+  GoStart,
+  ListBottom,
+  LoopOnce,
+  Play,
+  VolumeSmall,
+} from "@icon-park/react";
 
 import { Like } from "./Dynamic/component/like";
 import { useNewSongs } from "./utils";
@@ -95,12 +102,12 @@ export const StaticFooter: React.FC = () => {
             size="24"
             fill="rgb(237, 90, 101))"
           />
-          {/* <ListBottom
-              title="播放列表"
-              theme="outline"
-              size="24"
-              fill="rgb(237, 90, 101))"
-            /> */}
+          <ListBottom
+            title="播放列表"
+            theme="outline"
+            size="24"
+            fill="rgb(237, 90, 101))"
+          />
           <VolumeWrap>
             <div>
               <Slider

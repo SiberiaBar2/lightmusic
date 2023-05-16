@@ -1,13 +1,15 @@
 import { MouseEvent, MutableRefObject, useEffect, useRef } from "react";
+import { Tag } from "antd";
 import { useSelector } from "react-redux";
+import styled from "@emotion/styled";
+
 import { useCheckMusic } from "body/PlayFooter/utils";
 import { childrenReturnType } from "components/CardList";
+
 import { songsState } from "store/songs";
 import { RootState } from "store";
 import { useDouble } from "body/utils";
-import { FloatButton, Tag } from "antd";
 import { Keys } from "types";
-import styled from "@emotion/styled";
 import { useBackTop } from "hooks";
 
 const SONGSTYPE: { [x: number]: string } = {

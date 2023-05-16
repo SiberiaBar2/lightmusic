@@ -46,6 +46,7 @@ import {
 } from "../style";
 import { stringAdds } from "utils/utils";
 import { FatherHoc } from "./component/FatherHoc";
+import { NowList } from "./component/NowList";
 
 const singer = process.env.REACT_APP_SPA_URL as string;
 
@@ -85,6 +86,10 @@ export type DrawRefType = {
   changeVisiable: () => void;
 };
 
+export type NowListType = {
+  changeOpen: () => void;
+};
+
 const reducer = (_: StateActionType, action: StateActionType) => {
   switch (action.type) {
     case PlayType.dan:
@@ -118,6 +123,7 @@ export const Dynamic: React.FC<{
 
   const drawerRef = useRef() as React.MutableRefObject<DrawRefType>;
   const musicRef = useRef() as React.MutableRefObject<HTMLAudioElement>;
+  const nowListRef = useRef() as React.MutableRefObject<NowListType>;
 
   const [time, setTime] = useState(INITTIME);
   const [dura, setDura] = useState(INITTIME);
@@ -170,14 +176,12 @@ export const Dynamic: React.FC<{
     const isAuto = async () => {
       let flag = true;
       try {
-        console.log("musicRef.current", musicRef.current?.src, "play", play);
         if (musicRef.current?.src && !musicRef.current?.src.includes(singer)) {
           play === "play"
             ? await musicRef.current.play()
             : await musicRef.current.pause();
         }
       } catch (err) {
-        console.error("err ---> ", err);
         flag = false;
       }
       return flag;
@@ -187,7 +191,7 @@ export const Dynamic: React.FC<{
     const content = () => {
       isAuto().then((res) => {
         if (res) {
-          console.log("success");
+          console.warn("success");
           return;
         }
         // 失败就一直调用，直到成功为止！
@@ -445,12 +449,14 @@ export const Dynamic: React.FC<{
       fill="rgb(237, 195, 194)"
     /> */}
         <Tooltip title={PLAYTYPE[type.type]}>{getElement(type.type)}</Tooltip>
-        {/* <ListBottom
-      title="播放列表"
-      theme="outline"
-      size="24"
-      fill="rgb(237, 195, 194)"
-    /> */}
+        <Tooltip title={"播放列表"}>
+          <ListBottom
+            theme="outline"
+            size="24"
+            fill="rgb(237, 90, 101)"
+            onClick={() => nowListRef.current?.changeOpen()}
+          />
+        </Tooltip>
         <VolumeWrap>
           <div>
             <Slider
@@ -488,12 +494,13 @@ export const Dynamic: React.FC<{
   );
 
   return (
-    <Container>
+    <Container id={"player"}>
       <FatherHoc {...hocConfig}>
         {renderDivOne()}
         {renderDivRight()}
         <Audio {...audioConfig} />
         <Drawer ref={drawerRef} {...DrawerConfig} />
+        <NowList ref={nowListRef} />
       </FatherHoc>
     </Container>
   );

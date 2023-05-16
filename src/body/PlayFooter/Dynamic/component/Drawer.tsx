@@ -235,7 +235,6 @@ const Wrap = styled.div`
   align-items: center;
   position: relative;
   background: url(${(props) => props.color});
-  background-size: cover;
   ::after {
     position: absolute;
     left: 0;

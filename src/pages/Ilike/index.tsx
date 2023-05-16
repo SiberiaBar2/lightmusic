@@ -1,9 +1,7 @@
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
-import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
-import { LoginState } from "store/login";
 import { useSongDetail } from "./utils";
 import { config } from "utils/customRender";
 import { likeState } from "store/ilike";

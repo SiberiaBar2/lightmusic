@@ -290,7 +290,8 @@ const User = styled.div`
 const SearchContent = styled.div`
   width: 21rem;
   height: 35rem;
-  background: rgb(239, 130, 160);
+  background: #fff;
+  border: 0.1rem solid rgb(237, 90, 101);
   position: absolute;
   top: 4.5rem;
   right: 12rem;

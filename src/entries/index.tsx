@@ -46,7 +46,7 @@ const Entries = () => {
                 <Header>
                   <BodyHeader />
                 </Header>
-                <Main>
+                <Main id={"main"}>
                   <Aside>
                     <BodyAside />
                   </Aside>
@@ -74,7 +74,7 @@ const Entries = () => {
                     </Routes>
                     <FloatButton.BackTop
                       visibilityHeight={20}
-                      style={{ bottom: "6.5rem" }}
+                      style={{ bottom: "12.5rem" }}
                       target={() =>
                         document.getElementById("section") as HTMLElement
                       }
@@ -121,6 +121,13 @@ const Main = styled.main`
   display: flex;
   height: calc(100% - 10.9rem);
   background: rgb(250, 250, 252);
+  position: relative;
+
+  .ant-drawer {
+    :focus {
+      outline: none !important;
+    }
+  }
 `;
 
 const Section = styled.section`
