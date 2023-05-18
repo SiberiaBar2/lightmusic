@@ -1,4 +1,4 @@
-import { MouseEvent, MutableRefObject, useEffect, useRef } from "react";
+import { MouseEvent } from "react";
 import { Tag } from "antd";
 import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
@@ -10,7 +10,6 @@ import { songsState } from "store/songs";
 import { RootState } from "store";
 import { useDouble } from "body/utils";
 import { Keys } from "types";
-import { useBackTop } from "hooks";
 
 const SONGSTYPE: { [x: number]: string } = {
   [Keys.zero]: "", // 免费或无版权
@@ -43,8 +42,6 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     const { data } = check(id);
     return data?.success;
   };
-
-  useBackTop();
 
   // const canUse = isUse(id);
   // console.log("isUse", isUse(id));

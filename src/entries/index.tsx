@@ -10,6 +10,7 @@ import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { FloatButton } from "antd";
+import confetti from "canvas-confetti";
 import {
   RecommendSongSheet,
   Ranking,
@@ -22,7 +23,22 @@ import {
   Other,
 } from "pages";
 import store, { persist } from "../store";
+import { debounce } from "utils/utils";
 // import { ReactQueryDevtools } from "react-query-devtools";
+
+localStorage.setItem("zhixue", "false");
+const count = 390;
+const defaults = {
+  origin: { y: 0.7 },
+};
+
+function fire(particleRatio: any, opts: any) {
+  confetti(
+    Object.assign({}, defaults, opts, {
+      particleCount: Math.floor(count * particleRatio),
+    })
+  );
+}
 
 const Entries = () => {
   // 为什么写为true就能触发？
@@ -35,11 +51,37 @@ const Entries = () => {
     },
   });
 
+  const xuanlan = () => {
+    if (localStorage.getItem("zhixue") === "false") return;
+    fire(0.25, {
+      spread: 26,
+      startVelocity: 55,
+    });
+    fire(0.2, {
+      spread: 60,
+    });
+    fire(0.35, {
+      spread: 100,
+      decay: 0.91,
+      scalar: 0.8,
+    });
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 25,
+      decay: 0.92,
+      scalar: 1.2,
+    });
+    fire(0.1, {
+      spread: 120,
+      startVelocity: 45,
+    });
+  };
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persist}>
         {/* {getScrollBarColor} */}
-        <Container>
+        <Container onClick={debounce(xuanlan, 300)}>
           <QueryPrivider client={queryClients}>
             <Router>
               <CenterContent>

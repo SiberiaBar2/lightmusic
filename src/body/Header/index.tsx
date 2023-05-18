@@ -8,7 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search } from "@icon-park/react";
-import { Avatar, Button, Input, Popover, Tooltip } from "antd";
+import { Avatar, Button, Input, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
 import { HotList } from "./HotList";
@@ -67,6 +67,11 @@ export const Header = () => {
 
   const navigate = useNavigate();
 
+  const changeZhixue = () => {
+    localStorage.getItem("zhixue") === "false"
+      ? localStorage.setItem("zhixue", "true")
+      : localStorage.setItem("zhixue", "false");
+  };
   // const { data: { data: { unikey } } = { data: { unikey: "" } } } = useQrKey();
   // // console.log("loginKey", unikey);
 
@@ -225,6 +230,10 @@ export const Header = () => {
           onClick={() => window.history.forward()}
         />
       </IconWrap>
+      <Zhixue onClick={changeZhixue}>
+        <span>纸屑效果</span>
+        🎉
+      </Zhixue>
       {renderUser()}
     </RightContent>
   );
@@ -315,4 +324,11 @@ const Users = styled.div`
   display: flex;
   align-items: center;
   margin-right: 1rem;
+`;
+
+const Zhixue = styled.div`
+  cursor: pointer;
+  > span {
+    margin-right: 1rem;
+  }
 `;

@@ -5,8 +5,11 @@ import { useSongList } from "./utils";
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
 import { config } from "utils/customRender";
+import { useBackTop } from "hooks";
 
 export const SongList: React.FC = () => {
+  useBackTop();
+
   const { id } = useParams();
   const { data: songList, isLoading } = useSongList({ data: { id } });
 

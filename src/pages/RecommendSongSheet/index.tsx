@@ -14,11 +14,8 @@ import {
 } from "./utils";
 
 import "swiper/css/bundle";
-import { Divider } from "antd";
-import { useBackTop } from "hooks";
 
 export const RecommendSongSheet: React.FC = () => {
-  useBackTop();
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
   const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
