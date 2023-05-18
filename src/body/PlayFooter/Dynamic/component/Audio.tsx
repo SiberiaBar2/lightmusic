@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import dayjs from "dayjs";
+import { stringAdds } from "utils/utils";
 
 interface AudiosProps {
   musicRef: React.MutableRefObject<HTMLAudioElement>;
@@ -52,7 +53,7 @@ export const Audio: React.FC<AudiosProps> = React.memo(
       <audio
         controls
         ref={musicRef}
-        src={data[0].url}
+        src={stringAdds(data[0].url)}
         preload="auto"
         style={{ display: "none" }}
         onTimeUpdate={audioTimeUpdate}
