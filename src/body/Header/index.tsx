@@ -19,6 +19,7 @@ import { LoginState, loginSlice } from "store/login";
 import { UserDetail } from "./UserDetail";
 import { stringAdds } from "utils/utils";
 import { CommonModal } from "./component/CommonModal";
+import { useYiyan } from "./utils";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -36,6 +37,8 @@ export const Header = () => {
     console.error("执行了一次");
     window.location.reload();
   }, []);
+
+  const { data: text } = useYiyan();
 
   /**
    * 第一次登录后 刷新页面
@@ -138,6 +141,9 @@ export const Header = () => {
 
   const renderUser = () => (
     <User>
+      <Tooltip title={text}>
+        <Yiyan>{text}</Yiyan>
+      </Tooltip>
       <Input
         value={search}
         onChange={(e) => {
@@ -292,7 +298,7 @@ const User = styled.div`
   width: calc(100% - 40%);
   height: 100%;
   display: flex;
-  justify-content: flex-end;
+  /* justify-content: flex-end; */
   align-items: center;
 `;
 
@@ -331,4 +337,13 @@ const Zhixue = styled.div`
   > span {
     margin-right: 1rem;
   }
+`;
+
+const Yiyan = styled.div`
+  margin-right: 1rem;
+  width: 37rem;
+  height: 5.5rem;
+  overflow: hidden;
+  line-height: 5.5rem;
+  color: rgb(62, 56, 65);
 `;

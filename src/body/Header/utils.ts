@@ -25,6 +25,17 @@ export const useLogout = () => {
   );
 };
 
+export const useYiyan = () => {
+  return useQuery(["yiyan"], () =>
+    fetch("https://v1.hitokoto.cn/")
+      .then((response) => response.json())
+      .then((data) => {
+        return data.hitokoto;
+      })
+      .catch(console.error)
+  );
+};
+
 // 搜索结果
 export const useCloudsearch = ({
   keywords,
