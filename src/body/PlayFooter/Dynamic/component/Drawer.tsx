@@ -65,47 +65,49 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       <Wrap>
         <ContainerBackGround color={stringAdds(picUrl)} />
         <ContainerMask />
-        <DoubleDown
-          style={{
-            top: "2rem",
-            left: "15rem",
-            cursor: "pointer",
-            position: "absolute",
-          }}
-          theme="outline"
-          size="24"
-          fill="rgba(0, 0, 0, 0.4)"
-          onClick={() => changeVisiable()}
-        />
-        <DoubleUp
-          style={{
-            bottom: "2rem",
-            left: "15rem",
-            cursor: "pointer",
-            position: "absolute",
-          }}
-          theme="outline"
-          size="24"
-          fill="rgba(0, 0, 0, 0.4)"
-          onClick={() => changeVisiable()}
-        />
-        <DoubleUp
-          style={{
-            top: "72rem",
-            left: "15rem",
-            cursor: "pointer",
-            position: "absolute",
-          }}
-          theme="outline"
-          size="24"
-          fill="rgba(0, 0, 0, 0.4)"
-          onClick={() => changeVisiable()}
-        />
-        <Container>
-          <RoundWrap picUrl={stringAdds(picUrl)} />
-          <LyricWrap {...LryicConfig} />
-        </Container>
-        <CommonWrap songId={songId} />
+        <Component>
+          <DoubleDown
+            style={{
+              top: "2rem",
+              left: "-5rem",
+              cursor: "pointer",
+              position: "absolute",
+            }}
+            theme="outline"
+            size="24"
+            fill="rgba(0, 0, 0, 0.4)"
+            onClick={() => changeVisiable()}
+          />
+          <DoubleUp
+            style={{
+              bottom: "2rem",
+              left: "-5rem",
+              cursor: "pointer",
+              position: "absolute",
+            }}
+            theme="outline"
+            size="24"
+            fill="rgba(0, 0, 0, 0.4)"
+            onClick={() => changeVisiable()}
+          />
+          <DoubleUp
+            style={{
+              top: "62rem",
+              left: "-5rem",
+              cursor: "pointer",
+              position: "absolute",
+            }}
+            theme="outline"
+            size="24"
+            fill="rgba(0, 0, 0, 0.4)"
+            onClick={() => changeVisiable()}
+          />
+          <Container>
+            <RoundWrap picUrl={stringAdds(picUrl)} />
+            <LyricWrap {...LryicConfig} />
+          </Container>
+          <CommonWrap songId={songId} />
+        </Component>
       </Wrap>
     </AntDrawer>
   );
@@ -287,6 +289,10 @@ const ContainerMask = styled.div`
   bottom: 0;
   right: 0;
   background-color: rgba(0, 0, 0, 0.3);
+`;
+
+const Component = styled.div`
+  position: relative;
 `;
 
 const Container = styled.div`

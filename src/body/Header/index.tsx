@@ -178,6 +178,7 @@ export const Header = () => {
               fontSize: "0.9rem",
               cursor: "pointer",
               borderRadius: "5rem",
+              background: "rgba(0, 0, 0, 0.1)",
             }}
             type="dashed"
             onClick={() => modalRef.current?.openModal()}
@@ -246,6 +247,8 @@ export const Header = () => {
 
   const modalConfig = {
     title: _.isEmpty(profile) ? "登录" : "info",
+    cancel: "1212",
+    footer: null,
   };
 
   return (
@@ -280,7 +283,6 @@ const H4 = styled.h2`
   line-height: 4.75rem;
   text-align: center;
   position: relative;
-  color: rgb(59, 129, 140);
 
   > span {
     font-size: 0.1rem;
@@ -305,8 +307,10 @@ const User = styled.div`
 const SearchContent = styled.div`
   width: 21rem;
   height: 35rem;
-  background: #fff;
-  border: 0.1rem solid rgb(237, 90, 101);
+  /* background: #fff; */
+  background: rgba(0, 0, 0, 0.4);
+
+  /* border: 0.1rem solid rgb(237, 90, 101); */
   position: absolute;
   top: 4.5rem;
   right: 12rem;
@@ -345,5 +349,4 @@ const Yiyan = styled.div`
   height: 5.5rem;
   overflow: hidden;
   line-height: 5.5rem;
-  color: rgb(59, 129, 140);
 `;

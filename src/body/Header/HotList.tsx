@@ -61,7 +61,7 @@ const Container = styled.div`
     }
 
     span:nth-of-type(2) {
-      color: rgb(50, 47, 59);
+      /* color: rgb(50, 47, 59); */
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

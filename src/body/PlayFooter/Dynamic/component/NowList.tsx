@@ -51,6 +51,7 @@ export const NowList = forwardRef<NowListType, any>((props, ref) => {
       bodyStyle={{
         boxShadow: "none !important",
         padding: 0,
+        background: "rgba(0, 0, 0, 0.8)",
       }}
     >
       <Container>

@@ -37,3 +37,19 @@ html {
 ::-webkit-scrollbar {
   width: 0 !important;
 }
+
+* {
+  color: rgb(251, 236, 222);
+}
+
+.ant-modal-header {
+  background: transparent !important;
+}
+
+.ant-modal-title {
+  color: rgba(251, 236, 222) !important;
+}
+
+.ant-modal-content {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}

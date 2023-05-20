@@ -22,7 +22,7 @@ import {
   Other,
 } from "pages";
 import store, { persist } from "../store";
-import { debounce } from "utils/utils";
+import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 // import { ReactQueryDevtools } from "react-query-devtools";
@@ -87,7 +87,7 @@ const Entries = () => {
       <PersistGate persistor={persist}>
         {/* {getScrollBarColor} */}
         <Container onClick={debounce(xuanlan, 300)}>
-          <ContainerBackGround color={picUrl} />
+          <ContainerBackGround color={stringAdds(picUrl)} />
           <ContainerMask />
           <Router>
             <CenterContent>
@@ -119,7 +119,9 @@ const Entries = () => {
                   </Routes>
                   <FloatButton.BackTop
                     visibilityHeight={20}
-                    style={{ bottom: "12.5rem" }}
+                    style={{
+                      bottom: "12.5rem",
+                    }}
                     target={() =>
                       document.getElementById("section") as HTMLElement
                     }
