@@ -227,13 +227,13 @@ export const Header = () => {
         <Left
           theme="outline"
           size="24"
-          fill="rgb(62, 56, 65)"
+          fill="rgb(251, 236, 222)"
           onClick={() => window.history.back()}
         />
         <Right
           theme="outline"
           size="24"
-          fill="rgb(62, 56, 65)"
+          fill="rgb(251, 236, 222)"
           onClick={() => window.history.forward()}
         />
       </IconWrap>

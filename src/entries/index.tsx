@@ -44,6 +44,7 @@ function fire(particleRatio: any, opts: any) {
 const Entries = () => {
   const { data: { result = [] } = {} } = useNewSongs();
   const getIds = result.map((ele: any) => ele.id);
+
   const {
     data: {
       songs: [
@@ -52,9 +53,7 @@ const Entries = () => {
         },
       ],
     } = PLAYCONSTANTS,
-  } = useSongDetail(getIds[0]);
-
-  console.log("picUrl", picUrl);
+  } = useSongDetail(getIds[5]);
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
