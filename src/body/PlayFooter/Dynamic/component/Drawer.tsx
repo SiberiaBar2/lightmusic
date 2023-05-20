@@ -5,8 +5,8 @@ import React, {
   useState,
   ForwardedRef,
 } from "react";
-import { Divider, Drawer as AntDrawer, DrawerProps } from "antd";
-import { DoubleDown } from "@icon-park/react";
+import { Divider, Drawer as AntDrawer } from "antd";
+import { DoubleDown, DoubleUp } from "@icon-park/react";
 import styled from "@emotion/styled";
 import { DrawProps, DrawRefType } from "..";
 import { Common } from "../../Common";
@@ -62,7 +62,9 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       }}
       bodyStyle={{ padding: 0 }}
     >
-      <Wrap color={stringAdds(picUrl)}>
+      <Wrap>
+        <ContainerBackGround color={stringAdds(picUrl)} />
+        <ContainerMask />
         <DoubleDown
           style={{
             top: "2rem",
@@ -72,7 +74,31 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
           }}
           theme="outline"
           size="24"
-          fill="#ccc"
+          fill="rgba(0, 0, 0, 0.4)"
+          onClick={() => changeVisiable()}
+        />
+        <DoubleUp
+          style={{
+            bottom: "2rem",
+            left: "15rem",
+            cursor: "pointer",
+            position: "absolute",
+          }}
+          theme="outline"
+          size="24"
+          fill="rgba(0, 0, 0, 0.4)"
+          onClick={() => changeVisiable()}
+        />
+        <DoubleUp
+          style={{
+            top: "72rem",
+            left: "15rem",
+            cursor: "pointer",
+            position: "absolute",
+          }}
+          theme="outline"
+          size="24"
+          fill="rgba(0, 0, 0, 0.4)"
           onClick={() => changeVisiable()}
         />
         <Container>
@@ -234,20 +260,33 @@ const Wrap = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  background: url(${(props) => props.color});
-  ::after {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    content: "";
-    background: url(${(props) => props.color});
-    /* background-size: cover; */
-    z-index: -1;
-    filter: blur(37px);
-  }
-  z-index: 1;
+`;
+
+const ContainerBackGround = styled.div`
+  background-image: url(${(props) => props.color});
+  /* z-index: -2; */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+  -webkit-filter: blur(12px);
+  filter: blur(12px);
+  opacity: 0.7;
+  -webkit-transition: all 0.8s;
+  transition: all 0.8s;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+`;
+const ContainerMask = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
 `;
 
 const Container = styled.div`

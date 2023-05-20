@@ -65,7 +65,7 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-around;
     /* align-items: center; */
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     box-sizing: border-box;
     font-size: 1.4rem;
 

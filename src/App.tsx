@@ -1,17 +1,30 @@
 import Entries from "entries";
 import { ConfigProvider } from "antd";
+import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
+
+// 为什么写为true就能触发？
+// document.addEventListener("scroll", handelScroll, true);
+const queryClients = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "rgb(239, 71, 93)",
+          colorPrimary: "rgb(59, 129, 140)",
         },
       }}
     >
       <div className="App">
-        <Entries />
+        <QueryPrivider client={queryClients}>
+          <Entries />
+        </QueryPrivider>
       </div>
     </ConfigProvider>
   );

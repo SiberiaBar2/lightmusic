@@ -76,9 +76,9 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         //     ? "rgb(136, 58, 30)"
         //     : ""
         //   : "rgb(116, 120, 122)",
-        color: isActive() ? "rgb(136, 58, 30)" : "",
+        color: isActive() ? "rgb(124, 171, 177)" : "",
         padding: "1rem 0.3rem",
-        background: isActive() ? "rgb(228, 151, 157)" : "",
+        background: isActive() ? "rgba(0, 0, 0, 0.2)" : "",
         borderRadius: "0.3rem",
       }}
       // {...isClick}

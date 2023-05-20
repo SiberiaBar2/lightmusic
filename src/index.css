@@ -25,9 +25,12 @@ html {
 
 #root {
   height: 100%;
+  height: 100%;
 }
 
 .App {
+  /* z-index: -1; */
+  /* background-color: rgba(0, 0, 0, 0.4); */
   height: 100%;
 }
 

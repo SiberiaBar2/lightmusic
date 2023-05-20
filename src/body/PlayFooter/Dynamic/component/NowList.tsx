@@ -73,5 +73,5 @@ const Container = styled.div`
   > p {
     margin: 1rem 0;
   }
-  border-bottom: 0.1rem solid #ccc;
+  border-bottom: 0.1rem solid rgba(0, 0, 0, 0.4);
 `;

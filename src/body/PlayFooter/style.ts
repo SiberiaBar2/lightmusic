@@ -9,7 +9,6 @@ export const Container = styled.footer`
   bottom: 0;
   width: 100%;
   color: rgb(93, 101, 95);
-  background: rgb(250, 250, 252);
 
   .ant-drawer {
     margin-bottom: 4.3rem;
@@ -32,7 +31,7 @@ export const DivOne = styled.div`
     width: 4rem;
     height: 4rem;
     /* margin-left: 0.9rem; */
-    border: 1px solid darkblue;
+    /* border: 1px solid darkblue; */
     text-align: center;
     cursor: pointer;
     position: relative;
@@ -120,7 +119,7 @@ export const VolumeWrap = styled.div`
 
 export const Progress = styled.div`
   height: 0.4rem;
-  background: rgb(237, 90, 101);
+  background: rgba(0, 0, 0, 0.1);
   position: absolute;
   top: -0.1rem;
   left: 0;

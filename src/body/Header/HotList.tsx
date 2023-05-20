@@ -47,7 +47,7 @@ const Container = styled.div`
     cursor: pointer;
 
     &:hover {
-      background: rgb(240, 124, 130);
+      background: rgba(0, 0, 0, 0.4);
     }
 
     span:nth-of-type(1) {

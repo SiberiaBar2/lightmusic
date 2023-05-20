@@ -280,7 +280,7 @@ const H4 = styled.h2`
   line-height: 4.75rem;
   text-align: center;
   position: relative;
-  color: rgb(237, 85, 106);
+  color: rgb(59, 129, 140);
 
   > span {
     font-size: 0.1rem;
@@ -345,5 +345,5 @@ const Yiyan = styled.div`
   height: 5.5rem;
   overflow: hidden;
   line-height: 5.5rem;
-  color: rgb(62, 56, 65);
+  color: rgb(59, 129, 140);
 `;

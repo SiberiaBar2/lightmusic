@@ -6,7 +6,6 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { FloatButton } from "antd";
@@ -24,6 +23,8 @@ import {
 } from "pages";
 import store, { persist } from "../store";
 import { debounce } from "utils/utils";
+import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
+import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 // import { ReactQueryDevtools } from "react-query-devtools";
 
 localStorage.setItem("zhixue", "false");
@@ -41,15 +42,19 @@ function fire(particleRatio: any, opts: any) {
 }
 
 const Entries = () => {
-  // 为什么写为true就能触发？
-  // document.addEventListener("scroll", handelScroll, true);
-  const queryClients = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-      },
-    },
-  });
+  const { data: { result = [] } = {} } = useNewSongs();
+  const getIds = result.map((ele: any) => ele.id);
+  const {
+    data: {
+      songs: [
+        {
+          al: { picUrl },
+        },
+      ],
+    } = PLAYCONSTANTS,
+  } = useSongDetail(getIds[0]);
+
+  console.log("picUrl", picUrl);
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
@@ -82,51 +87,48 @@ const Entries = () => {
       <PersistGate persistor={persist}>
         {/* {getScrollBarColor} */}
         <Container onClick={debounce(xuanlan, 300)}>
-          <QueryPrivider client={queryClients}>
-            <Router>
-              <CenterContent>
-                <Header>
-                  <BodyHeader />
-                </Header>
-                <Main id={"main"}>
-                  <Aside>
-                    <BodyAside />
-                  </Aside>
-                  <Section id={"section"}>
-                    <Routes>
-                      <Route
-                        path="recommendsongsheet"
-                        element={<RecommendSongSheet />}
-                      />
-                      <Route
-                        path="recommendsongs"
-                        element={<RecommendSongs />}
-                      />
-                      <Route path="ranking" element={<Ranking />} />
-                      <Route path="songList/:id" element={<SongList />} />
-                      <Route path="recent" element={<Recent />} />
-                      <Route path="search/:searchparam" element={<Search />} />
-                      <Route path="ilike" element={<Ilike />} />
-                      <Route path="songsheet" element={<SongSheet />} />
-                      <Route path="other" element={<Other />} />
-                      <Route
-                        path="/"
-                        element={<Navigate to={"recommendsongsheet"} replace />}
-                      />
-                    </Routes>
-                    <FloatButton.BackTop
-                      visibilityHeight={20}
-                      style={{ bottom: "12.5rem" }}
-                      target={() =>
-                        document.getElementById("section") as HTMLElement
-                      }
+          <ContainerBackGround color={picUrl} />
+          <ContainerMask />
+          <Router>
+            <CenterContent>
+              <Header>
+                <BodyHeader />
+              </Header>
+              <Main id={"main"}>
+                <Aside>
+                  <BodyAside />
+                </Aside>
+                <Section id={"section"}>
+                  <Routes>
+                    <Route
+                      path="recommendsongsheet"
+                      element={<RecommendSongSheet />}
                     />
-                  </Section>
-                </Main>
-                <PlayFooter />
-              </CenterContent>
-            </Router>
-          </QueryPrivider>
+                    <Route path="recommendsongs" element={<RecommendSongs />} />
+                    <Route path="ranking" element={<Ranking />} />
+                    <Route path="songList/:id" element={<SongList />} />
+                    <Route path="recent" element={<Recent />} />
+                    <Route path="search/:searchparam" element={<Search />} />
+                    <Route path="ilike" element={<Ilike />} />
+                    <Route path="songsheet" element={<SongSheet />} />
+                    <Route path="other" element={<Other />} />
+                    <Route
+                      path="/"
+                      element={<Navigate to={"recommendsongsheet"} replace />}
+                    />
+                  </Routes>
+                  <FloatButton.BackTop
+                    visibilityHeight={20}
+                    style={{ bottom: "12.5rem" }}
+                    target={() =>
+                      document.getElementById("section") as HTMLElement
+                    }
+                  />
+                </Section>
+              </Main>
+              <PlayFooter />
+            </CenterContent>
+          </Router>
           {/* <ReactQueryDevtools initialIsOpen={true} /> */}
         </Container>
       </PersistGate>
@@ -139,12 +141,40 @@ export default Entries;
 const Container = styled.div`
   height: 100%;
   overflow-y: hidden;
+  position: relative;
+`;
+
+const ContainerBackGround = styled.div`
+  background-image: url(${(props) => props.color});
+  z-index: -2;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+  -webkit-filter: blur(12px);
+  filter: blur(12px);
+  opacity: 0.7;
+  -webkit-transition: all 0.8s;
+  transition: all 0.8s;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+`;
+const ContainerMask = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 100%;
 `;
 
 const Header = styled.header`
   height: 5.5rem;
-  /* background: rgb(241, 147, 1 55); */
-  box-shadow: 0 0.1rem 0.1rem #ccc;
+  box-shadow: 0 0.1rem 0.1rem rgba(0, 0, 0, 0.2);
   top: 0;
   width: 100%;
   z-index: 99;
@@ -157,12 +187,14 @@ const Aside = styled.aside`
   display: flex;
   align-items: center;
   justify-content: center;
+  .ant-menu {
+    background-color: transparent;
+  }
 `;
 
 const Main = styled.main`
   display: flex;
   height: calc(100% - 10.9rem);
-  background: rgb(250, 250, 252);
   position: relative;
 
   .ant-drawer {

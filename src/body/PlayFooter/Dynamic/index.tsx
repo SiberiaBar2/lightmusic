@@ -304,7 +304,7 @@ export const Dynamic: React.FC<{
             onClick={() => handeChangeType(PlayType.dan)}
             theme="outline"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(59, 129, 140)"
           />
         );
       case PlayType.shun:
@@ -314,7 +314,7 @@ export const Dynamic: React.FC<{
             onClick={() => handeChangeType(PlayType.shun)}
             theme="outline"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(59, 129, 140)"
           />
         );
       case PlayType.liexun:
@@ -324,7 +324,7 @@ export const Dynamic: React.FC<{
             onClick={() => handeChangeType(PlayType.liexun)}
             theme="outline"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(59, 129, 140)"
           />
         );
       case PlayType.sui:
@@ -334,7 +334,7 @@ export const Dynamic: React.FC<{
             onClick={() => handeChangeType(PlayType.sui)}
             theme="outline"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(59, 129, 140)"
           />
         );
 
@@ -412,7 +412,7 @@ export const Dynamic: React.FC<{
           onClick={() => goPrevorNext("prev")}
           theme="outline"
           size="24"
-          fill="rgb(237, 90, 101)"
+          fill="rgb(59, 129, 140)"
           style={{ cursor: "pointer" }}
         />
         {play !== "play" ? (
@@ -420,7 +420,7 @@ export const Dynamic: React.FC<{
             onClick={() => setParam(changePlay({ play: "play" }))}
             theme="filled"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(59, 129, 140)"
             style={{ cursor: "pointer" }}
           />
         ) : (
@@ -428,7 +428,7 @@ export const Dynamic: React.FC<{
             onClick={() => setParam(changePlay({ play: "pause" }))}
             theme="filled"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(59, 129, 140)"
             style={{ cursor: "pointer" }}
           />
         )}
@@ -436,7 +436,7 @@ export const Dynamic: React.FC<{
           onClick={() => goPrevorNext("next")}
           theme="outline"
           size="24"
-          fill="rgb(237, 90, 101)"
+          fill="rgb(59, 129, 140)"
           style={{ cursor: "pointer" }}
         />
         <Like songId={useMemo(() => songId, [songId])} />
@@ -453,7 +453,7 @@ export const Dynamic: React.FC<{
           <ListBottom
             theme="outline"
             size="24"
-            fill="rgb(237, 90, 101)"
+            fill="rgb(59, 129, 140)"
             onClick={() => nowListRef.current?.changeOpen()}
           />
         </Tooltip>
@@ -478,14 +478,14 @@ export const Dynamic: React.FC<{
               theme="outline"
               onClick={() => changeOpen(false)}
               size="24"
-              fill="rgb(237, 90, 101)"
+              fill="rgb(59, 129, 140)"
             />
           ) : (
             <VolumeMute
               theme="outline"
               onClick={() => changeOpen(true)}
               size="24"
-              fill="rgb(237, 90, 101)"
+              fill="rgb(59, 129, 140)"
             />
           )}
         </VolumeWrap>
