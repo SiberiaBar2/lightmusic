@@ -53,3 +53,7 @@ html {
 .ant-modal-content {
   background-color: rgba(0, 0, 0, 0.4) !important;
 }
+
+.ant-menu-item-selected {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}

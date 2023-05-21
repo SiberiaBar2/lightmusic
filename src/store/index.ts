@@ -12,12 +12,14 @@ import playReducer from "./play";
 import loginReducer from "./login";
 import songsReducer from "./songs";
 import ilikeReducer from "./ilike";
+import picturlReducer from "./picturl";
 
 const rootReducer = combineReducers({
   play: playReducer,
   login: loginReducer,
   songs: songsReducer,
   ilike: ilikeReducer,
+  picturl: picturlReducer,
 });
 
 // 状态持久化配置

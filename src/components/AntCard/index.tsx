@@ -27,6 +27,8 @@ const Antcard = styled(Card)`
   width: 18rem;
   height: 20rem;
   cursor: pointer;
+  background: transparent;
+  border: none;
 
   p:nth-of-type(1) {
     margin: 0;

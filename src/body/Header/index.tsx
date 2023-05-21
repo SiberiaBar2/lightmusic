@@ -189,7 +189,6 @@ export const Header = () => {
           <>
             <Avatar
               style={{
-                backgroundColor: "pink",
                 verticalAlign: "middle",
                 cursor: "pointer",
               }}

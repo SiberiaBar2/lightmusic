@@ -6,7 +6,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { FloatButton } from "antd";
 import confetti from "canvas-confetti";
@@ -21,11 +21,14 @@ import {
   RecommendSongs,
   Other,
 } from "pages";
-import store, { persist } from "../store";
+import { RootState } from "../store";
 import { debounce, stringAdds } from "utils/utils";
-import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
-import { PLAYCONSTANTS } from "body/PlayFooter/contants";
+import { useNewSongs } from "body/PlayFooter/utils";
+// import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 // import { ReactQueryDevtools } from "react-query-devtools";
+import { PictState } from "store/picturl";
+import { useEffect } from "react";
+import { songsInfo, songsState } from "store/songs";
 
 localStorage.setItem("zhixue", "false");
 const count = 390;
@@ -42,18 +45,32 @@ function fire(particleRatio: any, opts: any) {
 }
 
 const Entries = () => {
+  const dispatch = useDispatch();
+  const PictState = useSelector<RootState, Pick<PictState, "picturl">>(
+    (state) => state.picturl
+  );
+
+  const { picturl: picUrl } = PictState;
+
+  const songsState = useSelector<
+    RootState,
+    Pick<songsState, "songId" | "song" | "prevornext">
+  >((state) => state.songs);
   const { data: { result = [] } = {} } = useNewSongs();
   const getIds = result.map((ele: any) => ele.id);
+  useEffect(() => {
+    console.log("picUrl", picUrl);
 
-  const {
-    data: {
-      songs: [
-        {
-          al: { picUrl },
-        },
-      ],
-    } = PLAYCONSTANTS,
-  } = useSongDetail(getIds[5]);
+    !picUrl &&
+      dispatch(
+        songsInfo({
+          ...songsState,
+          songId: getIds[0],
+          song: 0,
+          prevornext: String(getIds),
+        })
+      );
+  }, []);
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
@@ -82,58 +99,51 @@ const Entries = () => {
   };
 
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persist}>
-        {/* {getScrollBarColor} */}
-        <Container onClick={debounce(xuanlan, 300)}>
-          <ContainerBackGround color={stringAdds(picUrl)} />
-          <ContainerMask />
-          <Router>
-            <CenterContent>
-              <Header>
-                <BodyHeader />
-              </Header>
-              <Main id={"main"}>
-                <Aside>
-                  <BodyAside />
-                </Aside>
-                <Section id={"section"}>
-                  <Routes>
-                    <Route
-                      path="recommendsongsheet"
-                      element={<RecommendSongSheet />}
-                    />
-                    <Route path="recommendsongs" element={<RecommendSongs />} />
-                    <Route path="ranking" element={<Ranking />} />
-                    <Route path="songList/:id" element={<SongList />} />
-                    <Route path="recent" element={<Recent />} />
-                    <Route path="search/:searchparam" element={<Search />} />
-                    <Route path="ilike" element={<Ilike />} />
-                    <Route path="songsheet" element={<SongSheet />} />
-                    <Route path="other" element={<Other />} />
-                    <Route
-                      path="/"
-                      element={<Navigate to={"recommendsongsheet"} replace />}
-                    />
-                  </Routes>
-                  <FloatButton.BackTop
-                    visibilityHeight={20}
-                    style={{
-                      bottom: "12.5rem",
-                    }}
-                    target={() =>
-                      document.getElementById("section") as HTMLElement
-                    }
-                  />
-                </Section>
-              </Main>
-              <PlayFooter />
-            </CenterContent>
-          </Router>
-          {/* <ReactQueryDevtools initialIsOpen={true} /> */}
-        </Container>
-      </PersistGate>
-    </Provider>
+    <Container onClick={debounce(xuanlan, 300)}>
+      <ContainerBackGround color={stringAdds(picUrl)} />
+      <ContainerMask />
+      <Router>
+        <CenterContent>
+          <Header>
+            <BodyHeader />
+          </Header>
+          <Main id={"main"}>
+            <Aside>
+              <BodyAside />
+            </Aside>
+            <Section id={"section"}>
+              <Routes>
+                <Route
+                  path="recommendsongsheet"
+                  element={<RecommendSongSheet />}
+                />
+                <Route path="recommendsongs" element={<RecommendSongs />} />
+                <Route path="ranking" element={<Ranking />} />
+                <Route path="songList/:id" element={<SongList />} />
+                <Route path="recent" element={<Recent />} />
+                <Route path="search/:searchparam" element={<Search />} />
+                <Route path="ilike" element={<Ilike />} />
+                <Route path="songsheet" element={<SongSheet />} />
+                <Route path="other" element={<Other />} />
+                <Route
+                  path="/"
+                  element={<Navigate to={"recommendsongsheet"} replace />}
+                />
+              </Routes>
+              <FloatButton.BackTop
+                visibilityHeight={20}
+                style={{
+                  bottom: "12.5rem",
+                }}
+                target={() => document.getElementById("section") as HTMLElement}
+              />
+            </Section>
+          </Main>
+          <PlayFooter />
+        </CenterContent>
+      </Router>
+      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+    </Container>
   );
 };
 
