@@ -1,7 +1,7 @@
 import Entries from "entries";
 import { ConfigProvider } from "antd";
 import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persist } from "store";
 

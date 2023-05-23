@@ -23,12 +23,13 @@ import {
 } from "pages";
 import { RootState } from "../store";
 import { debounce, stringAdds } from "utils/utils";
-import { useNewSongs } from "body/PlayFooter/utils";
+import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 // import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 // import { ReactQueryDevtools } from "react-query-devtools";
 import { PictState } from "store/picturl";
 import { useEffect } from "react";
 import { songsInfo, songsState } from "store/songs";
+import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 
 localStorage.setItem("zhixue", "false");
 const count = 390;
@@ -45,32 +46,43 @@ function fire(particleRatio: any, opts: any) {
 }
 
 const Entries = () => {
-  const dispatch = useDispatch();
-  const PictState = useSelector<RootState, Pick<PictState, "picturl">>(
-    (state) => state.picturl
-  );
+  // const dispatch = useDispatch();
+  // const PictState = useSelector<RootState, Pick<PictState, "picturl">>(
+  //   (state) => state.picturl
+  // );
 
-  const { picturl: picUrl } = PictState;
+  // const { picturl: picUrl } = PictState;
 
-  const songsState = useSelector<
-    RootState,
-    Pick<songsState, "songId" | "song" | "prevornext">
-  >((state) => state.songs);
+  // const songsState = useSelector<
+  //   RootState,
+  //   Pick<songsState, "songId" | "song" | "prevornext">
+  // >((state) => state.songs);
   const { data: { result = [] } = {} } = useNewSongs();
   const getIds = result.map((ele: any) => ele.id);
-  useEffect(() => {
-    console.log("picUrl", picUrl);
 
-    !picUrl &&
-      dispatch(
-        songsInfo({
-          ...songsState,
-          songId: getIds[0],
-          song: 0,
-          prevornext: String(getIds),
-        })
-      );
-  }, []);
+  // useEffect(() => {
+  //   console.log("picUrl", picUrl);
+
+  const {
+    data: {
+      songs: [
+        {
+          al: { picUrl },
+        },
+      ],
+    } = PLAYCONSTANTS,
+  } = useSongDetail(getIds[5]);
+
+  //   !picUrl &&
+  //     dispatch(
+  //       songsInfo({
+  //         ...songsState,
+  //         songId: getIds[0],
+  //         song: 0,
+  //         prevornext: String(getIds),
+  //       })
+  //     );
+  // }, []);
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;

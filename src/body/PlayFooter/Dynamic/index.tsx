@@ -47,7 +47,7 @@ import {
 import { stringAdds } from "utils/utils";
 import { FatherHoc } from "./component/FatherHoc";
 import { NowList } from "./component/NowList";
-import { changePicturl } from "store/picturl";
+// import { changePicturl } from "store/picturl";
 
 const singer = process.env.REACT_APP_SPA_URL as string;
 
@@ -143,9 +143,9 @@ export const Dynamic: React.FC<{
 
   const { name, picUrl, authName, lyric, data } = useSongs(songId);
 
-  useEffect(() => {
-    setParam(changePicturl({ picturl: picUrl }));
-  }, [picUrl]);
+  // useEffect(() => {
+  //   setParam(changePicturl({ picturl: picUrl }));
+  // }, [picUrl]);
 
   const audioTimeUpdate = useCallback(() => {
     const { currentTime = 0 } = musicRef.current;
