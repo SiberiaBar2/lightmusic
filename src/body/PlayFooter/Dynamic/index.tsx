@@ -421,7 +421,7 @@ export const Dynamic: React.FC<{
         {play !== "play" ? (
           <Play
             onClick={() => setParam(changePlay({ play: "play" }))}
-            theme="filled"
+            theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
             style={{ cursor: "pointer" }}
@@ -429,7 +429,7 @@ export const Dynamic: React.FC<{
         ) : (
           <PauseOne
             onClick={() => setParam(changePlay({ play: "pause" }))}
-            theme="filled"
+            theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
             style={{ cursor: "pointer" }}

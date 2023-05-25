@@ -6,9 +6,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 import { FloatButton } from "antd";
+import ReactLoading from "react-loading";
 import confetti from "canvas-confetti";
 import {
   RecommendSongSheet,
@@ -21,14 +20,10 @@ import {
   RecommendSongs,
   Other,
 } from "pages";
-import { RootState } from "../store";
 import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 // import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 // import { ReactQueryDevtools } from "react-query-devtools";
-import { PictState } from "store/picturl";
-import { useEffect } from "react";
-import { songsInfo, songsState } from "store/songs";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 
 localStorage.setItem("zhixue", "false");
@@ -111,50 +106,78 @@ const Entries = () => {
   };
 
   return (
-    <Container onClick={debounce(xuanlan, 300)}>
-      <ContainerBackGround color={stringAdds(picUrl)} />
-      <ContainerMask />
-      <Router>
-        <CenterContent>
-          <Header>
-            <BodyHeader />
-          </Header>
-          <Main id={"main"}>
-            <Aside>
-              <BodyAside />
-            </Aside>
-            <Section id={"section"}>
-              <Routes>
-                <Route
-                  path="recommendsongsheet"
-                  element={<RecommendSongSheet />}
-                />
-                <Route path="recommendsongs" element={<RecommendSongs />} />
-                <Route path="ranking" element={<Ranking />} />
-                <Route path="songList/:id" element={<SongList />} />
-                <Route path="recent" element={<Recent />} />
-                <Route path="search/:searchparam" element={<Search />} />
-                <Route path="ilike" element={<Ilike />} />
-                <Route path="songsheet" element={<SongSheet />} />
-                <Route path="other" element={<Other />} />
-                <Route
-                  path="/"
-                  element={<Navigate to={"recommendsongsheet"} replace />}
-                />
-              </Routes>
-              <FloatButton.BackTop
-                visibilityHeight={20}
-                style={{
-                  bottom: "12.5rem",
-                }}
-                target={() => document.getElementById("section") as HTMLElement}
-              />
-            </Section>
-          </Main>
-          <PlayFooter />
-        </CenterContent>
-      </Router>
-      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+    <Container>
+      {picUrl ? (
+        <View onClick={debounce(xuanlan, 300)}>
+          <div
+            style={{
+              backgroundImage: `url(${stringAdds(picUrl)})`,
+              zIndex: "-2",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              filter: "blur(12px)",
+              opacity: "0.7",
+              backgroundPosition: "50%",
+            }}
+          />
+          <ContainerMask />
+          <Router>
+            <CenterContent>
+              <Header>
+                <BodyHeader />
+              </Header>
+              <Main id={"main"}>
+                <Aside>
+                  <BodyAside />
+                </Aside>
+                <Section id={"section"}>
+                  <Routes>
+                    <Route
+                      path="recommendsongsheet"
+                      element={<RecommendSongSheet />}
+                    />
+                    <Route path="recommendsongs" element={<RecommendSongs />} />
+                    <Route path="ranking" element={<Ranking />} />
+                    <Route path="songList/:id" element={<SongList />} />
+                    <Route path="recent" element={<Recent />} />
+                    <Route path="search/:searchparam" element={<Search />} />
+                    <Route path="ilike" element={<Ilike />} />
+                    <Route path="songsheet" element={<SongSheet />} />
+                    <Route path="other" element={<Other />} />
+                    <Route
+                      path="/"
+                      element={<Navigate to={"recommendsongsheet"} replace />}
+                    />
+                  </Routes>
+                  <FloatButton.BackTop
+                    visibilityHeight={20}
+                    style={{
+                      bottom: "12.5rem",
+                    }}
+                    target={() =>
+                      document.getElementById("section") as HTMLElement
+                    }
+                  />
+                </Section>
+              </Main>
+              <PlayFooter />
+            </CenterContent>
+          </Router>
+          {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+        </View>
+      ) : (
+        <ReactLoading
+          type="bars"
+          color="rgb(240, 124, 130)"
+          height={"7%"}
+          width={"7%"}
+        />
+      )}
     </Container>
   );
 };
@@ -163,28 +186,18 @@ export default Entries;
 
 const Container = styled.div`
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const View = styled.div`
+  width: 100%;
+  height: 100%;
   overflow-y: hidden;
   position: relative;
 `;
 
-const ContainerBackGround = styled.div`
-  background-image: url(${(props) => props.color});
-  z-index: -2;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50%;
-  -webkit-filter: blur(12px);
-  filter: blur(12px);
-  opacity: 0.7;
-  -webkit-transition: all 0.8s;
-  transition: all 0.8s;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  height: 100%;
-`;
 const ContainerMask = styled.div`
   position: absolute;
   left: 0;

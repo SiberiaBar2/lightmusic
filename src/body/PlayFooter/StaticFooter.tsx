@@ -75,7 +75,7 @@ export const StaticFooter: React.FC = () => {
             style={{ cursor: "pointer" }}
           />
           <Play
-            theme="filled"
+            theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
             style={{ cursor: "pointer" }}
