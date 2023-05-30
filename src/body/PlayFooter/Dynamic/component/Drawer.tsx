@@ -63,7 +63,21 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       bodyStyle={{ padding: 0 }}
     >
       <Wrap>
-        <ContainerBackGround color={stringAdds(picUrl)} />
+        <div
+          style={{
+            backgroundImage: `url(${stringAdds(picUrl)})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            filter: "blur(12px)",
+            opacity: "0.7",
+            backgroundPosition: "50%",
+          }}
+        />
         <ContainerMask />
         <Component>
           <DoubleDown
@@ -264,24 +278,6 @@ const Wrap = styled.div`
   position: relative;
 `;
 
-const ContainerBackGround = styled.div`
-  background-image: url(${(props) => props.color});
-  /* z-index: -2; */
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50%;
-  -webkit-filter: blur(12px);
-  filter: blur(12px);
-  opacity: 0.7;
-  -webkit-transition: all 0.8s;
-  transition: all 0.8s;
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  height: 100%;
-`;
 const ContainerMask = styled.div`
   position: absolute;
   left: 0;

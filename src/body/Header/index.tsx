@@ -30,6 +30,7 @@ export const Header = () => {
   >((state) => state.login);
   const { changeLogin } = loginSlice.actions;
 
+  const { getUserInfo } = loginSlice.actions;
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
   const modalRef = useRef() as MutableRefObject<{ openModal: () => void }>;
@@ -51,8 +52,13 @@ export const Header = () => {
       console.error("刷新");
       once();
       store.dispatch(changeLogin({ islogin: false }));
+      return;
     }
-  }, [profile, once, islogin]);
+    if (_.isEmpty(profile) && !islogin) {
+      store.dispatch(changeLogin({ islogin: true }));
+      once();
+    }
+  }, [profile, once, islogin, store]);
   // const getHttp = !_.isEmpty(profile)
   //   ? (profile.avatarUrl.slice(0, 4) as string)
   //   : "";

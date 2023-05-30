@@ -1,9 +1,12 @@
 import { useCallback } from "react";
 import * as qs from "qs";
+import stroe from "store";
+import { loginSlice } from "store/login";
 // import * as auth from "auth-provider";
 // import { useAuth } from "context/auth-context";
 
 const api = process.env.REACT_APP_API_URL;
+const { getUserInfo } = loginSlice.actions;
 
 interface Config extends RequestInit {
   data?: object;
@@ -28,7 +31,7 @@ export const http = async (
 
   // console.log("endpoint", endpoint);
 
-  // console.log("qs.stringify(data)", qs.stringify(data));
+  // console.log("qs.stringify(data)", qs.stringify(data), "data", data);
 
   if (config.method.toUpperCase() === "GET") {
     if (data) endpoint += `?${qs.stringify(data)}`;
@@ -36,14 +39,15 @@ export const http = async (
     config.body = JSON.stringify(data || {});
   }
 
-  // console.log("sdssdsdsdsds", `${api}/${endpoint}`);
-
   return fetch(`${api}/${endpoint}`, config).then(async (response) => {
-    // if (response.status === 401) {
-    //     await auth.logout();
-    //   window.location.reload();
-    //   return Promise.reject({ message: "请重新登陆" });
-    // }
+    if (response.status === 301) {
+      localStorage.removeItem("cookie");
+      stroe.dispatch(getUserInfo({ data: {} }));
+      // window.location.reload();
+      return Promise.reject({ message: "请重新登陆" });
+    }
+
+    // console.log("response", response);
 
     const data = await response.json();
     if (response.ok) {
