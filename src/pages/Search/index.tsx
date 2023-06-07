@@ -8,7 +8,6 @@ const DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
 export const Search: React.FC = () => {
   const { searchparam } = useParams();
-  // console.log("parparpar", searchparam);
 
   // const [param, setParam] = useSongIdSearchParam();
   const { data } = useCloudsearch({

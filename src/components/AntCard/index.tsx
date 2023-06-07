@@ -14,7 +14,7 @@ export const AntCard: React.FC<CardProps & { item?: any }> = ({
   const { picUrl, name, coverImgUrl, id } = item;
 
   return (
-    <Antcard onClick={() => navigate(`/songlist/${id}`)} {...other}>
+    <Antcard onClick={() => navigate(`/main/songlist/${id}`)} {...other}>
       <Img src={picUrl || coverImgUrl} alt="" />
       <Tooltip title={name}>
         <p>{name?.slice(0, 12)}</p>

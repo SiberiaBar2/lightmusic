@@ -19,11 +19,10 @@ import {
   SongSheet,
   RecommendSongs,
   Other,
+  Login,
 } from "pages";
 import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
-// import { PLAYCONSTANTS } from "body/PlayFooter/contants";
-// import { ReactQueryDevtools } from "react-query-devtools";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 
 localStorage.setItem("zhixue", "false");
@@ -41,22 +40,8 @@ function fire(particleRatio: any, opts: any) {
 }
 
 const Entries = () => {
-  // const dispatch = useDispatch();
-  // const PictState = useSelector<RootState, Pick<PictState, "picturl">>(
-  //   (state) => state.picturl
-  // );
-
-  // const { picturl: picUrl } = PictState;
-
-  // const songsState = useSelector<
-  //   RootState,
-  //   Pick<songsState, "songId" | "song" | "prevornext">
-  // >((state) => state.songs);
   const { data: { result = [] } = {} } = useNewSongs();
   const getIds = result.map((ele: any) => ele.id);
-
-  // useEffect(() => {
-  //   console.log("picUrl", picUrl);
 
   const {
     data: {
@@ -67,17 +52,6 @@ const Entries = () => {
       ],
     } = PLAYCONSTANTS,
   } = useSongDetail(getIds[5]);
-
-  //   !picUrl &&
-  //     dispatch(
-  //       songsInfo({
-  //         ...songsState,
-  //         songId: getIds[0],
-  //         song: 0,
-  //         prevornext: String(getIds),
-  //       })
-  //     );
-  // }, []);
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
@@ -105,81 +79,84 @@ const Entries = () => {
     });
   };
 
-  return (
-    <Container>
-      {picUrl ? (
-        <View onClick={debounce(xuanlan, 300)}>
-          <div
-            style={{
-              backgroundImage: `url(${stringAdds(picUrl)})`,
-              zIndex: "-2",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-              filter: "blur(12px)",
-              opacity: "0.7",
-              backgroundPosition: "50%",
-            }}
-          />
-          <ContainerMask />
-          <Router>
-            <CenterContent>
-              <Header>
-                <BodyHeader />
-              </Header>
-              <Main id={"main"}>
-                <Aside>
-                  <BodyAside />
-                </Aside>
-                <Section id={"section"}>
-                  <Routes>
-                    <Route
-                      path="recommendsongsheet"
-                      element={<RecommendSongSheet />}
-                    />
-                    <Route path="recommendsongs" element={<RecommendSongs />} />
-                    <Route path="ranking" element={<Ranking />} />
-                    <Route path="songList/:id" element={<SongList />} />
-                    <Route path="recent" element={<Recent />} />
-                    <Route path="search/:searchparam" element={<Search />} />
-                    <Route path="ilike" element={<Ilike />} />
-                    <Route path="songsheet" element={<SongSheet />} />
-                    <Route path="other" element={<Other />} />
-                    <Route
-                      path="/"
-                      element={<Navigate to={"recommendsongsheet"} replace />}
-                    />
-                  </Routes>
-                  <FloatButton.BackTop
-                    visibilityHeight={20}
-                    style={{
-                      bottom: "12.5rem",
-                    }}
-                    target={() =>
-                      document.getElementById("section") as HTMLElement
-                    }
-                  />
-                </Section>
-              </Main>
-              <PlayFooter />
-            </CenterContent>
-          </Router>
-          {/* <ReactQueryDevtools initialIsOpen={true} /> */}
-        </View>
-      ) : (
-        <ReactLoading
-          type="bars"
-          color="rgb(240, 124, 130)"
-          height={"7%"}
-          width={"7%"}
-        />
-      )}
-    </Container>
+  const renderLoading = () => (
+    <ReactLoading
+      type="bars"
+      color="rgb(240, 124, 130)"
+      height={"7%"}
+      width={"7%"}
+    />
   );
+
+  const MainView = () => (
+    <Main id={"main"}>
+      <Aside>
+        <BodyAside />
+      </Aside>
+      <Section id={"section"}>
+        <Routes>
+          <Route path="recommendsongsheet" element={<RecommendSongSheet />} />
+          <Route path="recommendsongs" element={<RecommendSongs />} />
+          <Route path="ranking" element={<Ranking />} />
+          <Route path="songList/:id" element={<SongList />} />
+          <Route path="recent" element={<Recent />} />
+          <Route path="search/:searchparam" element={<Search />} />
+          <Route path="ilike" element={<Ilike />} />
+          <Route path="songsheet" element={<SongSheet />} />
+          <Route path="other" element={<Other />} />
+          <Route
+            path="/"
+            element={<Navigate to={"recommendsongsheet"} replace />}
+          />
+        </Routes>
+        <FloatButton.BackTop
+          visibilityHeight={20}
+          style={{
+            bottom: "12.5rem",
+          }}
+          target={() => document.getElementById("section") as HTMLElement}
+        />
+      </Section>
+    </Main>
+  );
+  const renderView = () => (
+    <View onClick={debounce(xuanlan, 300)}>
+      <div
+        style={{
+          backgroundImage: `url(${stringAdds(picUrl)})`,
+          zIndex: "-2",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          filter: "blur(12px)",
+          opacity: "0.7",
+          backgroundPosition: "50%",
+        }}
+      />
+      <ContainerMask />
+      <Router>
+        <CenterContent>
+          <Header>
+            <BodyHeader />
+          </Header>
+          <Routes>
+            {/* 允许匹配多级路由 */}
+            <Route path="main/*" element={<MainView />} />
+            <Route path="login/:islogin" element={<Login />} />
+            <Route path="/" element={<Navigate to={"main"} replace />} />
+          </Routes>
+          <PlayFooter />
+        </CenterContent>
+      </Router>
+      {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+    </View>
+  );
+
+  return <Container>{!picUrl ? renderLoading() : renderView()}</Container>;
 };
 
 export default Entries;

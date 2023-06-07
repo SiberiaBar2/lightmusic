@@ -33,7 +33,8 @@ export const MusciCard: React.FC<Props> = (props) => {
         <Img
           src={item.coverImgUrl}
           alt={item.name}
-          onClick={() => navigate(`/songlist/${item.id}`)}
+          // 前面加/ 避免多重url路径，原理暂时不知
+          onClick={() => navigate(`/main/songlist/${item.id}`)}
         />
       </Container>
     </>

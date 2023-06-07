@@ -30,10 +30,8 @@ export const Header = () => {
   >((state) => state.login);
   const { changeLogin } = loginSlice.actions;
 
-  const { getUserInfo } = loginSlice.actions;
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
-  const modalRef = useRef() as MutableRefObject<{ openModal: () => void }>;
   const once = useCallback(() => {
     console.error("执行了一次");
     window.location.reload();
@@ -49,14 +47,11 @@ export const Header = () => {
    */
   useEffect(() => {
     if (!_.isEmpty(profile) && islogin) {
-      console.error("刷新");
+      // console.error("刷新");
+      navigate("main/recommendsongsheet");
       once();
       store.dispatch(changeLogin({ islogin: false }));
       return;
-    }
-    if (_.isEmpty(profile) && !islogin) {
-      store.dispatch(changeLogin({ islogin: true }));
-      once();
     }
   }, [profile, once, islogin, store]);
   // const getHttp = !_.isEmpty(profile)
@@ -135,7 +130,7 @@ export const Header = () => {
     return (
       <Search
         onClick={() => {
-          search && navigate(`search/${search}`);
+          search && navigate(`main/search/${search}`);
           setOpen(false);
         }}
         theme="outline"
@@ -162,21 +157,11 @@ export const Header = () => {
         onFocus={() => setOpen(true)}
         onPressEnter={(e) => {
           if (e.key === "Enter") {
-            search && navigate(`search/${search}`);
+            search && navigate(`main/search/${search}`);
             setOpen(false);
           }
         }}
       />
-      {/* <Popover
-        destroyTooltipOnHide
-        getPopupContainer={(triggerNode) =>
-          triggerNode.parentNode as HTMLElement
-        }
-        content={
-          _.isEmpty(profile) ? <Qrcode /> : <UserDetail uid={profile.userId} />
-        }
-        trigger="click"
-      > */}
       <Users>
         {_.isEmpty(profile) ? (
           <Button
@@ -187,7 +172,9 @@ export const Header = () => {
               background: "rgba(0, 0, 0, 0.1)",
             }}
             type="dashed"
-            onClick={() => modalRef.current?.openModal()}
+            onClick={() => {
+              navigate("login/unlogin");
+            }}
           >
             请登录
           </Button>
@@ -204,7 +191,9 @@ export const Header = () => {
                   src={!_.isEmpty(profile) ? stringAdds(profile.avatarUrl) : ""}
                 />
               }
-              onClick={() => modalRef.current?.openModal()}
+              onClick={() => {
+                navigate("login/1");
+              }}
             />
             <Tooltip title={profile.nickname}>
               <span
@@ -269,9 +258,9 @@ export const Header = () => {
           // null} */}
         </SearchContent>
       )}
-      <CommonModal {...modalConfig} ref={modalRef}>
+      {/* <CommonModal {...modalConfig} ref={modalRef}>
         {_.isEmpty(profile) ? <Qrcode /> : <UserDetail uid={profile.userId} />}
-      </CommonModal>
+      </CommonModal> */}
     </Container>
   );
 };
@@ -305,7 +294,7 @@ const User = styled.div`
   width: calc(100% - 40%);
   height: 100%;
   display: flex;
-  /* justify-content: flex-end; */
+  justify-content: flex-end;
   align-items: center;
 `;
 
@@ -317,8 +306,8 @@ const SearchContent = styled.div`
 
   /* border: 0.1rem solid rgb(237, 90, 101); */
   position: absolute;
-  top: 4.5rem;
-  right: 12rem;
+  top: 5rem;
+  right: 7rem;
   z-index: 20;
   overflow-y: auto;
   border-radius: 1rem;

@@ -71,7 +71,9 @@ const Qrcode: React.FC = () => {
   return (
     <Content>
       <div>
-        <span style={{ marginBottom: "2rem" }}>使用网易云app登录</span>
+        <span style={{ marginBottom: "2rem", display: "inline-block" }}>
+          使用网易云app登录
+        </span>
         <img color="red" id="#qrImg" ref={imgRef} alt="" />
       </div>
     </Content>
