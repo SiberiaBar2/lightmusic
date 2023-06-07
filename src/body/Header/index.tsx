@@ -1,10 +1,4 @@
-import {
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search } from "@icon-park/react";
@@ -12,13 +6,9 @@ import { Avatar, Button, Input, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
 import { HotList } from "./HotList";
-// import { Suggest } from"./Suggest";
-import Qrcode from "./Qrcode";
 import store, { RootState } from "store";
 import { LoginState, loginSlice } from "store/login";
-import { UserDetail } from "./UserDetail";
 import { stringAdds } from "utils/utils";
-import { CommonModal } from "./component/CommonModal";
 import { useYiyan } from "./utils";
 
 export const Header = () => {
@@ -32,10 +22,6 @@ export const Header = () => {
 
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
-  const once = useCallback(() => {
-    console.error("执行了一次");
-    window.location.reload();
-  }, []);
 
   const { data: text } = useYiyan();
 
@@ -47,13 +33,13 @@ export const Header = () => {
    */
   useEffect(() => {
     if (!_.isEmpty(profile) && islogin) {
-      // console.error("刷新");
       navigate("main/recommendsongsheet");
-      once();
       store.dispatch(changeLogin({ islogin: false }));
-      return;
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
-  }, [profile, once, islogin, store]);
+  }, [profile, islogin, store]);
   // const getHttp = !_.isEmpty(profile)
   //   ? (profile.avatarUrl.slice(0, 4) as string)
   //   : "";

@@ -13,10 +13,12 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   const navigate = useNavigate();
 
   const confirm = () => {
-    navigate("main/recommendsongsheet");
     logout();
     localStorage.clear();
-    window.location.reload();
+    navigate("main/recommendsongsheet");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   useMemo(() => {
