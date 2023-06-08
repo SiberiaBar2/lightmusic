@@ -4,21 +4,25 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserDetail } from "users";
 import { useLogout } from "./utils";
+import stroe from "store";
+import { loginSlice } from "store/login";
+
 export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   const {
     data: { level = 0, listenSongs = 0, profile: { vipType = 0 } = {} } = {},
   } = useUserDetail(uid);
+
+  const { getUserInfo } = loginSlice.actions;
 
   const { mutate: logout, data } = useLogout();
   const navigate = useNavigate();
 
   const confirm = () => {
     logout();
-    localStorage.clear();
-    navigate("main/recommendsongsheet");
+    stroe.dispatch(getUserInfo({ data: {} }));
     setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+      navigate("/main/recommendsongsheet");
+    }, 300);
   };
 
   useMemo(() => {

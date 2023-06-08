@@ -53,3 +53,73 @@ export const useCloudsearch = ({
     })
   );
 };
+
+// 二维码相关
+export const useCheckLoginStatus = (callBack?: (value: unknown) => void) => {
+  const client = useHttp();
+  return useMutation(
+    (key: string) =>
+      client(`login/qr/check`, {
+        method: "GET",
+        data: {
+          key: key,
+          timerstamp: Date.now(),
+        },
+      }),
+    {
+      onSuccess: callBack,
+    }
+  );
+};
+
+export const useGetLoginValue = (callBack?: (value: unknown) => void) => {
+  const client = useHttp();
+  return useMutation(
+    (cookie: string) =>
+      client(`login/status`, {
+        method: "POST",
+        data: {
+          timerstamp: Date.now(),
+          cookie,
+        },
+      }),
+    {
+      onSuccess: callBack,
+    }
+  );
+};
+
+export const useGetUniKey = () => {
+  const client = useHttp();
+  return useQuery(
+    ["unikey"],
+    () =>
+      client("login/qr/key", {
+        data: {
+          timerstamp: Date.now(),
+        },
+      }),
+    {
+      select: (res) => ({ unikey: res?.data?.unikey }),
+    }
+  );
+};
+
+export const useGetQrcodeUrl = (key?: string) => {
+  const client = useHttp();
+  return useQuery(
+    ["qrimg"],
+    () =>
+      client("login/qr/create", {
+        data: {
+          key: key,
+          qrimg: true,
+          timerstamp: Date.now(),
+        },
+      }),
+    {
+      enabled: !!key,
+      select: (res) => ({ qrimg: res?.data?.qrimg }),
+    }
+  );
+};

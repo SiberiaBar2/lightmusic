@@ -1,72 +1,64 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import axios from "axios";
 import { message } from "antd";
 import stroe from "store";
 import { loginSlice } from "store/login";
+import {
+  useCheckLoginStatus,
+  useGetLoginValue,
+  useGetQrcodeUrl,
+  useGetUniKey,
+} from "./utils";
 
 const Qrcode: React.FC = () => {
-  const imgRef = useRef() as React.MutableRefObject<HTMLImageElement>;
-  const userRef: React.MutableRefObject<any> = useRef();
+  const timerRef = useRef(null) as React.MutableRefObject<any>;
 
+  const navigate = useNavigate();
   const { getUserInfo } = loginSlice.actions;
-  const api = process.env.REACT_APP_API_URL;
 
-  async function checkStatus(key: string) {
-    const res = await axios({
-      url: `${api}/login/qr/check?key=${key}&timerstamp=${Date.now()}`,
-    });
-    return res.data;
-  }
-  async function getLoginStatus(cookie = "") {
-    const res = await axios({
-      url: `${api}/login/status?timerstamp=${Date.now()}`,
-      method: "post",
-      data: {
-        cookie,
-      },
-    });
+  const { data: { unikey = "" } = {} } = useGetUniKey();
+  const { data: { qrimg = "" } = {} } = useGetQrcodeUrl(unikey);
 
-    userRef.current = res.data;
-    cookie && stroe.dispatch(getUserInfo({ data: res.data.data }));
-  }
-  async function login() {
-    let timer: any;
-    const cookie = localStorage.getItem("cookie");
+  // 为什么 unikey 导致的会多次重渲染
+  console.log("unikey", unikey);
 
-    // 这里和存redux时 前面不&& 会引发无限循环 暂时不知原因
-    cookie && getLoginStatus(cookie as string);
-    const res = await axios({
-      url: `${api}/login/qr/key?timerstamp=${Date.now()}`,
-    });
-    const key = res.data.data.unikey;
-    const res2 = await axios({
-      url: `${api}/login/qr/create?key=${key}&qrimg=true&timerstamp=${Date.now()}`,
-    });
+  const infoData = (data: any) => {
+    stroe.dispatch(getUserInfo({ data: data.data }));
+  };
+  const { mutate: getUserInfoSync } = useGetLoginValue(infoData);
 
-    if (imgRef.current) {
-      imgRef.current.src = res2.data.data.qrimg;
+  const getData = (data: any) => {
+    console.warn("check-status", data);
+    if (data.code === 800) {
+      message.warning("二维码已过期,请重新获取");
+      // clearInterval(timerRef.current);
     }
+    if (data.code === 803) {
+      // 这一步会返回cookie
+      clearInterval(timerRef.current);
+      message.success("授权登录成功");
+      getUserInfoSync(data.cookie);
+      localStorage.setItem("cookie", data.cookie);
+      setTimeout(() => {
+        navigate("/main/recommendsongsheet");
+      }, 500);
+    }
+  };
+  const { mutate: check } = useCheckLoginStatus(getData);
 
-    // eslint-disable-next-line prefer-const
-    timer = setInterval(async () => {
-      const statusRes = await checkStatus(key);
-
-      if (statusRes.code === 800) {
-        message.warning("二维码已过期,请重新获取");
-        clearInterval(timer);
-      }
-      if (statusRes.code === 803) {
-        // 这一步会返回cookie
-        clearInterval(timer);
-        message.success("授权登录成功");
-        await getLoginStatus(statusRes.cookie);
-        localStorage.setItem("cookie", statusRes.cookie);
-      }
+  useEffect(() => {
+    // if (timerRef.current) {
+    //   clearInterval(timerRef.current);
+    // }
+    timerRef.current = setInterval(() => {
+      unikey && check(unikey);
     }, 3000);
-  }
 
-  login();
+    return () => {
+      clearInterval(timerRef.current);
+    };
+  }, [unikey]);
 
   return (
     <Content>
@@ -74,7 +66,7 @@ const Qrcode: React.FC = () => {
         <span style={{ marginBottom: "2rem", display: "inline-block" }}>
           使用网易云app登录
         </span>
-        <img color="red" id="#qrImg" ref={imgRef} alt="" />
+        <img color="red" src={qrimg} alt="" />
       </div>
     </Content>
   );

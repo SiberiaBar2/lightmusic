@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search } from "@icon-park/react";
@@ -6,8 +6,8 @@ import { Avatar, Button, Input, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
 import { HotList } from "./HotList";
-import store, { RootState } from "store";
-import { LoginState, loginSlice } from "store/login";
+import { RootState } from "store";
+import { LoginState } from "store/login";
 import { stringAdds } from "utils/utils";
 import { useYiyan } from "./utils";
 
@@ -18,42 +18,12 @@ export const Header = () => {
     RootState,
     Pick<LoginState, "data" | "islogin">
   >((state) => state.login);
-  const { changeLogin } = loginSlice.actions;
+  // const { changeLogin } = loginSlice.actions;
 
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
   const { data: text } = useYiyan();
-
-  /**
-   * 第一次登录后 刷新页面
-   * 以后登录情况下 不再刷新
-   * !_.isEmpty(profile): 表示首次扫描登录成功
-   * islogin: 为true 表示首次的标识
-   */
-  useEffect(() => {
-    if (!_.isEmpty(profile) && islogin) {
-      navigate("main/recommendsongsheet");
-      store.dispatch(changeLogin({ islogin: false }));
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    }
-  }, [profile, islogin, store]);
-  // const getHttp = !_.isEmpty(profile)
-  //   ? (profile.avatarUrl.slice(0, 4) as string)
-  //   : "";
-  // const getEnd = !_.isEmpty(profile)
-  //   ? (profile.avatarUrl.slice(4) as string)
-  //   : "";
-  // const getHttps = getHttp + "s" + getEnd;
-  // console.log("profile", profile);
-  // if (!_.isEmpty(profile)) {
-  //   window.location.reload();
-  // }
-  // console.log("loginState", loginState, "data。", profile);
-
-  // const debouncedParam = useDebounce(search, 500);
 
   const navigate = useNavigate();
 
@@ -197,7 +167,6 @@ export const Header = () => {
           </>
         )}
       </Users>
-      {/* </Popover> */}
     </User>
   );
 
@@ -225,15 +194,9 @@ export const Header = () => {
     </RightContent>
   );
 
-  const modalConfig = {
-    title: _.isEmpty(profile) ? "登录" : "info",
-    cancel: "1212",
-    footer: null,
-  };
-
   return (
     <Container>
-      <H4>light-music</H4>
+      <H4 onClick={() => navigate("main/recommendsongsheet")}>light-music</H4>
       {renderRightContent()}
       {!search && (
         <SearchContent style={{ display: open ? "" : "none" }}>
@@ -244,9 +207,6 @@ export const Header = () => {
           // null} */}
         </SearchContent>
       )}
-      {/* <CommonModal {...modalConfig} ref={modalRef}>
-        {_.isEmpty(profile) ? <Qrcode /> : <UserDetail uid={profile.userId} />}
-      </CommonModal> */}
     </Container>
   );
 };
@@ -287,13 +247,11 @@ const User = styled.div`
 const SearchContent = styled.div`
   width: 21rem;
   height: 35rem;
-  /* background: #fff; */
   background: rgba(0, 0, 0, 0.4);
 
-  /* border: 0.1rem solid rgb(237, 90, 101); */
   position: absolute;
   top: 5rem;
-  right: 7rem;
+  right: 11rem;
   z-index: 20;
   overflow-y: auto;
   border-radius: 1rem;
