@@ -6,8 +6,11 @@ import { useUserDetail } from "users";
 import { useLogout } from "./utils";
 import stroe from "store";
 import { loginSlice } from "store/login";
+import { changelike } from "store/ilike";
+import { useDispatch } from "react-redux";
 
 export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
+  const dispatch = useDispatch();
   const {
     data: { level = 0, listenSongs = 0, profile: { vipType = 0 } = {} } = {},
   } = useUserDetail(uid);
@@ -20,6 +23,12 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   const confirm = () => {
     logout();
     stroe.dispatch(getUserInfo({ data: {} }));
+    // localStorage.clear();
+    dispatch(
+      changelike({
+        likes: [],
+      })
+    );
     setTimeout(() => {
       navigate("/main/recommendsongsheet");
     }, 300);

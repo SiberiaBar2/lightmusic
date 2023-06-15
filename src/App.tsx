@@ -26,7 +26,7 @@ function App() {
     >
       <div className="App">
         <Provider store={store}>
-          <PersistGate persistor={persist}>
+          <PersistGate loading={null} persistor={persist}>
             <QueryPrivider client={queryClients}>
               <Entries />
             </QueryPrivider>

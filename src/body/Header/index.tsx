@@ -186,10 +186,7 @@ export const Header = () => {
           onClick={() => window.history.forward()}
         />
       </IconWrap>
-      <Zhixue onClick={changeZhixue}>
-        <span>纸屑效果</span>
-        🎉
-      </Zhixue>
+      <Zhixue onClick={changeZhixue}>🎉</Zhixue>
       {renderUser()}
     </RightContent>
   );
@@ -223,6 +220,7 @@ const H4 = styled.h2`
   line-height: 4.75rem;
   text-align: center;
   position: relative;
+  cursor: pointer;
 
   > span {
     font-size: 0.1rem;

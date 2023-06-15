@@ -29,11 +29,11 @@ export const FatherHoc: React.FC<FatherHocProps> = ({
   setDuration,
   play,
 }) => {
-  // 切歌时重置播放进度
-  useMemo(() => {
-    setDuration(0);
-    localStorage.setItem("currentTime", "0");
-  }, [songId]);
+  // // 切歌时重置播放进度
+  // useMemo(() => {
+  //   setDuration(0);
+  //   localStorage.setItem("currentTime", "0");
+  // }, [songId]);
 
   // 使用策略模式替换 if else
   const songsType = useMemo(

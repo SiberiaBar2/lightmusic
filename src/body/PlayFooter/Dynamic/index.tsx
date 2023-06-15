@@ -161,6 +161,12 @@ export const Dynamic: React.FC<{
     setDuration(currentTime);
   }, [musicRef.current, setTime, setDuration]);
 
+  // 切歌时重置播放进度
+  useMemo(() => {
+    setDuration(0);
+    localStorage.setItem("currentTime", "0");
+  }, [songId]);
+
   // 为什么 musicRef.current.src 的值是当前url地址栏？ 导致 出现播放源错误
   // 获得播放总时长
   const onDurationChange = useCallback(() => {
