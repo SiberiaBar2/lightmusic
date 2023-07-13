@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
-import { LeftOutlined } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 import { asideList, ROUTERPATH } from "../contants";
@@ -17,7 +16,6 @@ const items: MenuItem[] = asideList.map((aside) => {
 
 export const Aside: React.FC = () => {
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
 
   const nowSecKey =
     (sessionStorage.getItem("secondKeys") as string) || "推荐歌单";
@@ -29,29 +27,19 @@ export const Aside: React.FC = () => {
     navigate(`${ROUTERPATH[e.key]}`);
   };
 
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
   return (
-    <>
-      <AntMenu
-        theme={"light"}
-        onClick={onClick}
-        defaultOpenKeys={[defaultMenu]}
-        mode="inline"
-        items={items}
-        selectedKeys={[nowSecKey]}
-        inlineCollapsed={collapsed}
-      />
-      <Arrow onClick={toggleCollapsed}>
-        <LeftOutlined style={{ fontSize: "2.5rem" }} />
-      </Arrow>
-    </>
+    <AntMenu
+      theme={"light"}
+      onClick={onClick}
+      defaultOpenKeys={[defaultMenu]}
+      mode="inline"
+      items={items}
+      selectedKeys={[nowSecKey]}
+    />
   );
 };
 
 const AntMenu = styled(Menu)`
-  /* min-width: 7rem; */
   width: 20rem;
   height: 80%;
   background: rgb(250, 250, 252);

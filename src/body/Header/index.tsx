@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Left, Right, Search } from "@icon-park/react";
+import { Left, Right, Search, Refresh } from "@icon-park/react";
 import { Avatar, Button, Input, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
@@ -23,7 +23,8 @@ export const Header = () => {
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
-  const { data: text } = useYiyan();
+  const [reset, setReset] = useState(false);
+  const { data: text } = useYiyan(reset);
 
   const navigate = useNavigate();
 
@@ -99,7 +100,26 @@ export const Header = () => {
   const renderUser = () => (
     <User>
       <Tooltip title={text}>
-        <Yiyan>{text}</Yiyan>
+        <Yiyan>
+          {text ? (
+            <>
+              <span
+                style={{
+                  marginRight: 3,
+                }}
+              >
+                {text}
+              </span>
+              <Refresh
+                style={{ cursor: "pointer" }}
+                theme="outline"
+                size="18"
+                fill="rgb(249, 241, 219)"
+                onClick={() => setReset(!reset)}
+              />
+            </>
+          ) : null}
+        </Yiyan>
       </Tooltip>
       <Input
         value={search}
@@ -284,5 +304,9 @@ const Yiyan = styled.div`
   width: 37rem;
   height: 5.5rem;
   overflow: hidden;
-  line-height: 5.5rem;
+  /* line-height: 5.5rem; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid red; */
 `;

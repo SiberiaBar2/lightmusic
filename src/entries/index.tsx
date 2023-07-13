@@ -24,6 +24,7 @@ import {
 import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
+import { useEffect, useRef, useState } from "react";
 
 localStorage.setItem("zhixue", "false");
 const count = 390;
@@ -42,7 +43,9 @@ function fire(particleRatio: any, opts: any) {
 const Entries = () => {
   const { data: { result = [] } = {} } = useNewSongs();
   const getIds = result.map((ele: any) => ele.id);
+  const [loading, setLoaing] = useState(false);
 
+  const backRef = useRef<any>(null);
   const {
     data: {
       songs: [
@@ -88,6 +91,14 @@ const Entries = () => {
     />
   );
 
+  useEffect(() => {
+    // backRef.current.background = `url(${stringAdds(picUrl)})`;
+    const timer = setTimeout(() => setLoaing(true), 2000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
   const MainView = () => (
     <Main id={"main"}>
       <Aside>
@@ -121,22 +132,6 @@ const Entries = () => {
   );
   const renderView = () => (
     <View onClick={debounce(xuanlan, 300)}>
-      <div
-        style={{
-          backgroundImage: `url(${stringAdds(picUrl)})`,
-          zIndex: "-2",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          position: "absolute",
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          filter: "blur(12px)",
-          opacity: "0.7",
-          backgroundPosition: "50%",
-        }}
-      />
       <ContainerMask />
       <Router>
         <CenterContent>
@@ -156,7 +151,30 @@ const Entries = () => {
     </View>
   );
 
-  return <Container>{!picUrl ? renderLoading() : renderView()}</Container>;
+  return (
+    <Container>
+      <div
+        ref={backRef}
+        style={{
+          backgroundImage: `url(${stringAdds(picUrl)})`,
+          zIndex: "-2",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+          filter: "blur(12px)",
+          opacity: "0.7",
+          backgroundPosition: "50%",
+        }}
+      />
+      {!backRef.current?.style?.backgroundImage || !loading
+        ? renderLoading()
+        : renderView()}
+    </Container>
+  );
 };
 
 export default Entries;
@@ -166,13 +184,13 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: hidden;
+  position: relative;
 `;
 
 const View = styled.div`
   width: 100%;
   height: 100%;
-  overflow-y: hidden;
-  position: relative;
 `;
 
 const ContainerMask = styled.div`
@@ -195,7 +213,7 @@ const Header = styled.header`
 `;
 
 const Aside = styled.aside`
-  /* width: 14%; */
+  width: 14%;
   height: 100%;
   /* display: flex; */
   /* align-items: center; */
@@ -207,6 +225,7 @@ const Aside = styled.aside`
 `;
 
 const Main = styled.main`
+  width: 100%;
   display: flex;
   height: calc(100% - 10.9rem);
   position: relative;
@@ -219,7 +238,7 @@ const Main = styled.main`
 `;
 
 const Section = styled.section`
-  width: calc(100% - 20%);
+  width: 100%;
   height: 100%;
   overflow-y: auto;
 `;

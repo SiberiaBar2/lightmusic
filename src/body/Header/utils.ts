@@ -25,8 +25,8 @@ export const useLogout = () => {
   );
 };
 
-export const useYiyan = () => {
-  return useQuery(["yiyan"], () =>
+export const useYiyan = (reset: boolean) => {
+  return useQuery(["yiyan", reset], () =>
     fetch("https://v1.hitokoto.cn/")
       .then((response) => response.json())
       .then((data) => {

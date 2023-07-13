@@ -13,7 +13,7 @@ interface AudiosProps {
 // 避免受到其他组件渲染的影响
 export const Audio: React.FC<AudiosProps> = React.memo(
   ({ musicRef, audioTimeUpdate, onDurationChange, play, data }) => {
-    // console.log("render", dayjs().format("YYYY-MM-DD:HH:mm:ss"));
+    console.log("render", dayjs().format("YYYY-MM-DD:HH:mm:ss"));
 
     const listenFunc = useCallback(() => {
       console.log("刷新");
