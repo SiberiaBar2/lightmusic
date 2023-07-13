@@ -151,6 +151,11 @@ const Entries = () => {
     </View>
   );
 
+  console.log(
+    "backRef.current?.style?.backgroundImage",
+    backRef.current?.style?.backgroundImage
+  );
+
   return (
     <Container>
       <div
