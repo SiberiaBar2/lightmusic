@@ -153,7 +153,7 @@ const Entries = () => {
 
   console.log(
     "backRef.current?.style?.backgroundImage",
-    backRef.current?.style?.backgroundImage
+    backRef.current?.style.backgroundImage
   );
 
   return (
@@ -175,7 +175,7 @@ const Entries = () => {
           backgroundPosition: "50%",
         }}
       />
-      {!backRef.current?.style?.backgroundImage || !loading
+      {!backRef.current?.style.backgroundImage || !loading
         ? renderLoading()
         : renderView()}
     </Container>
