@@ -92,12 +92,11 @@ const Entries = () => {
   );
 
   useEffect(() => {
-    // backRef.current.background = `url(${stringAdds(picUrl)})`;
     const timer = setTimeout(() => setLoaing(true), 2000);
     return () => {
       clearTimeout(timer);
     };
-  }, []);
+  }, [setLoaing, setTimeout, clearTimeout]);
 
   const MainView = () => (
     <Main id={"main"}>
