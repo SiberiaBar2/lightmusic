@@ -150,12 +150,9 @@ const Entries = () => {
     </View>
   );
 
-  console.log(
-    "backRef.current?.style?.backgroundImage",
-    backRef.current?.style.backgroundImage
-  );
-
   return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     <Container>
       <div
         ref={backRef}
@@ -174,9 +171,15 @@ const Entries = () => {
           backgroundPosition: "50%",
         }}
       />
-      {!backRef.current?.style.backgroundImage || !loading
-        ? renderLoading()
-        : renderView()}
+      {console.log(
+        "backRef.current?.style?.backgroundImage",
+        backRef.current?.style.backgroundImage,
+        "地址",
+        backRef.current?.style.backgroundImage
+      )}
+      {loading && backRef.current?.style.backgroundImage?.includes("https")
+        ? renderView()
+        : renderLoading()}
     </Container>
   );
 };
