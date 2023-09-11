@@ -177,9 +177,10 @@ const Entries = () => {
         "地址",
         backRef.current?.style.backgroundImage
       )}
-      {loading && backRef.current?.style.backgroundImage?.includes("https")
+      {loading ? renderView() : renderLoading()}
+      {/* {loading && backRef.current?.style.backgroundImage?.includes("https")
         ? renderView()
-        : renderLoading()}
+        : renderLoading()} */}
     </Container>
   );
 };
