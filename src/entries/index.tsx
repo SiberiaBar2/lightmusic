@@ -1,3 +1,4 @@
+import { ArrowUpOutlined, ReloadOutlined } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { Aside as BodyAside, PlayFooter, Header as BodyHeader } from "body";
 import {
@@ -124,6 +125,11 @@ const Entries = () => {
           style={{
             bottom: "12.5rem",
           }}
+          icon={
+            <TopIcon>
+              <ArrowUpOutlined />
+            </TopIcon>
+          }
           target={() => document.getElementById("section") as HTMLElement}
         />
       </Section>
@@ -254,4 +260,10 @@ const Section = styled.section`
 const CenterContent = styled.div`
   height: 100%;
   position: relative;
+`;
+
+const TopIcon = styled.span`
+  path {
+    color: rgb(240, 124, 130);
+  }
 `;

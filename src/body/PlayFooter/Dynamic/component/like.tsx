@@ -110,7 +110,17 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
       message.success("已添加到我喜欢");
       return;
     }
-    message.warning("请先登录");
+    message.warning({
+      content: (
+        <span
+          style={{
+            color: "rgb(240, 124, 130)",
+          }}
+        >
+          请先登录
+        </span>
+      ),
+    });
   }, [cookie, tolike, islike, songId, dispatch, changelike]);
 
   return (
