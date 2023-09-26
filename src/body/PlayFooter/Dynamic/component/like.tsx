@@ -56,6 +56,18 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
 
   const { mutate: tolike } = useLike();
 
+  const getMsgColor = (msg: string) =>
+    message.warning({
+      content: (
+        <span
+          style={{
+            color: "rgb(240, 124, 130)",
+          }}
+        >
+          {msg}
+        </span>
+      ),
+    });
   const likeMusci = useCallback(() => {
     // 不再喜欢
     if (islike && cookie) {
@@ -78,7 +90,7 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
           likes: like,
         })
       );
-      message.success("已从我喜欢移除");
+      getMsgColor("已从我喜欢移除");
       return;
     }
     // 喜欢歌曲
@@ -107,20 +119,10 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
           likes: like,
         })
       );
-      message.success("已添加到我喜欢");
+      getMsgColor("已添加到我喜欢");
       return;
     }
-    message.warning({
-      content: (
-        <span
-          style={{
-            color: "rgb(240, 124, 130)",
-          }}
-        >
-          请先登录
-        </span>
-      ),
-    });
+    getMsgColor("请先登录");
   }, [cookie, tolike, islike, songId, dispatch, changelike]);
 
   return (
