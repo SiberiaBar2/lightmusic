@@ -47,7 +47,7 @@ export const http = async (
       return Promise.reject({ message: "请重新登陆" });
     }
 
-    // console.log("response", response);
+    console.log("response.status", response.status);
 
     const data = await response.json();
     if (response.ok) {

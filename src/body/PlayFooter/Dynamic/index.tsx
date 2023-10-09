@@ -387,8 +387,9 @@ export const Dynamic: React.FC<{
     <DivOne>
       {picUrl ? (
         <div
-          onClick={() => {
+          onClick={(e) => {
             drawerRef.current.changeVisiable();
+            e.stopPropagation();
           }}
         >
           <img src={stringAdds(picUrl)} alt="" />

@@ -7,7 +7,7 @@ export interface LoginState {
 
 const initialState: LoginState = {
   data: {},
-  islogin: true,
+  islogin: false,
 };
 
 export const loginSlice = createSlice({
@@ -15,6 +15,7 @@ export const loginSlice = createSlice({
   initialState,
   reducers: {
     getUserInfo: (state, { payload }) => {
+      console.log("执行了多少次", payload);
       state.data = payload;
     },
     changeLogin: (state, { payload }) => {
