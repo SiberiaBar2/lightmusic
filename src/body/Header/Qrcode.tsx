@@ -34,36 +34,40 @@ const Qrcode: React.FC = () => {
   // 为什么 unikey 导致的会多次重渲染
   console.log("unikey", unikey);
 
-  const infoData = useCallback((data: any) => {
-    console.log("执行多少次", data);
+  const infoData = (data: any) => {
+    console.log(
+      "执行多少次",
+      data,
+      "!_.isEmpty(data.data)",
+      !_.isEmpty(data.data)
+    );
 
     if (!_.isEmpty(data.data)) {
       stroe.dispatch(getUserInfo({ data: data.data }));
       stroe.dispatch(changeLogin({ islogin: true }));
     }
-  }, []);
+  };
   const { mutate: getUserInfoSync } = useGetLoginValue(infoData);
 
-  const getData = useCallback(
-    (data: any) => {
-      console.warn("check-status", data);
-      if (data.code === 800) {
-        message.warning("二维码已过期,请重新获取");
-        // clearInterval(timerRef.current);
-      }
-      if (data.code === 803) {
-        // 这一步会返回cookie
-        clearInterval(timerRef.current);
-        message.success("授权登录成功");
-        getUserInfoSync(data.cookie);
-        localStorage.setItem("cookie", data.cookie);
-        setTimeout(() => {
-          navigate("/main/recommendsongsheet");
-        }, 500);
-      }
-    },
-    [getUserInfoSync]
-  );
+  const getData = (data: any) => {
+    console.warn("check-status", data);
+    if (data.code === 800) {
+      message.warning("二维码已过期,请重新获取");
+      // clearInterval(timerRef.current);
+    }
+    if (data.code === 803) {
+      // 这一步会返回cookie
+      clearInterval(timerRef.current);
+      message.success("授权登录成功");
+      getUserInfoSync(data.cookie);
+      // 然而现在又是好的？？？
+      localStorage.setItem("cookie", data.cookie);
+      // localStorage 放在上面 导致接口调用时cookie不存在，登录失效？
+      setTimeout(() => {
+        navigate("/main/recommendsongsheet");
+      }, 500);
+    }
+  };
   const { mutate: check } = useCheckLoginStatus(getData);
 
   useEffect(() => {

@@ -15,7 +15,7 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
     data: { level = 0, listenSongs = 0, profile: { vipType = 0 } = {} } = {},
   } = useUserDetail(uid);
 
-  const { getUserInfo } = loginSlice.actions;
+  const { getUserInfo, changeLogin } = loginSlice.actions;
 
   const { mutate: logout, data } = useLogout();
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   const confirm = () => {
     logout();
     stroe.dispatch(getUserInfo({ data: {} }));
+    stroe.dispatch(changeLogin({ islogin: false }));
     // localStorage.clear();
     dispatch(
       changelike({

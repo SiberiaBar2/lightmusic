@@ -15,12 +15,11 @@ export const loginSlice = createSlice({
   initialState,
   reducers: {
     getUserInfo: (state, { payload }) => {
-      console.log("执行了多少次", payload);
+      console.log("store ===》 ", payload);
       state.data = payload;
     },
     changeLogin: (state, { payload }) => {
       console.warn("payload", payload);
-
       state.islogin = payload.islogin;
     },
   },

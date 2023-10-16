@@ -8,18 +8,21 @@ import { useSelector } from "react-redux";
 import { RootState } from "store";
 
 export const Login: React.FC = () => {
-  const { islogin } = useParams();
+  // const { islogin } = useParams();
   const loginState = useSelector<
     RootState,
     Pick<LoginState, "data" | "islogin">
   >((state) => state.login);
 
   // 解构赋值 真正的默认值
-  const { data: { data: { profile = {} } = {} } = {} } = loginState;
+  const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
+
+  console.log("islogin====>", islogin);
 
   return (
     <Container>
-      {islogin === "unlogin" ? <Qrcode /> : <UserDetail uid={profile.userId} />}
+      {/* {islogin === "unlogin" ? <Qrcode /> : <UserDetail uid={profile.userId} />} */}
+      {!islogin ? <Qrcode /> : <UserDetail uid={profile.userId} />}
     </Container>
   );
 };

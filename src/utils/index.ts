@@ -40,6 +40,12 @@ export const http = async (
   }
 
   return fetch(`${api}/${endpoint}`, config).then(async (response) => {
+    // console.log(
+    //   "response",
+    //   response,
+    //   "${api}/${endpoint}",
+    //   `${api}/${endpoint}`
+    // );
     if (response.status === 301) {
       localStorage.removeItem("cookie");
       stroe.dispatch(getUserInfo({ data: {} }));
