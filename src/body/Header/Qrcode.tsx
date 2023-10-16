@@ -61,9 +61,10 @@ const Qrcode: React.FC = () => {
       message.success("授权登录成功");
       getUserInfoSync(data.cookie);
       // 然而现在又是好的？？？
-      localStorage.setItem("cookie", data.cookie);
+      // localStorage.setItem("cookie", data.cookie);
       // localStorage 放在上面 导致接口调用时cookie不存在，登录失效？
       setTimeout(() => {
+        localStorage.setItem("cookie", data.cookie);
         navigate("/main/recommendsongsheet");
       }, 500);
     }
