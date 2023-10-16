@@ -33,7 +33,7 @@ export const useRecommendSongs = () => {
     queryKey: "recommendsongs",
     queryFn: () =>
       client("recommend/songs", {
-        data: { cookie: localStorage.getItem("cookie") },
+        data: { cookie },
       }),
   });
 };

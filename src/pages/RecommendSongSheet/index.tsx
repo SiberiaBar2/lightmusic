@@ -18,7 +18,7 @@ import "swiper/css/bundle";
 export const RecommendSongSheet: React.FC = () => {
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
-  const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
+  // const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
   const { data: { recommend: recommends = [] } = {} } = useRecommendResource();
 
   const renderSwiper = () => (
