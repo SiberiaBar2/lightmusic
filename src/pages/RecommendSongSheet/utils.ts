@@ -31,6 +31,9 @@ export const useRecommendSongs = () => {
   const client = useHttp();
   return useQuery({
     queryKey: "recommendsongs",
-    queryFn: () => client("recommend/songs", { data: { cookie } }),
+    queryFn: () =>
+      client("recommend/songs", {
+        data: { cookie: localStorage.getItem("cookie") },
+      }),
   });
 };
