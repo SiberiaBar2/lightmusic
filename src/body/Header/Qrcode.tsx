@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "@emotion/styled";
+import { useSelector } from "react-redux";
 import { message } from "antd";
+import styled from "@emotion/styled";
+import _ from "lodash";
+
 import stroe, { RootState } from "store";
-import { loginSlice } from "store/login";
+import { loginSlice, LoginState } from "store/login";
 import {
   useCheckLoginStatus,
   useGetLoginValue,
   useGetQrcodeUrl,
   useGetUniKey,
 } from "./utils";
-import _ from "lodash";
-import { useSelector } from "react-redux";
-import { LoginState } from "store/login";
 
 const Qrcode: React.FC = () => {
   const loginState = useSelector<

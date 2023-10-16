@@ -136,7 +136,7 @@ const Entries = () => {
     </Main>
   );
   const renderView = () => (
-    <View onClick={debounce(xuanlan, 300)}>
+    <View onClick={debounce(xuanlan, 2000)}>
       <ContainerMask />
       <Router>
         <CenterContent>
@@ -177,12 +177,12 @@ const Entries = () => {
           backgroundPosition: "50%",
         }}
       />
-      {console.log(
+      {/* {console.log(
         "backRef.current?.style?.backgroundImage",
         backRef.current?.style.backgroundImage,
         "地址",
         backRef.current?.style.backgroundImage
-      )}
+      )} */}
       {loading ? renderView() : renderLoading()}
       {/* {loading && backRef.current?.style.backgroundImage?.includes("https")
         ? renderView()
