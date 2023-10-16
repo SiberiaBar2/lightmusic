@@ -10,11 +10,14 @@ export const useRecommend = () => {
   });
 };
 
-export const useRecommendResource = () => {
+export const useRecommendResource = (userCookie?: string) => {
+  console.log("cookie", cookie, "userCookie", userCookie);
+
   const client = useHttp();
   return useQuery({
     queryKey: "recommendresource",
-    queryFn: () => client("recommend/resource", { data: { cookie } }),
+    queryFn: () =>
+      client("recommend/resource", { data: { cookie: cookie || userCookie } }),
   });
 };
 

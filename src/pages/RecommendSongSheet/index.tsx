@@ -14,12 +14,21 @@ import {
 } from "./utils";
 
 import "swiper/css/bundle";
+import { useLocation } from "react-router-dom";
 
 export const RecommendSongSheet: React.FC = () => {
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
+
+  const query = useLocation();
+  console.log("query", query);
+
+  const { state } = query;
+
   // const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
-  const { data: { recommend: recommends = [] } = {} } = useRecommendResource();
+  const { data: { recommend: recommends = [] } = {} } = useRecommendResource(
+    state?.userCookie
+  );
 
   const renderSwiper = () => (
     <Swiper
