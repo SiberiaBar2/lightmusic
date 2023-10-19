@@ -104,7 +104,7 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
             fill="rgba(0, 0, 0, 0.4)"
             onClick={() => changeVisiable()}
           />
-          <DoubleUp
+          {/* <DoubleUp
             style={{
               top: "62rem",
               left: "-5rem",
@@ -115,12 +115,12 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
             size="24"
             fill="rgba(0, 0, 0, 0.4)"
             onClick={() => changeVisiable()}
-          />
+          /> */}
           <Container>
             <RoundWrap picUrl={stringAdds(picUrl)} />
             <LyricWrap {...LryicConfig} />
           </Container>
-          <CommonWrap songId={songId} />
+          {/* <CommonWrap songId={songId} /> */}
         </Component>
       </Wrap>
     </AntDrawer>
@@ -276,6 +276,7 @@ const Wrap = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  height: 100%;
 `;
 
 const ContainerMask = styled.div`
@@ -289,11 +290,13 @@ const ContainerMask = styled.div`
 
 const Component = styled.div`
   position: relative;
+  height: 100%;
 `;
 
 const Container = styled.div`
-  width: 90rem;
-  height: 30rem;
+  width: 140rem;
+  /* height: 30rem; */
+  height: 100%;
   display: flex;
   margin-top: 5rem;
   display: flex;
