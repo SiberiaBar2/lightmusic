@@ -192,7 +192,13 @@ const RoundWrap: React.FC<Pick<DrawProps, "picUrl">> = React.memo(
             fill="rgb(251, 236, 222)"
             style={{ cursor: "pointer" }}
           />
-          <Like songId={useMemo(() => songId, [songId])} />
+          <Like
+            style={{
+              marginLeft: 20,
+            }}
+            size={30}
+            songId={useMemo(() => songId, [songId])}
+          />
           {/* <PlayTypeIcon /> */}
         </Player>
       </Round>

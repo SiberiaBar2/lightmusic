@@ -1,5 +1,5 @@
-import { divide } from "lodash";
-import { ReactElement, ReactNode, useCallback, useReducer } from "react";
+import { log } from "console";
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 
 import { changePlay } from "store/play";
@@ -46,6 +46,8 @@ export const useToggleSongs = ({
       );
       play !== "play" && dispatch(changePlay({ play: "play" }));
     },
-    [changePlay, songsInfo]
+    // 未加依赖项 陷入闭包陷阱 要注意传入的props并非useCallback函数的直接函数参数
+    // 因此必须指定依赖项
+    [changePlay, songsInfo, prevornext, song, songsState, play]
   );
 };

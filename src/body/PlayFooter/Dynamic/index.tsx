@@ -48,6 +48,7 @@ import { stringAdds } from "utils/utils";
 import { FatherHoc } from "./component/FatherHoc";
 import { NowList } from "./component/NowList";
 import { useToggleSongs } from "./component/utils";
+import { PlayTypeIcon } from "./component/PlayTypeIcon";
 // import { changePicturl } from "store/picturl";
 
 const singer = process.env.REACT_APP_SPA_URL as string;
@@ -437,7 +438,7 @@ export const Dynamic: React.FC<{
     /> */}
         <Tooltip title={PLAYTYPE[type.type]}>
           {getElement(type.type)}
-          {/* <PlayTypeIcon /> */}
+          {/* <PlayTypeIcon type={type.type} /> */}
         </Tooltip>
         <Tooltip title={"播放列表"}>
           <ListBottom

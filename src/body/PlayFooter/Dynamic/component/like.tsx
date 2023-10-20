@@ -1,4 +1,4 @@
-import { useCallback, useMemo, memo } from "react";
+import { useCallback, useMemo, memo, CSSProperties } from "react";
 import { Like as ParkLike } from "@icon-park/react";
 import { message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,8 +13,12 @@ import { LoginState } from "store/login";
 type SongIdType = string | number | undefined;
 const cookie = localStorage.getItem("cookie");
 
-export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
-  const { songId } = props;
+export const Like: React.FC<{
+  songId: SongIdType;
+  size?: number | string;
+  style?: CSSProperties;
+}> = memo((props) => {
+  const { songId, size, style } = props;
 
   const dispatch = useDispatch();
 
@@ -129,9 +133,9 @@ export const Like: React.FC<{ songId: SongIdType }> = memo((props) => {
     <ParkLike
       onClick={() => likeMusci()}
       theme={islike ? "filled" : "outline"}
-      size="24"
+      size={size || "24"}
       fill="rgb(237, 90, 101)" // rgb(59, 129, 140)
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "pointer", ...style }}
     />
   );
 });
