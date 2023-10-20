@@ -5,9 +5,18 @@ import React, {
   useState,
   ForwardedRef,
 } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Divider, Drawer as AntDrawer } from "antd";
-import { DoubleDown, DoubleUp } from "@icon-park/react";
+import {
+  DoubleDown,
+  DoubleUp,
+  GoEnd,
+  GoStart,
+  PauseOne,
+  Play,
+} from "@icon-park/react";
 import styled from "@emotion/styled";
+
 import { DrawProps, DrawRefType } from "..";
 import { Common } from "../../Common";
 import { IsSame } from "../../IsSame";
@@ -15,6 +24,13 @@ import { useSongs } from "../../useSongs";
 import { CardList } from "components";
 import { stringAdds } from "utils/utils";
 import "./index.css";
+import { playState, changePlay } from "store/play";
+import { useToggleSongs } from "./utils";
+import { RootState } from "store";
+import _ from "lodash";
+import { songsState } from "store/songs";
+import { Like } from "./like";
+import { PlayTypeIcon } from "./PlayTypeIcon";
 
 const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   const { lyric, time, picUrl, songId } = props;
@@ -117,11 +133,68 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
 
 const RoundWrap: React.FC<Pick<DrawProps, "picUrl">> = React.memo(
   ({ picUrl }) => {
+    const dispatch = useDispatch();
+    const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
+      _.pick(state.play, "play")
+    );
+    const songsState = useSelector<
+      RootState,
+      Pick<songsState, "songId" | "song" | "prevornext">
+    >((state) => state.songs);
+    const { play } = playState;
+    const { songId, song, prevornext } = songsState;
+
+    const goPrevorNext = useToggleSongs({
+      prevornext,
+      song,
+      songsState,
+      play,
+    });
     return (
       <Round>
         <div>
           <img src={stringAdds(picUrl)} alt="" />
         </div>
+        <Player>
+          <GoStart
+            onClick={() => goPrevorNext("prev")}
+            theme="outline"
+            size="30"
+            fill="rgb(251, 236, 222)"
+            style={{ cursor: "pointer" }}
+          />
+          {play !== "play" ? (
+            <Play
+              onClick={() => dispatch(changePlay({ play: "play" }))}
+              theme="outline"
+              size="30"
+              style={{
+                cursor: "pointer",
+                margin: "0px 15px",
+              }}
+            />
+          ) : (
+            <PauseOne
+              onClick={() => dispatch(changePlay({ play: "pause" }))}
+              theme="outline"
+              size="30"
+              fill="rgb(251, 236, 222)"
+              style={{
+                cursor: "pointer",
+                margin: "0px 15px",
+              }}
+            />
+          )}
+          <GoEnd
+            onClick={() => goPrevorNext("next")}
+            theme="outline"
+            size="30"
+            fill="rgb(251, 236, 222)"
+            style={{ cursor: "pointer" }}
+          />
+          <Like songId={useMemo(() => songId, [songId])} />
+          {/* <PlayTypeIcon /> */}
+        </Player>
       </Round>
     );
   }
@@ -204,7 +277,7 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
     // }
 
     if (index !== -1 && div) {
-      div.style.top = -index * 4 + 12.5 + "rem";
+      div.style.top = -index * 4 + 17 + "rem";
       [...div.children].forEach((item) => {
         if (item) {
           item.classList.remove("active");
@@ -351,6 +424,15 @@ const CommentList = styled.div`
 const Revelant = styled.div`
   flex: 1;
   margin: 2rem;
+`;
+
+const Player = styled.div`
+  height: 5rem;
+  width: 35rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 Drawer.whyDidYouRender = true;

@@ -47,6 +47,7 @@ import {
 import { stringAdds } from "utils/utils";
 import { FatherHoc } from "./component/FatherHoc";
 import { NowList } from "./component/NowList";
+import { useToggleSongs } from "./component/utils";
 // import { changePicturl } from "store/picturl";
 
 const singer = process.env.REACT_APP_SPA_URL as string;
@@ -143,6 +144,13 @@ export const Dynamic: React.FC<{
 
   const { name, picUrl, authName, lyric, data } = useSongs(songId);
 
+  const goPrevorNext = useToggleSongs({
+    prevornext,
+    song,
+    songsState,
+    play,
+  });
+
   // useEffect(() => {
   //   setParam(changePicturl({ picturl: picUrl }));
   // }, [picUrl]);
@@ -220,37 +228,6 @@ export const Dynamic: React.FC<{
       playMusic();
     }
   }, [playMusic, play]);
-
-  // 播放下一首、上一首 同时支持列表循环 、随机数
-  const goPrevorNext = useCallback(
-    (key: string, reback?: string) => {
-      let togo = key === "prev" ? Number(song) - 1 : Number(song) + 1;
-      const getSongsId = prevornext.split(",").map((ele) => Number(ele));
-      const min = 0;
-      const max = getSongsId?.length - 1;
-
-      if (togo < min) {
-        togo = max;
-      }
-      if (togo > max) {
-        togo = 0;
-      }
-      // 生成一个歌曲列表下标数组之内的随机数
-      if (reback === "random") {
-        togo = Math.round(Math.random() * max);
-      }
-
-      setParam(
-        songsInfo({
-          ...songsState,
-          songId: getSongsId[togo],
-          song: togo,
-        })
-      );
-      play !== "play" && setParam(changePlay({ play: "play" }));
-    },
-    [setParam, songsInfo, prevornext, songsState, song, play]
-  );
 
   /**
    *  随时监听播放进度 以用来控制单曲、循环、列表，随机
@@ -458,7 +435,10 @@ export const Dynamic: React.FC<{
       size="24"
       fill="rgb(237, 195, 194)"
     /> */}
-        <Tooltip title={PLAYTYPE[type.type]}>{getElement(type.type)}</Tooltip>
+        <Tooltip title={PLAYTYPE[type.type]}>
+          {getElement(type.type)}
+          {/* <PlayTypeIcon /> */}
+        </Tooltip>
         <Tooltip title={"播放列表"}>
           <ListBottom
             theme="outline"
