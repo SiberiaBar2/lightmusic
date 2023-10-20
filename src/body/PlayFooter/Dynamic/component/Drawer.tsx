@@ -83,7 +83,7 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
           <DoubleDown
             style={{
               top: "2rem",
-              left: "-5rem",
+              left: "5rem",
               cursor: "pointer",
               position: "absolute",
             }}
@@ -95,7 +95,7 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
           <DoubleUp
             style={{
               bottom: "2rem",
-              left: "-5rem",
+              left: "5rem",
               cursor: "pointer",
               position: "absolute",
             }}
@@ -104,18 +104,6 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
             fill="rgba(0, 0, 0, 0.4)"
             onClick={() => changeVisiable()}
           />
-          {/* <DoubleUp
-            style={{
-              top: "62rem",
-              left: "-5rem",
-              cursor: "pointer",
-              position: "absolute",
-            }}
-            theme="outline"
-            size="24"
-            fill="rgba(0, 0, 0, 0.4)"
-            onClick={() => changeVisiable()}
-          /> */}
           <Container>
             <RoundWrap picUrl={stringAdds(picUrl)} />
             <LyricWrap {...LryicConfig} />
@@ -134,7 +122,6 @@ const RoundWrap: React.FC<Pick<DrawProps, "picUrl">> = React.memo(
         <div>
           <img src={stringAdds(picUrl)} alt="" />
         </div>
-        <div></div>
       </Round>
     );
   }
@@ -217,7 +204,7 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
     // }
 
     if (index !== -1 && div) {
-      div.style.top = -index * 3 + 12.5 + "rem";
+      div.style.top = -index * 4 + 12.5 + "rem";
       [...div.children].forEach((item) => {
         if (item) {
           item.classList.remove("active");
@@ -290,82 +277,66 @@ const ContainerMask = styled.div`
 
 const Component = styled.div`
   position: relative;
+  width: 100%;
   height: 100%;
 `;
 
 const Container = styled.div`
-  width: 140rem;
-  /* height: 30rem; */
+  width: 100%;
   height: 100%;
   display: flex;
   margin-top: 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* border: 1px solid salmon; */
-  /* justify-content: space-between; */
 `;
 
 const Round = styled.div`
-  width: 40rem;
+  width: 50%;
+  height: 60%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   margin-left: 1rem;
-  /* margin-right: 15rem; */
 
   div:nth-of-type(1) {
-    width: 25rem;
-    height: 25rem;
+    width: 35rem;
+    height: 80%;
 
     img:nth-of-type(1) {
       width: 100%;
       height: 100%;
     }
   }
-
-  div:nth-of-type(2) {
-    width: 100%;
-    height: 3rem;
-  }
 `;
 
 const Lyric = styled.div`
-  /* flex: 1; */
-  /* width: 100%; */
-  width: 50rem;
-  /* width: 40rem; */
+  width: 50% !important;
+  height: 60%;
+
   overflow: hidden;
-  /* padding: 2rem; */
   position: relative;
   font-size: 1.4rem;
-  /* text-align: center; */
-  height: 25rem;
   overflow-y: auto;
 
-  /* > div {
-    position: absolute;
-    top: 15rem; */
   ul {
     width: 100%;
     position: absolute;
-    /* top: 15rem; */
     left: 0;
     padding: 0;
 
     li {
       margin-bottom: 1rem;
-      min-height: 2rem;
+      min-height: 3rem;
       list-style: none;
       width: 100%;
       line-height: 2rem;
-      /* transition: 0.6s; */
-      /* text-overflow: ; */
-      /* text-align: center; */
+      font-size: 20px;
+      font-weight: 450;
+      letter-spacing: 0.1rem;
     }
   }
-  /* } */
 `;
 
 const Comment = styled.div`
