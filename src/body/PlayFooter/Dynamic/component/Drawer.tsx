@@ -364,7 +364,7 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  margin-top: 5rem;
+  /* margin-top: 5rem; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -372,7 +372,7 @@ const Container = styled.div`
 
 const Round = styled.div`
   width: 50%;
-  height: 60%;
+  height: 50rem;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -381,7 +381,7 @@ const Round = styled.div`
 
   div:nth-of-type(1) {
     width: 35rem;
-    height: 80%;
+    height: 35rem;
 
     img:nth-of-type(1) {
       width: 100%;
@@ -392,12 +392,15 @@ const Round = styled.div`
 
 const Lyric = styled.div`
   width: 50% !important;
-  height: 60%;
+  height: 50rem;
 
   overflow: hidden;
   position: relative;
   font-size: 1.4rem;
   overflow-y: auto;
+  /* display: flex; */
+  /* justify-content: center; */
+  /* align-items: center; */
 
   ul {
     width: 100%;
