@@ -283,7 +283,7 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
     // }
 
     if (index !== -1 && div) {
-      div.style.top = -index * 4 + 17 + "rem";
+      div.style.top = -index * 4 + 21 + "rem";
       [...div.children].forEach((item) => {
         if (item) {
           item.classList.remove("active");
