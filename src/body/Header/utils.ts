@@ -89,10 +89,10 @@ export const useGetLoginValue = (callBack?: (value: unknown) => void) => {
   );
 };
 
-export const useGetUniKey = () => {
+export const useGetUniKey = (expired: boolean) => {
   const client = useHttp();
   return useQuery(
-    ["unikey"],
+    ["unikey", expired],
     () =>
       client("login/qr/key", {
         data: {
@@ -108,7 +108,7 @@ export const useGetUniKey = () => {
 export const useGetQrcodeUrl = (key?: string) => {
   const client = useHttp();
   return useQuery(
-    ["qrimg"],
+    ["qrimg", key],
     () =>
       client("login/qr/create", {
         data: {

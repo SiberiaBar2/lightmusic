@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { message } from "antd";
+import { message, QRCode } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
 
@@ -28,7 +28,8 @@ const Qrcode: React.FC = () => {
   const navigate = useNavigate();
   const { getUserInfo, changeLogin } = loginSlice.actions;
 
-  const { data: { unikey = "" } = {} } = useGetUniKey();
+  const [expired, setExpired] = useState(false);
+  const { data: { unikey = "" } = {} } = useGetUniKey(expired);
   const { data: { qrimg = "" } = {} } = useGetQrcodeUrl(unikey);
 
   // 为什么 unikey 导致的会多次重渲染
@@ -42,7 +43,7 @@ const Qrcode: React.FC = () => {
       !_.isEmpty(data.data)
     );
 
-    if (!_.isEmpty(data.data)) {
+    if (data?.data && !_.isEmpty(data.data)) {
       stroe.dispatch(getUserInfo({ data: data.data }));
       stroe.dispatch(changeLogin({ islogin: true }));
     }
@@ -53,7 +54,8 @@ const Qrcode: React.FC = () => {
     console.warn("check-status", data);
     if (data.code === 800) {
       message.warning("二维码已过期,请重新获取");
-      // clearInterval(timerRef.current);
+      clearInterval(timerRef.current);
+      setExpired(true);
     }
     if (data.code === 803) {
       // 这一步会返回cookie
@@ -95,11 +97,29 @@ const Qrcode: React.FC = () => {
         <span style={{ marginBottom: "2rem", display: "inline-block" }}>
           使用网易云app登录
         </span>
-        <img color="red" src={qrimg} alt="" />
+        <div>
+          {expired ? (
+            <>
+              <span>二维码已过期,请重新获取</span>
+              <p
+                onClick={() => {
+                  setExpired(false);
+                }}
+              >
+                点击刷新
+              </p>
+            </>
+          ) : (
+            // <QRCode value={qrimg}></QRCode>
+            <img src={qrimg} alt="" />
+          )}
+        </div>
       </div>
     </Content>
   );
 };
+
+export default Qrcode;
 
 const Content = styled.div`
   display: flex;
@@ -121,5 +141,3 @@ const Content = styled.div`
     }
   }
 `;
-
-export default Qrcode;

@@ -1,4 +1,4 @@
-import { ArrowUpOutlined, ReloadOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined } from "@ant-design/icons";
 import styled from "@emotion/styled";
 import { Aside as BodyAside, PlayFooter, Header as BodyHeader } from "body";
 import {
@@ -163,7 +163,8 @@ const Entries = () => {
       <div
         ref={backRef}
         style={{
-          backgroundImage: `url(${stringAdds(picUrl)})`,
+          // backgroundImage: `url(${stringAdds(picUrl)})`,
+          backgroundImage: `url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)`,
           zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
@@ -183,7 +184,8 @@ const Entries = () => {
         "地址",
         backRef.current?.style.backgroundImage
       )} */}
-      {loading ? renderView() : renderLoading()}
+      {/* {loading ? renderView() : renderLoading()} */}
+      {renderView()}
       {/* {loading && backRef.current?.style.backgroundImage?.includes("https")
         ? renderView()
         : renderLoading()} */}

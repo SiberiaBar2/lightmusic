@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search, Refresh } from "@icon-park/react";
@@ -6,8 +6,8 @@ import { Avatar, Button, Input, Tooltip } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
 import { HotList } from "./HotList";
-import { RootState } from "store";
-import { LoginState } from "store/login";
+import stroe, { RootState } from "store";
+import { loginSlice, LoginState } from "store/login";
 import { stringAdds } from "utils/utils";
 import { useYiyan } from "./utils";
 
@@ -20,6 +20,7 @@ export const Header = () => {
   >((state) => state.login);
   // const { changeLogin } = loginSlice.actions;
 
+  const { getUserInfo, changeLogin } = loginSlice.actions;
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
@@ -35,6 +36,14 @@ export const Header = () => {
       ? localStorage.setItem("zhixue", "true")
       : localStorage.setItem("zhixue", "false");
   };
+
+  // 解除登录态
+  useEffect(() => {
+    if (!profile && _.isEmpty(profile)) {
+      stroe.dispatch(getUserInfo({ data: {} }));
+      stroe.dispatch(changeLogin({ islogin: false }));
+    }
+  }, [profile]);
   // const { data: { data: { unikey } } = { data: { unikey: "" } } } = useQrKey();
   // // console.log("loginKey", unikey);
 
