@@ -182,19 +182,19 @@ export const Header = () => {
                 navigate("login/1");
               }}
             />
-            <Tooltip title={profile.nickname}>
-              <span
-                style={{
-                  margin: "0 0.5rem",
-                  display: "inline-block",
-                  fontSize: "0.8rem",
-                  lineHeight: "100%",
-                  color: "rgb(62, 56, 65)",
-                }}
-              >
-                {!_.isEmpty(profile) ? profile.nickname : null}
-              </span>
-            </Tooltip>
+            {/* <Tooltip title={profile.nickname}> */}
+            <span
+              title={profile.nickname}
+              style={{
+                margin: "0 0.5rem",
+                fontSize: "0.8rem",
+                lineHeight: "100%",
+                color: "rgb(62, 56, 65)",
+              }}
+            >
+              {!_.isEmpty(profile) ? profile.nickname : null}
+            </span>
+            {/* </Tooltip> */}
           </>
         )}
       </Users>
