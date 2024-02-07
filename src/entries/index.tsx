@@ -164,7 +164,8 @@ const Entries = () => {
         ref={backRef}
         style={{
           // backgroundImage: `url(${stringAdds(picUrl)})`,
-          backgroundImage: `url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)`,
+          backgroundImage:
+            "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
           zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
