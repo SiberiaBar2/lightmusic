@@ -20,8 +20,9 @@ import {
   useRef,
   useState,
   useEffect,
+  MouseEvent,
 } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
 import { Slider, Tooltip } from "antd";
 import _ from "lodash";
@@ -29,7 +30,7 @@ import _ from "lodash";
 import { Audio } from "./component/Audio";
 
 import Drawer from "./component/Drawer";
-import { useMount } from "hooks";
+import { useFuncDebounce, useMount } from "hooks";
 import { Like } from "./component/like";
 import { useSongs } from "../useSongs";
 import { RootState } from "store";
@@ -117,6 +118,7 @@ export const Dynamic: React.FC<{
 
   const [open, setOpen] = useState(true);
 
+  const debouncedCallback = useFuncDebounce();
   // 持久化存储播放类型
   const [type, dispatch] = useReducer<ReducerType>(reducer, {
     type: Number(localStorage.getItem("playtype")) || PlayType.liexun,
@@ -288,7 +290,7 @@ export const Dynamic: React.FC<{
         return (
           <PlayOnce
             title="单曲播放"
-            onClick={() => handeChangeType(PlayType.dan)}
+            onClick={debouncedCallback(() => handeChangeType(PlayType.dan))}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -298,7 +300,7 @@ export const Dynamic: React.FC<{
         return (
           <LoopOnce
             title="顺序播放"
-            onClick={() => handeChangeType(PlayType.shun)}
+            onClick={debouncedCallback(() => handeChangeType(PlayType.shun))}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -308,7 +310,7 @@ export const Dynamic: React.FC<{
         return (
           <PlayCycle
             title="列表循环"
-            onClick={() => handeChangeType(PlayType.liexun)}
+            onClick={debouncedCallback(() => handeChangeType(PlayType.liexun))}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -318,7 +320,7 @@ export const Dynamic: React.FC<{
         return (
           <ShuffleOne
             title="随机播放"
-            onClick={() => handeChangeType(PlayType.sui)}
+            onClick={debouncedCallback(() => handeChangeType(PlayType.sui))}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -365,15 +367,19 @@ export const Dynamic: React.FC<{
     <DivOne>
       {picUrl ? (
         <div
-          onClick={(e) => {
-            drawerRef.current.changeVisiable();
-            e.stopPropagation();
-          }}
+          onClick={debouncedCallback(
+            (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+              drawerRef.current.changeVisiable();
+              e.stopPropagation();
+            }
+          )}
         >
           <img src={stringAdds(picUrl)} alt="" />
         </div>
       ) : (
-        <div onClick={() => drawerRef.current.changeVisiable()}>
+        <div
+          onClick={debouncedCallback(() => drawerRef.current.changeVisiable())}
+        >
           <p>music</p>
         </div>
       )}
@@ -393,96 +399,106 @@ export const Dynamic: React.FC<{
     </DivOne>
   );
 
-  const renderDivRight = () => (
-    <DivRight>
-      <DivTwo>
-        <GoStart
-          onClick={() => goPrevorNext("prev")}
-          theme="outline"
-          size="24"
-          fill="rgb(251, 236, 222)"
-          style={{ cursor: "pointer" }}
-        />
-        {play !== "play" ? (
-          <Play
-            onClick={() => setParam(changePlay({ play: "play" }))}
+  const renderDivRight = () => {
+    console.log("1111111", play);
+
+    return (
+      <DivRight>
+        <DivTwo>
+          <GoStart
+            onClick={debouncedCallback(() => goPrevorNext("prev"))}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
             style={{ cursor: "pointer" }}
           />
-        ) : (
-          <PauseOne
-            onClick={() => setParam(changePlay({ play: "pause" }))}
-            theme="outline"
-            size="24"
-            fill="rgb(251, 236, 222)"
-            style={{ cursor: "pointer" }}
-          />
-        )}
-        <GoEnd
-          onClick={() => goPrevorNext("next")}
-          theme="outline"
-          size="24"
-          fill="rgb(251, 236, 222)"
-          style={{ cursor: "pointer" }}
-        />
-        <Like songId={useMemo(() => songId, [songId])} />
-      </DivTwo>
-      <DivThree>
-        {/* <Acoustic
-      title="音效"
-      theme="outline"
-      size="24"
-      fill="rgb(237, 195, 194)"
-    /> */}
-        <Tooltip title={PLAYTYPE[type.type]}>
-          {getElement(type.type)}
-          {/* <PlayTypeIcon type={type.type} /> */}
-        </Tooltip>
-        <Tooltip title={"播放列表"}>
-          <ListBottom
-            theme="outline"
-            size="24"
-            fill="rgb(251, 236, 222)"
-            onClick={() => nowListRef.current?.changeOpen()}
-          />
-        </Tooltip>
-        <VolumeWrap>
-          <div>
-            <Slider
-              vertical
-              value={volume}
-              onChange={(volume) => {
-                setVolume(volume);
-                musicRef.current.volume = volume * 0.01;
-                volume && changeOpen(true);
-              }}
-              min={0}
-              max={100}
-              step={5}
-              style={{ height: "85%", bottom: "none" }}
-            />
-          </div>
-          {open && volume !== 0 ? (
-            <VolumeSmall
+          {play !== "play" ? (
+            <Play
+              onClick={debouncedCallback(() => {
+                setParam(changePlay({ play: "play" }));
+              })}
               theme="outline"
-              onClick={() => changeOpen(false)}
               size="24"
               fill="rgb(251, 236, 222)"
+              style={{ cursor: "pointer" }}
             />
           ) : (
-            <VolumeMute
+            <PauseOne
+              onClick={debouncedCallback(() => {
+                setParam(changePlay({ play: "pause" }));
+              })}
               theme="outline"
-              onClick={() => changeOpen(true)}
               size="24"
               fill="rgb(251, 236, 222)"
+              style={{ cursor: "pointer" }}
             />
           )}
-        </VolumeWrap>
-      </DivThree>
-    </DivRight>
-  );
+          <GoEnd
+            onClick={debouncedCallback(() => goPrevorNext("next"))}
+            theme="outline"
+            size="24"
+            fill="rgb(251, 236, 222)"
+            style={{ cursor: "pointer" }}
+          />
+          <Like songId={useMemo(() => songId, [songId])} />
+        </DivTwo>
+        <DivThree>
+          {/* <Acoustic
+        title="音效"
+        theme="outline"
+        size="24"
+        fill="rgb(237, 195, 194)"
+      /> */}
+          <Tooltip title={PLAYTYPE[type.type]}>
+            {getElement(type.type)}
+            {/* <PlayTypeIcon type={type.type} /> */}
+          </Tooltip>
+          <Tooltip title={"播放列表"}>
+            <ListBottom
+              theme="outline"
+              size="24"
+              fill="rgb(251, 236, 222)"
+              onClick={debouncedCallback(() =>
+                nowListRef.current?.changeOpen()
+              )}
+            />
+          </Tooltip>
+          <VolumeWrap>
+            <div>
+              <Slider
+                vertical
+                value={volume}
+                onChange={(volume) => {
+                  setVolume(volume);
+                  musicRef.current.volume = volume * 0.01;
+                  volume && changeOpen(true);
+                }}
+                min={0}
+                max={100}
+                step={5}
+                style={{ height: "85%", bottom: "none" }}
+              />
+            </div>
+            {open && volume !== 0 ? (
+              <VolumeSmall
+                theme="outline"
+                onClick={() => changeOpen(false)}
+                size="24"
+                fill="rgb(251, 236, 222)"
+              />
+            ) : (
+              <VolumeMute
+                theme="outline"
+                onClick={() => changeOpen(true)}
+                size="24"
+                fill="rgb(251, 236, 222)"
+              />
+            )}
+          </VolumeWrap>
+        </DivThree>
+      </DivRight>
+    );
+  };
 
   return (
     <Container id={"player"}>

@@ -32,7 +32,7 @@ export const useFuncDebounce = function () {
     return () => {
       clearTimeout(timerRef.current);
     };
-  });
+  }, []);
 
   return debouncedCallback;
 };

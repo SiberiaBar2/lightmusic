@@ -5,7 +5,6 @@ import { Slider } from "antd";
 import { PlayType } from "..";
 import { changePlay } from "store/play";
 import { Progress } from "body/PlayFooter/style";
-import { log } from "console";
 
 interface FatherHocProps {
   children: React.ReactNode;

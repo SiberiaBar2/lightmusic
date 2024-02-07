@@ -9,6 +9,7 @@ import { RootState } from "store";
 import { likeState, changelike } from "store/ilike";
 import { useIlike } from "users";
 import { LoginState } from "store/login";
+import { useFuncDebounce } from "hooks";
 
 type SongIdType = string | number | undefined;
 const cookie = localStorage.getItem("cookie");
@@ -59,6 +60,7 @@ export const Like: React.FC<{
   const islike = likes.find((item) => item === Number(songId));
 
   const { mutate: tolike } = useLike();
+  const debouncedCallback = useFuncDebounce();
 
   const getMsgColor = (msg: string) =>
     message.warning({
@@ -131,7 +133,7 @@ export const Like: React.FC<{
 
   return (
     <ParkLike
-      onClick={() => likeMusci()}
+      onClick={debouncedCallback(() => likeMusci())}
       theme={islike ? "filled" : "outline"}
       size={size || "24"}
       fill="rgb(237, 90, 101)" // rgb(59, 129, 140)
