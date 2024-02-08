@@ -17,6 +17,13 @@ export const useFuncDebounce = function () {
     U extends unknown[]
   >(callback: T, delay = 500, change = true) {
     return function (object?: K, ...args: U) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (object?.stopPropagation) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        object.stopPropagation();
+      }
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(function () {
         if (change && _.isObject(object)) {

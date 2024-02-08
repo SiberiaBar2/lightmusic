@@ -188,12 +188,12 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
             //   e.stopPropagation();
             //   likeMusci();
             // }}
-            onClick={debouncedCallback(
-              (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
-                e.stopPropagation();
-                likeMusci();
-              }
-            )}
+            onClick={debouncedCallback(function (
+              e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+            ) {
+              e.stopPropagation();
+              likeMusci();
+            })}
             theme={"filled"}
             size={22}
             fill="rgb(237, 90, 101)"
