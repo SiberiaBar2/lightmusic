@@ -12,12 +12,16 @@ import {
   DoubleUp,
   GoEnd,
   GoStart,
+  LoopOnce,
   PauseOne,
   Play,
+  PlayCycle,
+  PlayOnce,
+  ShuffleOne,
 } from "@icon-park/react";
 import styled from "@emotion/styled";
 
-import { DrawProps, DrawRefType } from "..";
+import { DrawProps, DrawRefType, PlayType } from "..";
 import { Common } from "../../Common";
 import { IsSame } from "../../IsSame";
 import { useSongs } from "../../useSongs";
@@ -31,9 +35,10 @@ import _ from "lodash";
 import { songsState } from "store/songs";
 import { Like } from "./like";
 import { PlayTypeIcon } from "./PlayTypeIcon";
+import { useFuncDebounce } from "hooks";
 
 const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
-  const { lyric, time, picUrl, songId } = props;
+  const { lyric, time, picUrl, songId, type, handeChangeType } = props;
 
   // console.log("time ---->", time);
 
@@ -81,7 +86,9 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       <Wrap>
         <div
           style={{
-            backgroundImage: `url(${stringAdds(picUrl)})`,
+            // backgroundImage: `url(${stringAdds(picUrl)})`,
+            backgroundImage:
+              "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             position: "absolute",
@@ -121,7 +128,11 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
             onClick={() => changeVisiable()}
           />
           <Container>
-            <RoundWrap picUrl={stringAdds(picUrl)} />
+            <RoundWrap
+              picUrl={stringAdds(picUrl)}
+              type={type}
+              handeChangeType={handeChangeType}
+            />
             <LyricWrap {...LryicConfig} />
           </Container>
           {/* <CommonWrap songId={songId} /> */}
@@ -131,80 +142,140 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   );
 };
 
-const RoundWrap: React.FC<Pick<DrawProps, "picUrl">> = React.memo(
-  ({ picUrl }) => {
-    const dispatch = useDispatch();
-    const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
-      _.pick(state.play, "play")
-    );
-    const songsState = useSelector<
-      RootState,
-      Pick<songsState, "songId" | "song" | "prevornext">
-    >((state) => state.songs);
-    const { play } = playState;
-    const { songId, song, prevornext } = songsState;
-
-    const goPrevorNext = useToggleSongs({
-      prevornext,
-      song,
-      songsState,
-      play,
-    });
-    return (
-      <Round>
-        <div>
-          <img src={stringAdds(picUrl)} alt="" />
-        </div>
-        <Player>
-          <GoStart
-            onClick={() => goPrevorNext("prev")}
-            theme="outline"
-            size="30"
-            fill="rgb(251, 236, 222)"
-            style={{ cursor: "pointer" }}
-          />
-          {play !== "play" ? (
-            <Play
-              onClick={() => dispatch(changePlay({ play: "play" }))}
-              theme="outline"
-              size="30"
-              style={{
-                cursor: "pointer",
-                margin: "0px 15px",
-              }}
-            />
-          ) : (
-            <PauseOne
-              onClick={() => dispatch(changePlay({ play: "pause" }))}
-              theme="outline"
-              size="30"
-              fill="rgb(251, 236, 222)"
-              style={{
-                cursor: "pointer",
-                margin: "0px 15px",
-              }}
-            />
-          )}
-          <GoEnd
-            onClick={() => goPrevorNext("next")}
-            theme="outline"
-            size="30"
-            fill="rgb(251, 236, 222)"
-            style={{ cursor: "pointer" }}
-          />
-          <Like
-            style={{
-              marginLeft: 20,
-            }}
-            size={30}
-            songId={useMemo(() => songId, [songId])}
-          />
-          {/* <PlayTypeIcon /> */}
-        </Player>
-      </Round>
-    );
+const RoundWrap: React.FC<
+  Pick<DrawProps, "picUrl"> & {
+    handeChangeType?: any;
+    type: any;
   }
-);
+> = React.memo(({ picUrl, handeChangeType, type }) => {
+  const dispatch = useDispatch();
+  const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
+    _.pick(state.play, "play")
+  );
+  const songsState = useSelector<
+    RootState,
+    Pick<songsState, "songId" | "song" | "prevornext">
+  >((state) => state.songs);
+  const { play } = playState;
+  const { songId, song, prevornext } = songsState;
+
+  const goPrevorNext = useToggleSongs({
+    prevornext,
+    song,
+    songsState,
+    play,
+  });
+
+  const debouncedCallback = useFuncDebounce();
+  const getElement = (type: number) => {
+    switch (type) {
+      case PlayType.dan:
+        return (
+          <PlayOnce
+            title="单曲播放"
+            onClick={debouncedCallback(() => handeChangeType(PlayType.dan))}
+            theme="outline"
+            size="30"
+            fill="rgb(251, 236, 222)"
+          />
+        );
+      case PlayType.shun:
+        return (
+          <LoopOnce
+            title="顺序播放"
+            onClick={debouncedCallback(() => handeChangeType(PlayType.shun))}
+            theme="outline"
+            size="30"
+            fill="rgb(251, 236, 222)"
+          />
+        );
+      case PlayType.liexun:
+        return (
+          <PlayCycle
+            title="列表循环"
+            onClick={debouncedCallback(() => handeChangeType(PlayType.liexun))}
+            theme="outline"
+            size="30"
+            fill="rgb(251, 236, 222)"
+          />
+        );
+      case PlayType.sui:
+        return (
+          <ShuffleOne
+            title="随机播放"
+            onClick={debouncedCallback(() => handeChangeType(PlayType.sui))}
+            theme="outline"
+            size="30"
+            fill="rgb(251, 236, 222)"
+          />
+        );
+
+      default:
+        break;
+    }
+  };
+  return (
+    <Round>
+      <div>
+        <img src={stringAdds(picUrl)} alt="" />
+      </div>
+      <Player>
+        <GoStart
+          onClick={() => goPrevorNext("prev")}
+          theme="outline"
+          size="30"
+          fill="rgb(251, 236, 222)"
+          style={{ cursor: "pointer" }}
+        />
+        {play !== "play" ? (
+          <Play
+            onClick={() => dispatch(changePlay({ play: "play" }))}
+            theme="outline"
+            size="30"
+            style={{
+              cursor: "pointer",
+              margin: "0px 15px",
+            }}
+          />
+        ) : (
+          <PauseOne
+            onClick={() => dispatch(changePlay({ play: "pause" }))}
+            theme="outline"
+            size="30"
+            fill="rgb(251, 236, 222)"
+            style={{
+              cursor: "pointer",
+              margin: "0px 15px",
+            }}
+          />
+        )}
+        <GoEnd
+          onClick={() => goPrevorNext("next")}
+          theme="outline"
+          size="30"
+          fill="rgb(251, 236, 222)"
+          style={{ cursor: "pointer" }}
+        />
+        <Like
+          style={{
+            marginLeft: 20,
+            marginRight: 35,
+          }}
+          size={30}
+          songId={useMemo(() => songId, [songId])}
+        />
+        <span
+          style={{
+            cursor: "pointer",
+          }}
+        >
+          {getElement(type.type)}
+        </span>
+        {/* <PlayTypeIcon /> */}
+      </Player>
+    </Round>
+  );
+});
 
 // 抽离组件，将频繁渲染的状态单独提出， 自身状态变化 不影响其他组件重复渲染
 const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({

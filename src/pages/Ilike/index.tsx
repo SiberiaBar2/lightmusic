@@ -23,7 +23,6 @@ export const Ilike: React.FC = () => {
     likes.join(",")
     // likes.slice(30).join(",")
   );
-  // console.log("songs", songs);
 
   return (
     <div>

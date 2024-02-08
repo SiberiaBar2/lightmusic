@@ -1,15 +1,20 @@
-import { MouseEvent } from "react";
-import { Tag } from "antd";
-import { useSelector } from "react-redux";
+import { MouseEvent, useCallback } from "react";
+import { Tag, message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "@emotion/styled";
+import _ from "lodash";
+import { Like as ParkLike } from "@icon-park/react";
 
-import { useCheckMusic } from "body/PlayFooter/utils";
+import { useCheckMusic, useLike } from "body/PlayFooter/utils";
 import { childrenReturnType } from "components/CardList";
 
 import { songsState } from "store/songs";
+import { likeState, changelike } from "store/ilike";
 import { RootState } from "store";
 import { useDouble } from "body/utils";
 import { Keys } from "types";
+import { useFuncDebounce } from "hooks";
+const cookie = localStorage.getItem("cookie");
 
 const SONGSTYPE: { [x: number]: string } = {
   [Keys.zero]: "", // 免费或无版权
@@ -22,9 +27,19 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
   const { songindex, songidlist, customrender, item, ...other } = props;
   const { id, name, fee } = item;
 
+  const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
+    _.pick(state.ilike, ["likes"])
+  );
+
+  const dispatch = useDispatch();
+  const { likes } = likeState;
+
+  console.log("likes", likes);
+
   // const backTopRef = useRef() as MutableRefObject<any>;
   // const backTopInstance = backTopRef.current;
   const check = useCheckMusic();
+  const debouncedCallback = useFuncDebounce();
 
   const songsState = useSelector<
     RootState,
@@ -64,6 +79,74 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     return item.id === songId;
   };
 
+  const { mutate: tolike } = useLike();
+  const islike = likes.includes(id);
+
+  const getMsgColor = (msg: string) =>
+    message.warning({
+      content: (
+        <span
+          style={{
+            color: "rgb(240, 124, 130)",
+          }}
+        >
+          {msg}
+        </span>
+      ),
+    });
+  const likeMusci = useCallback(() => {
+    // 不再喜欢
+    if (islike && cookie) {
+      // 更新接口
+      setTimeout(
+        () =>
+          tolike({
+            id: id,
+            like: false,
+            cookie: cookie,
+            timerstamp: Date.now(),
+          }),
+        1000
+      );
+      // 更新redux
+      const like = likes.filter((item) => item !== songId);
+
+      dispatch(
+        changelike({
+          likes: like,
+        })
+      );
+      getMsgColor("已从我喜欢移除");
+      return;
+    }
+    // 喜欢歌曲
+    if (!islike && cookie) {
+      setTimeout(
+        () =>
+          tolike({
+            id: songId,
+            like: true,
+            cookie: cookie,
+            timerstamp: Date.now(),
+          }),
+        1000
+      );
+
+      const like = _.cloneDeep(likes);
+      like.unshift(songId as number);
+
+      console.log("songId", songId, "likelist", like);
+
+      dispatch(
+        changelike({
+          likes: like,
+        })
+      );
+      getMsgColor("已添加到我喜欢");
+      return;
+    }
+    getMsgColor("请先登录");
+  }, [cookie, tolike, islike, songId, dispatch, changelike]);
   return (
     <div
       style={{
@@ -71,6 +154,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         justifyContent: "space-between",
         width: "100%",
         cursor: "pointer",
+        height: 22,
         // color: canUse
         //   ? isActive()
         //     ? "rgb(136, 58, 30)"
@@ -87,13 +171,29 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
       onClick={debounce((e) => {
         // if (!canUse) return message.warning("暂无版权", 1);
         strategy[(e as MouseEvent<Element, MouseEvent>).detail]();
+        likeMusci();
       }, 300)}
     >
-      <span>
+      <span style={{ display: "flex" }}>
         <span style={{ marginRight: "1rem" }}>{name}</span>
         {SONGSTYPE[fee as number] ? (
           <AntTag>{SONGSTYPE[fee as number]}</AntTag>
         ) : null}
+        {likes.includes(id) ? (
+          <ParkLike
+            theme={"filled"}
+            size={22}
+            fill="rgb(237, 90, 101)"
+            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
+          />
+        ) : (
+          <ParkLike
+            theme={"outline"}
+            size={22}
+            fill="rgb(237, 90, 101)"
+            style={{ cursor: "pointer" }}
+          />
+        )}
       </span>
       {customrender ? customrender(item) : null}
     </div>
@@ -106,4 +206,6 @@ const AntTag = styled(Tag)`
   color: rgb(192, 44, 56);
   border: 0.1rem solid rgb(192, 44, 56);
   border-radius: 5rem;
+  height: 22px;
+  width: 32px;
 `;

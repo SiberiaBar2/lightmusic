@@ -76,6 +76,10 @@ export interface DrawProps {
   musicRef: React.MutableRefObject<HTMLAudioElement>;
   lyric: string;
   songId?: number | string;
+  handeChangeType?: any;
+  type: {
+    type: PlayType;
+  };
 }
 
 type StateActionType = { type: PlayType };
@@ -336,12 +340,19 @@ export const Dynamic: React.FC<{
     return name + "-" + authName;
   }, [name, authName]);
 
-  const DrawerConfig: DrawProps = {
+  const DrawerConfig: DrawProps & {
+    handeChangeType: any;
+    type: {
+      type: PlayType;
+    };
+  } = {
     picUrl: picUrl,
     time: time,
     musicRef: musicRef,
     lyric: lyric,
     songId: songId,
+    handeChangeType: handeChangeType,
+    type: type,
   };
 
   const hocConfig = {
