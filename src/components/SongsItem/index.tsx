@@ -109,7 +109,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         1000
       );
       // 更新redux
-      const like = likes.filter((item) => item !== songId);
+      const like = likes.filter((item) => item !== id);
 
       dispatch(
         changelike({
@@ -133,9 +133,9 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
       );
 
       const like = _.cloneDeep(likes);
-      like.unshift(songId as number);
+      like.unshift(id as number);
 
-      console.log("songId", songId, "likelist", like);
+      // console.log("songId", songId, "likelist", like);
 
       dispatch(
         changelike({
@@ -169,9 +169,9 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
       // 双击可能触发单击 因此使用传参式防抖
       // 也可以使用lodash防抖，同样支持传参
       onClick={debounce((e) => {
+        console.log("父级");
         // if (!canUse) return message.warning("暂无版权", 1);
         strategy[(e as MouseEvent<Element, MouseEvent>).detail]();
-        likeMusci();
       }, 300)}
     >
       <span style={{ display: "flex" }}>
@@ -181,6 +181,19 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         ) : null}
         {likes.includes(id) ? (
           <ParkLike
+            // onClick={(
+            //   e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+            // ) => {
+            //   console.log("自己", e);
+            //   e.stopPropagation();
+            //   likeMusci();
+            // }}
+            onClick={debouncedCallback(
+              (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
+                e.stopPropagation();
+                likeMusci();
+              }
+            )}
             theme={"filled"}
             size={22}
             fill="rgb(237, 90, 101)"
@@ -188,6 +201,14 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
           />
         ) : (
           <ParkLike
+            onClick={debouncedCallback(
+              (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
+                console.log("自己");
+
+                e.stopPropagation();
+                likeMusci();
+              }
+            )}
             theme={"outline"}
             size={22}
             fill="rgb(237, 90, 101)"

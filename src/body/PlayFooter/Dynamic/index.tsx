@@ -411,7 +411,7 @@ export const Dynamic: React.FC<{
   );
 
   const renderDivRight = () => {
-    console.log("1111111", play);
+    // console.log("1111111", play);
 
     return (
       <DivRight>
