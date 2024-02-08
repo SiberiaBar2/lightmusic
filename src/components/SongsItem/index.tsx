@@ -229,4 +229,5 @@ const AntTag = styled(Tag)`
   border-radius: 5rem;
   height: 22px;
   width: 32px;
+  background: transparent;
 `;
