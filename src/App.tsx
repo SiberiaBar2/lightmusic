@@ -22,6 +22,14 @@ function App() {
         token: {
           colorPrimary: "rgb(48, 22, 28)", // rgb(59, 129, 140)
         },
+        components: {
+          Slider: {
+            trackHoverBg: "rgba(0, 0, 0, 0.6)",
+            trackBg: "rgba(0, 0, 0, 0.6)",
+            railBg: "rgba(0, 0, 0, 0.4)",
+            railHoverBg: "rgba(0, 0, 0, 0.4)",
+          },
+        },
       }}
     >
       <div className="App">
