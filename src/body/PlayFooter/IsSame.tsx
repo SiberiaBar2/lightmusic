@@ -40,9 +40,6 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  /* &:hover {
-    background: rgb(240, 161, 168);
-  } */
 `;
 
 const ImageWrap = styled.div`

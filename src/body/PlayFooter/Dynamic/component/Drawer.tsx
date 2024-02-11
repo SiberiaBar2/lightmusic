@@ -221,7 +221,7 @@ const RoundWrap: React.FC<
       </div>
       <Player>
         <GoStart
-          onClick={() => goPrevorNext("prev")}
+          onClick={debouncedCallback(() => goPrevorNext("prev"))}
           theme="outline"
           size="30"
           fill="rgb(251, 236, 222)"
@@ -229,7 +229,9 @@ const RoundWrap: React.FC<
         />
         {play !== "play" ? (
           <Play
-            onClick={() => dispatch(changePlay({ play: "play" }))}
+            onClick={debouncedCallback(() =>
+              dispatch(changePlay({ play: "play" }))
+            )}
             theme="outline"
             size="30"
             style={{
@@ -239,7 +241,9 @@ const RoundWrap: React.FC<
           />
         ) : (
           <PauseOne
-            onClick={() => dispatch(changePlay({ play: "pause" }))}
+            onClick={debouncedCallback(() =>
+              dispatch(changePlay({ play: "pause" }))
+            )}
             theme="outline"
             size="30"
             fill="rgb(251, 236, 222)"
@@ -250,7 +254,7 @@ const RoundWrap: React.FC<
           />
         )}
         <GoEnd
-          onClick={() => goPrevorNext("next")}
+          onClick={debouncedCallback(() => goPrevorNext("next"))}
           theme="outline"
           size="30"
           fill="rgb(251, 236, 222)"
