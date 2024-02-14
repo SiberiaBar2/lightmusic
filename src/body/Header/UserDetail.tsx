@@ -24,6 +24,7 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
     logout();
     stroe.dispatch(getUserInfo({ data: {} }));
     stroe.dispatch(changeLogin({ islogin: false }));
+    localStorage.removeItem("cookie");
     // localStorage.clear();
     dispatch(
       changelike({
