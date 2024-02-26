@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import { stringAdds } from "utils/utils";
+import { AnyAction, Dispatch } from "redux";
+import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 
 interface AudiosProps {
   musicRef: React.MutableRefObject<HTMLAudioElement>;
@@ -8,11 +10,21 @@ interface AudiosProps {
   onDurationChange: () => void;
   play: string | undefined;
   data: any;
+  setParam: Dispatch<AnyAction>;
+  changePlay: ActionCreatorWithPayload<any, "play/changePlay">;
 }
 
 // 避免受到其他组件渲染的影响
 export const Audio: React.FC<AudiosProps> = React.memo(
-  ({ musicRef, audioTimeUpdate, onDurationChange, play, data }) => {
+  ({
+    musicRef,
+    audioTimeUpdate,
+    onDurationChange,
+    play,
+    data,
+    setParam,
+    changePlay,
+  }) => {
     console.log("render", dayjs().format("YYYY-MM-DD:HH:mm:ss"));
 
     const listenFunc = useCallback(() => {
@@ -61,8 +73,12 @@ export const Audio: React.FC<AudiosProps> = React.memo(
         onWaiting={(e) => {
           console.log("onWaiting", e);
         }}
-        onPaste={(e) => {
+        onCanPlay={(e) => {
+          console.log("onCanPlay", e);
+        }}
+        onPause={(e) => {
           console.log("onPaste", e);
+          setParam(changePlay({ play: "pause" }));
         }}
         onPlaying={(e) => {
           console.log("onPlaying", e);

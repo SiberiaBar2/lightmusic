@@ -378,6 +378,8 @@ export const Dynamic: React.FC<{
     onDurationChange,
     play,
     data,
+    setParam,
+    changePlay,
   };
 
   const renderDivOne = () => (
