@@ -73,15 +73,13 @@ export const Audio: React.FC<AudiosProps> = React.memo(
         onWaiting={(e) => {
           console.log("onWaiting", e);
         }}
-        onCanPlay={(e) => {
-          console.log("onCanPlay", e);
+        onPlay={(e) => {
+          console.log("onPlaying", e);
+          setParam(changePlay({ play: "play" }));
         }}
         onPause={(e) => {
           console.log("onPaste", e);
           setParam(changePlay({ play: "pause" }));
-        }}
-        onPlaying={(e) => {
-          console.log("onPlaying", e);
         }}
         onWaitingCapture={(e) => {
           console.log("onWaitingCapture", e);
