@@ -29,6 +29,9 @@ export const Like: React.FC<{
   const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
     loginState;
   const { data: { ids = [] } = {} } = useIlike(userId);
+  const { data: ddd } = useIlike(userId);
+
+  console.log("ddd 我喜欢", ddd);
 
   const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
     _.pick(state.ilike, ["likes"])

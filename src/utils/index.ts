@@ -39,6 +39,8 @@ export const http = async (
     config.body = JSON.stringify(data || {});
   }
 
+  console.log("api url", `${api}/${endpoint}`, "config", config);
+
   return fetch(`${api}/${endpoint}`, config).then(async (response) => {
     // console.log(
     //   "response",

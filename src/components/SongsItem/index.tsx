@@ -34,8 +34,6 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
   const dispatch = useDispatch();
   const { likes } = likeState;
 
-  console.log("likes", likes);
-
   // const backTopRef = useRef() as MutableRefObject<any>;
   // const backTopInstance = backTopRef.current;
   const check = useCheckMusic();

@@ -52,7 +52,7 @@ interface EndConfig {
 }
 
 const RESPONSRCODE = 200;
-const CODEPATH = "data.code";
+const CODEPATH = "code";
 const FAILEDMESSAGE = "获取数据失败";
 
 const ENDCONFIG = {
@@ -108,7 +108,9 @@ export const useRequest = <T = any>(
   useEffect(() => {
     // console.warn("useRequest refreshDeps element is change!", ele);
     // getSyncDataWrap(requestConfig.current);
-    debouncedCallback(getSyncDataWrap, 1000)(requestConfig.current);
+    if (!_.isEmpty(refreshDeps)) {
+      debouncedCallback(getSyncDataWrap, 1000)(requestConfig.current);
+    }
   }, [...refreshDeps]);
 
   /**
@@ -178,6 +180,8 @@ export const useRequest = <T = any>(
 
             syncFunc(params)
               .then((res) => {
+                console.log("res", res);
+
                 if (_.get(res, CODEPATH) === RESPONSRCODE) {
                   saveData(res);
                   end.success && end.success(res);
@@ -225,11 +229,16 @@ export const useRequest = <T = any>(
   const getSyncDataWrap = useCallback(
     (config?: unknown) => {
       if (debounceWait) {
+        console.log("11111");
+
         return debouncedCallback(getSyncData, debounceWait)(config);
       }
       if (throttleWait) {
+        console.log("22222");
         return throttleCallback(getSyncData, throttleWait)(config);
       }
+      console.log(333333, "config", config);
+
       return getSyncData(config);
     },
     [debounceWait, getSyncData]
@@ -258,15 +267,22 @@ export const useRequest = <T = any>(
   //   });
 
   useEffect(() => {
+    console.log("manual", manual);
+
     if (manual) {
       return;
     }
     if (loadingDelay) {
+      console.log("loadingDelay");
+
       loadingDelatyTimer.current = setTimeout(() => {
         getSyncDataWrap(requestConfig.current);
       }, loadingDelay);
       return;
     }
+
+    console.log("dasdasdasdsas");
+
     getSyncDataWrap(requestConfig.current);
 
     return () => {
