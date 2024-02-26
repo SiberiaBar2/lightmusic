@@ -15,7 +15,7 @@ export const useFuncDebounce = function () {
     T extends Function,
     K,
     U extends unknown[]
-  >(callback: T, delay = 500, change = true) {
+  >(callback: T, delay = 1000, change = true) {
     return function (object?: K, ...args: U) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
