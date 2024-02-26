@@ -195,12 +195,12 @@ export const Dynamic: React.FC<{
     setDura(dura);
   }, [setDura, musicRef.current]);
 
-  document.addEventListener("visibilitychange", function () {
-    if (document.hidden) {
-      console.log("笔记本盖子已关闭");
-      setParam(changePlay({ play: "pause" }));
-    }
-  });
+  // document.addEventListener("visibilitychange", function () {
+  //   if (document.hidden) {
+  //     console.log("笔记本盖子已关闭");
+  //     setParam(changePlay({ play: "pause" }));
+  //   }
+  // });
   const playMusic = useCallback(() => {
     // 使用 async await 辅助 try catch 捕获异步错误
     const isAuto = async () => {
