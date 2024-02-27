@@ -9,7 +9,7 @@ export const useSongUrl = (id: IdType, level: string) => {
   const client = useHttp();
   return useQuery({
     queryKey: ["songurl", id, level],
-    queryFn: () => client("song/url/v1", { data: { id, level } }),
+    queryFn: () => client("song/url/v1", { data: { id, cookie, level } }),
     enabled: !!id, // 惰性请求 只有参数不为 undefined 、 null 、 ''时发起请求
   });
 };
