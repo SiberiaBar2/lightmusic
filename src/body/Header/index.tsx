@@ -24,7 +24,7 @@ export const Header = () => {
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
-  console.log("profile", profile);
+  // console.log("profile", profile);
 
   const [reset, setReset] = useState(false);
   const { data: text } = useYiyan(reset);

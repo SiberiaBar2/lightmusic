@@ -31,9 +31,8 @@ export const Like: React.FC<{
   const { data: { ids = [] } = {} } = useIlike(userId);
   const { data: ddd } = useIlike(userId);
 
-  console.log("ddd 我喜欢", ddd);
-
   const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
+    // _.pick(state.ilike, "likes")
     _.pick(state.ilike, ["likes"])
   );
 
@@ -120,7 +119,7 @@ export const Like: React.FC<{
       // unshift 方法会影响原数组！
       like.unshift(songId as number);
 
-      console.log("songId", songId, "likelist", like);
+      // console.log("songId", songId, "likelist", like);
 
       // const like = [songId, ...likes];
       dispatch(

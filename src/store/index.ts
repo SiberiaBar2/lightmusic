@@ -23,6 +23,7 @@ import loginReducer from "./login";
 import songsReducer from "./songs";
 import ilikeReducer from "./ilike";
 import picturlReducer from "./picturl";
+import toneQualityReducer from "./toneQuality";
 
 const rootReducer = combineReducers({
   play: playReducer,
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   songs: songsReducer,
   ilike: ilikeReducer,
   picturl: picturlReducer,
+  toneQuality: toneQualityReducer,
 });
 
 // 状态持久化配置

@@ -5,11 +5,11 @@ type IdType = number | string | null | undefined;
 const cookie = localStorage.getItem("cookie");
 
 // 播放地址
-export const useSongUrl = (id: IdType) => {
+export const useSongUrl = (id: IdType, level: string) => {
   const client = useHttp();
   return useQuery({
-    queryKey: ["songurl", id],
-    queryFn: () => client("song/url", { data: { id, cookie } }),
+    queryKey: ["songurl", id, level],
+    queryFn: () => client("song/url/v1", { data: { id, level } }),
     enabled: !!id, // 惰性请求 只有参数不为 undefined 、 null 、 ''时发起请求
   });
 };

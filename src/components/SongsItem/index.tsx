@@ -31,6 +31,8 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     _.pick(state.ilike, ["likes"])
   );
 
+  // console.log("likeState", likeState);
+
   const dispatch = useDispatch();
   const { likes } = likeState;
 
@@ -51,10 +53,12 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
   >(id, songindex, String(songidlist));
 
   const { songId } = songsState;
-  const isUse = (id: number) => {
-    const { data } = check(id);
-    return data?.success;
-  };
+  // const isUse = (id: number) => {
+  //   // const { data } = check(id);
+  //   const data = check(id);
+  //   console.log("data", data);
+  //   // return data?.success;
+  // };
 
   // const canUse = isUse(id);
   // console.log("isUse", isUse(id));
@@ -158,7 +162,11 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         //     ? "rgb(136, 58, 30)"
         //     : ""
         //   : "rgb(116, 120, 122)",
-        color: isActive() ? "rgb(124, 171, 177)" : "",
+        // color: canUse
+        //   ? isActive()
+        //     ? "rgb(124, 171, 177)"
+        //     : ""
+        //   : "rgb(116, 120, 122)",
         padding: "1rem 0.3rem",
         background: isActive() ? "rgba(0, 0, 0, 0.2)" : "",
         borderRadius: "0.3rem",
@@ -213,6 +221,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
             style={{ cursor: "pointer" }}
           />
         )}
+        {/* {!canUse ? <span>暂无版权</span> : null} */}
       </span>
       {customrender ? customrender(item) : null}
     </div>

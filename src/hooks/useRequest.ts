@@ -267,7 +267,7 @@ export const useRequest = <T = any>(
   //   });
 
   useEffect(() => {
-    console.log("manual", manual);
+    // console.log("manual", manual);
 
     if (manual) {
       return;
@@ -281,7 +281,7 @@ export const useRequest = <T = any>(
       return;
     }
 
-    console.log("dasdasdasdsas");
+    // console.log("dasdasdasdsas");
 
     getSyncDataWrap(requestConfig.current);
 

@@ -383,8 +383,10 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
 
 const CommonWrap: React.FC<Pick<DrawProps, "songId">> = React.memo(
   ({ songId }) => {
-    const { hotComments, comments, userId, topComments, songs } =
-      useSongs(songId);
+    const { hotComments, comments, userId, topComments, songs } = useSongs(
+      songId || "",
+      ""
+    );
 
     return (
       <Comment>

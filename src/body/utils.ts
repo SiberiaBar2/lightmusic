@@ -64,7 +64,7 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
     [Keys.double]: function () {
       const islike = likes.includes(id as number);
 
-      console.log("islike", islike, "id", id);
+      // console.log("islike", islike, "id", id);
 
       if (islike) {
         run({

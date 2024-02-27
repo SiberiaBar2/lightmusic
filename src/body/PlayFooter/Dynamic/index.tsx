@@ -24,7 +24,7 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
-import { Slider, Tooltip } from "antd";
+import { Button, Dropdown, MenuProps, Slider, Tooltip } from "antd";
 import _ from "lodash";
 
 import { Audio } from "./component/Audio";
@@ -50,6 +50,7 @@ import { FatherHoc } from "./component/FatherHoc";
 import { NowList } from "./component/NowList";
 import { useToggleSongs } from "./component/utils";
 import { PlayTypeIcon } from "./component/PlayTypeIcon";
+import { ToneQualityState, changeToneQuality } from "store/toneQuality";
 // import { changePicturl } from "store/picturl";
 
 const singer = process.env.REACT_APP_SPA_URL as string;
@@ -144,12 +145,21 @@ export const Dynamic: React.FC<{
   );
   const { play } = playState;
 
+  const qualityState = useSelector<
+    RootState,
+    Pick<ToneQualityState, "toneQuality">
+  >((state) => _.pick(state.toneQuality, "toneQuality"));
+  const { toneQuality } = qualityState;
+
   const songsState = useSelector<
     RootState,
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
 
-  const { name, picUrl, authName, lyric, data } = useSongs(songId);
+  const { name, picUrl, authName, lyric, data } = useSongs(
+    songId || "",
+    toneQuality?.key || ""
+  );
 
   const goPrevorNext = useToggleSongs({
     prevornext,
@@ -294,6 +304,11 @@ export const Dynamic: React.FC<{
     saveStorge(type);
   }, []);
 
+  // useMemo(() => {
+  //   if (musicRef.current?.currentTime && duration) {
+  //     musicRef.current.currentTime = duration;
+  //   }
+  // }, [toneQuality?.key]);
   const getElement = (type: number) => {
     switch (type) {
       case PlayType.dan:
@@ -418,9 +433,163 @@ export const Dynamic: React.FC<{
     </DivOne>
   );
 
-  const renderDivRight = () => {
-    // console.log("1111111", play);
+  const MUSICQUALITY = {
+    color: "#333333",
+  };
 
+  const onChangeToneQuality = (config: { key: string; label: string }) => {
+    // changeToneQuality
+    // console.log("key======>", config);
+    setParam(changeToneQuality({ toneQuality: config }));
+  };
+  const items: MenuProps["items"] = [
+    {
+      key: "standard",
+      label: (
+        <label>
+          <div
+            style={MUSICQUALITY}
+            onClick={() =>
+              onChangeToneQuality({
+                key: "standard",
+                label: "标准",
+              })
+            }
+          >
+            标准
+          </div>
+        </label>
+      ),
+    },
+    {
+      key: "higher",
+      label: (
+        <label>
+          <div
+            style={MUSICQUALITY}
+            onClick={() =>
+              onChangeToneQuality({
+                key: "higher",
+                label: "较高",
+              })
+            }
+          >
+            较高
+          </div>
+        </label>
+      ),
+    },
+    {
+      key: "exhigh",
+      label: (
+        <label>
+          <div
+            style={MUSICQUALITY}
+            onClick={() =>
+              onChangeToneQuality({
+                key: "exhigh",
+                label: "极高",
+              })
+            }
+          >
+            极高
+          </div>
+        </label>
+      ),
+    },
+    {
+      key: "lossless",
+      label: (
+        <label>
+          <div
+            style={MUSICQUALITY}
+            onClick={() =>
+              onChangeToneQuality({
+                key: "lossless",
+                label: "无损",
+              })
+            }
+          >
+            无损
+          </div>
+        </label>
+      ),
+    },
+    {
+      key: "hires",
+      label: (
+        <label>
+          <div
+            style={MUSICQUALITY}
+            onClick={() =>
+              onChangeToneQuality({
+                key: "hires",
+                label: "Hi-Res",
+              })
+            }
+          >
+            Hi-Res
+          </div>
+        </label>
+      ),
+    },
+    {
+      key: "jyeffect",
+      label: (
+        <label>
+          <div
+            style={MUSICQUALITY}
+            onClick={() =>
+              onChangeToneQuality({
+                key: "jyeffect",
+                label: "高清环绕声",
+              })
+            }
+          >
+            高清环绕声
+          </div>
+        </label>
+      ),
+    },
+    {
+      key: "sky",
+      label: (
+        <label>
+          <div
+            style={MUSICQUALITY}
+            onClick={() =>
+              onChangeToneQuality({
+                key: "sky",
+                label: "沉浸环绕声",
+              })
+            }
+          >
+            沉浸环绕声
+          </div>
+        </label>
+      ),
+    },
+    {
+      key: "jymaster",
+      label: (
+        <label>
+          <div
+            style={MUSICQUALITY}
+            onClick={() =>
+              onChangeToneQuality({
+                key: "jymaster",
+                label: "超清母带",
+              })
+            }
+          >
+            超清母带
+          </div>
+        </label>
+      ),
+    },
+  ];
+
+  const renderDivRight = () => {
     return (
       <DivRight>
         <DivTwo>
@@ -468,6 +637,9 @@ export const Dynamic: React.FC<{
         size="24"
         fill="rgb(237, 195, 194)"
       /> */}
+          <Dropdown menu={{ items }} placement="bottomLeft" arrow>
+            <span>{toneQuality?.label || "-"}</span>
+          </Dropdown>
           <Tooltip title={PLAYTYPE[type.type]}>
             {getElement(type.type)}
             {/* <PlayTypeIcon type={type.type} /> */}
