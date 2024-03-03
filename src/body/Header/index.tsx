@@ -224,7 +224,7 @@ export const Header = () => {
 
   return (
     <Container>
-      <H4 onClick={() => navigate("main/recommendsongsheet")}>light-music</H4>
+      <H4 onClick={() => navigate("main/recommendsongsheet")}>lightmusic</H4>
       {renderRightContent()}
       {!search && (
         <SearchContent style={{ display: open ? "" : "none" }}>

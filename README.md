@@ -1,4 +1,4 @@
-# light-music
+# lightmusic
 
 ```tex
 本项目使用React、Typescript，Css-in-js搭建
@@ -7,7 +7,7 @@
 ### Demo
 
 ```tex
-http://you-music.top/
+http://lightmusic.top/
 ```
 
 ### 安装依赖

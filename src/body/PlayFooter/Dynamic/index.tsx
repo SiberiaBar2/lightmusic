@@ -53,6 +53,7 @@ import { PlayTypeIcon } from "./component/PlayTypeIcon";
 import { ToneQualityState, changeToneQuality } from "store/toneQuality";
 // import { changePicturl } from "store/picturl";
 
+import { useBoolean, useStateSync } from "k-react-custom-hook";
 const singer = process.env.REACT_APP_SPA_URL as string;
 
 const INITTIME = "00:00";
@@ -691,9 +692,14 @@ export const Dynamic: React.FC<{
     );
   };
 
+  // console.log("崇轩");
+
+  const [value, { toggle, on, off }] = useBoolean();
   return (
     <Container id={"player"}>
       <FatherHoc {...hocConfig}>
+        {/* <div>111? {value ? "是" : "否"}</div> */}
+        <div onClick={() => toggle()}>改变</div>
         {renderDivOne()}
         {renderDivRight()}
         <Audio {...audioConfig} />

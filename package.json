@@ -1,5 +1,5 @@
 {
-  "name": "youmisic",
+  "name": "lightmusic",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,6 +19,7 @@
     "antd": "^5.1.2",
     "canvas-confetti": "^1.6.0",
     "dayjs": "^1.11.7",
+    "k-react-custom-hook": "^1.0.4",
     "lodash": "^4.17.21",
     "qs": "^6.11.0",
     "react": "^18.2.0",
