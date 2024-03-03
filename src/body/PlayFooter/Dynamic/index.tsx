@@ -699,7 +699,7 @@ export const Dynamic: React.FC<{
     <Container id={"player"}>
       <FatherHoc {...hocConfig}>
         {/* <div>111? {value ? "是" : "否"}</div> */}
-        <div onClick={() => toggle()}>改变</div>
+        {/* <div onClick={() => toggle()}>改变</div> */}
         {renderDivOne()}
         {renderDivRight()}
         <Audio {...audioConfig} />
