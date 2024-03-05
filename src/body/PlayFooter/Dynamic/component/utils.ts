@@ -44,6 +44,7 @@ export const useToggleSongs = ({
           song: togo,
         })
       );
+      localStorage.setItem("musicTime", "0");
       play !== "play" && dispatch(changePlay({ play: "play" }));
     },
     // 未加依赖项 陷入闭包陷阱 要注意传入的props并非useCallback函数的直接函数参数

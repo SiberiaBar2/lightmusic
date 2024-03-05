@@ -162,6 +162,18 @@ export const Dynamic: React.FC<{
     toneQuality?.key || ""
   );
 
+  useEffect(() => {
+    console.log(
+      " useEffect musicRef.current?.currentTime",
+      musicRef.current?.currentTime
+    );
+
+    if (musicRef.current?.currentTime || musicRef.current?.currentTime === 0) {
+      musicRef.current.currentTime = Number(localStorage.getItem("musicTime"));
+      setParam(changePlay({ play: "play" }));
+    }
+  }, [toneQuality?.key]);
+
   const goPrevorNext = useToggleSongs({
     prevornext,
     song,
@@ -441,6 +453,13 @@ export const Dynamic: React.FC<{
   const onChangeToneQuality = (config: { key: string; label: string }) => {
     // changeToneQuality
     // console.log("key======>", config);
+    console.log("musicRef.current?.currentTime", musicRef.current?.currentTime);
+
+    localStorage.setItem(
+      "musicTime",
+      JSON.stringify(musicRef.current?.currentTime)
+    );
+    setParam(changePlay({ play: "pause" }));
     setParam(changeToneQuality({ toneQuality: config }));
   };
   const items: MenuProps["items"] = [
