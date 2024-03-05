@@ -12,7 +12,6 @@ import { cleanObject } from "utils/utils";
 export * from "./useFuncDebounce";
 export * from "./useBoolean";
 export * from "./useThrottle";
-export * from "./useUpdate";
 
 export const useMount = (callBack: () => void) => {
   useEffect(() => {

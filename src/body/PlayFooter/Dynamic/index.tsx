@@ -30,7 +30,7 @@ import _ from "lodash";
 import { Audio } from "./component/Audio";
 
 import Drawer from "./component/Drawer";
-import { useFuncDebounce, useMount, useUpdate } from "hooks";
+import { useFuncDebounce, useMount } from "hooks";
 import { Like } from "./component/like";
 import { useSongs } from "../useSongs";
 import { RootState } from "store";
@@ -56,6 +56,7 @@ import { ToneQualityState, changeToneQuality } from "store/toneQuality";
 import {
   useBoolean,
   useStateSync,
+  useUpdate,
   // useUpdate,
 } from "react-custom-hook-karlfranz";
 const singer = process.env.REACT_APP_SPA_URL as string;
