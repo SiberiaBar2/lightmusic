@@ -33,19 +33,23 @@ const Qrcode: React.FC = () => {
   const { data: { qrimg = "" } = {} } = useGetQrcodeUrl(unikey);
 
   // 为什么 unikey 导致的会多次重渲染
-  console.log("unikey", unikey);
+  // console.log("unikey", unikey);
 
   const infoData = (data: any) => {
-    console.log(
-      "执行多少次",
-      data,
-      "!_.isEmpty(data.data)",
-      !_.isEmpty(data.data)
-    );
+    // console.log(
+    //   "执行多少次",
+    //   data,
+    //   "!_.isEmpty(data.data)",
+    //   !_.isEmpty(data.data)
+    // );
 
     if (data?.data && !_.isEmpty(data.data)) {
       stroe.dispatch(getUserInfo({ data: data.data }));
       stroe.dispatch(changeLogin({ islogin: true }));
+
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
     }
   };
   const { mutate: getUserInfoSync } = useGetLoginValue(infoData);
@@ -72,6 +76,9 @@ const Qrcode: React.FC = () => {
           },
         });
       }, 500);
+      // setTimeout(() => {
+      //   location.reload();
+      // }, 1000);
     }
   };
   const { mutate: check } = useCheckLoginStatus(getData);
@@ -80,7 +87,7 @@ const Qrcode: React.FC = () => {
     // if (timerRef.current) {
     //   clearInterval(timerRef.current);
     // }
-    if (unikey && !islogin) {
+    if (unikey && _.isEmpty(profile)) {
       timerRef.current = setInterval(() => {
         check(unikey);
       }, 3000);
@@ -89,7 +96,7 @@ const Qrcode: React.FC = () => {
     return () => {
       timerRef.current && clearInterval(timerRef.current);
     };
-  }, [unikey, islogin]);
+  }, [unikey, profile]);
 
   return (
     <Content>

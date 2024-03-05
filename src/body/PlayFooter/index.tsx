@@ -3,6 +3,8 @@ import { RootState } from "store";
 import { Dynamic } from "./Dynamic";
 import { StaticFooter } from "./StaticFooter";
 import { songsState } from "store/songs";
+import { loginSlice, LoginState } from "store/login";
+import _ from "lodash";
 
 export const PlayFooter: React.FC = () => {
   const dispatch = useDispatch();
@@ -11,10 +13,15 @@ export const PlayFooter: React.FC = () => {
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
 
+  const loginState = useSelector<
+    RootState,
+    Pick<LoginState, "data" | "islogin">
+  >((state) => state.login);
+  const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
   const { songId } = songsState;
   return (
     <>
-      {songId ? (
+      {songId && !_.isEmpty(profile) ? (
         <Dynamic param={songsState} setParam={dispatch} />
       ) : (
         <StaticFooter />

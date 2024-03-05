@@ -19,21 +19,21 @@ export const http = async (
 ) => {
   // console.log("ddddddd", data);
 
-  const config = {
+  const config: RequestInit = {
     method: "GET",
     headers: {
       //   Authorization: token ? `Bearer ${token}` : "",
       "Content-Type": data ? "application/json" : "",
     },
     ...customConfig,
-    // credentials: "include",
+    credentials: "include",
   };
 
   // console.log("endpoint", endpoint);
 
   // console.log("qs.stringify(data)", qs.stringify(data), "data", data);
 
-  if (config.method.toUpperCase() === "GET") {
+  if (config && config?.method?.toUpperCase() === "GET") {
     if (data) endpoint += `?${qs.stringify(data)}`;
   } else {
     config.body = JSON.stringify(data || {});

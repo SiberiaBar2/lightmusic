@@ -6,6 +6,7 @@ import { UserDetail } from "body/Header/UserDetail";
 import { loginSlice, LoginState } from "store/login";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
+import _ from "lodash";
 
 export const Login: React.FC = () => {
   // const { islogin } = useParams();
@@ -22,7 +23,7 @@ export const Login: React.FC = () => {
   return (
     <Container>
       {/* {islogin === "unlogin" ? <Qrcode /> : <UserDetail uid={profile.userId} />} */}
-      {!islogin ? <Qrcode /> : <UserDetail uid={profile.userId} />}
+      {_.isEmpty(profile) ? <Qrcode /> : <UserDetail uid={profile.userId} />}
     </Container>
   );
 };

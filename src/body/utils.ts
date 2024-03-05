@@ -66,11 +66,11 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
 
       // console.log("islike", islike, "id", id);
 
-      if (islike) {
-        run({
-          id: id,
-        });
-      }
+      // if (islike) {
+      //   run({
+      //     id: id,
+      //   });
+      // }
 
       dispatch(
         songsInfo({

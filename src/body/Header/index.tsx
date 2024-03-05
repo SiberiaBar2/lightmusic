@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search, Refresh } from "@icon-park/react";
@@ -24,7 +24,7 @@ export const Header = () => {
   // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
-  // console.log("profile", profile);
+  console.log("profile", profile);
 
   const [reset, setReset] = useState(false);
   const { data: text } = useYiyan(reset);
@@ -182,6 +182,7 @@ export const Header = () => {
                 navigate("login/1");
               }}
             />
+
             {/* <Tooltip title={profile.nickname}> */}
             <span
               title={profile.nickname}

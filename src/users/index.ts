@@ -14,9 +14,12 @@ export const useUserDetail = (uid: number) => {
 export const useIlike = (uid: number) => {
   const cookie = localStorage.getItem("cookie");
   const client = useHttp();
-  return useQuery(["likelist", uid], () =>
-    client("likelist", { data: { uid: uid, cookie, timestemp: Date.now() } })
-  );
+  return useQuery({
+    queryKey: ["likelist", uid],
+    queryFn: () =>
+      client("likelist", { data: { uid: uid, cookie, timestemp: Date.now() } }),
+    enabled: !!uid,
+  });
 };
 
 // 刷新登陆
