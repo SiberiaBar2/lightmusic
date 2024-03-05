@@ -6766,15 +6766,6 @@ jsonpointer@^5.0.0:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
-k-react-custom-hook@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.npmjs.org/k-react-custom-hook/-/k-react-custom-hook-1.0.4.tgz#97b8f6ed1066d27ee006cd41eb14632c29740df1"
-  integrity sha512-dalhK3Qa1blopycFOBnUdLEY5UKBHw+KdukqMWeEojez3IKXKl+eGwMBlJEL8grXVg6kIUngOjXfdF3IN7LUlA==
-  dependencies:
-    "@types/node" "^20.11.22"
-    lodash "^4.17.21"
-    react "^18.2.0"
-
 keyv@^4.5.3:
   version "4.5.4"
   resolved "https://registry.npmjs.org/keyv/-/keyv-4.5.4.tgz#a879a99e29452f942439f2a405e3af8b31d4de93"
@@ -8698,6 +8689,15 @@ react-app-polyfill@^3.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
+
+react-custom-hook-karlfranz@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.npmjs.org/react-custom-hook-karlfranz/-/react-custom-hook-karlfranz-1.2.2.tgz#83b56027bfdd98f4cb2ab23ae41d78e960088e97"
+  integrity sha512-GTjS+qzJPDy+r6l05sts3PUa39hefrpMLkA7OZsIVk3JYwQtJ940oDyhSMFtKY94mhJ+0Cx6JuXLKDR4fWWBVQ==
+  dependencies:
+    "@types/node" "^20.11.22"
+    lodash "^4.17.21"
+    react "^18.2.0"
 
 react-dev-utils@^12.0.1:
   version "12.0.1"

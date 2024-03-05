@@ -30,7 +30,7 @@ import _ from "lodash";
 import { Audio } from "./component/Audio";
 
 import Drawer from "./component/Drawer";
-import { useFuncDebounce, useMount } from "hooks";
+import { useFuncDebounce, useMount, useUpdate } from "hooks";
 import { Like } from "./component/like";
 import { useSongs } from "../useSongs";
 import { RootState } from "store";
@@ -53,7 +53,11 @@ import { PlayTypeIcon } from "./component/PlayTypeIcon";
 import { ToneQualityState, changeToneQuality } from "store/toneQuality";
 // import { changePicturl } from "store/picturl";
 
-import { useBoolean, useStateSync } from "k-react-custom-hook";
+import {
+  useBoolean,
+  useStateSync,
+  // useUpdate,
+} from "react-custom-hook-karlfranz";
 const singer = process.env.REACT_APP_SPA_URL as string;
 
 const INITTIME = "00:00";
@@ -162,16 +166,23 @@ export const Dynamic: React.FC<{
     toneQuality?.key || ""
   );
 
-  useEffect(() => {
+  useUpdate(() => {
     console.log(
       " useEffect musicRef.current?.currentTime",
       musicRef.current?.currentTime
     );
 
-    if (musicRef.current?.currentTime || musicRef.current?.currentTime === 0) {
-      musicRef.current.currentTime = Number(localStorage.getItem("musicTime"));
-      setParam(changePlay({ play: "play" }));
-    }
+    // if (musicRef.current?.currentTime || musicRef.current?.currentTime === 0) {
+
+    // if (toneQuality?.key !== localStorage.getItem("musicTime")) {
+    musicRef.current &&
+      (musicRef.current.currentTime = Number(
+        localStorage.getItem("musicTime")
+      ));
+    setParam(changePlay({ play: "play" }));
+    // }
+
+    // }
   }, [toneQuality?.key]);
 
   const goPrevorNext = useToggleSongs({
