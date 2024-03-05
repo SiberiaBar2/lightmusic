@@ -56,8 +56,8 @@ import { ToneQualityState, changeToneQuality } from "store/toneQuality";
 import {
   useBoolean,
   useStateSync,
+  useStorgeState,
   useUpdate,
-  // useUpdate,
 } from "react-custom-hook-karlfranz";
 const singer = process.env.REACT_APP_SPA_URL as string;
 
@@ -167,6 +167,7 @@ export const Dynamic: React.FC<{
     toneQuality?.key || ""
   );
 
+  const [playTime, setPlayTime] = useStorgeState("0", "musicTime");
   useUpdate(() => {
     console.log(
       " useEffect musicRef.current?.currentTime",
@@ -176,11 +177,12 @@ export const Dynamic: React.FC<{
     // if (musicRef.current?.currentTime || musicRef.current?.currentTime === 0) {
 
     // if (toneQuality?.key !== localStorage.getItem("musicTime")) {
-    musicRef.current &&
-      (musicRef.current.currentTime = Number(
-        localStorage.getItem("musicTime")
-      ));
-    setParam(changePlay({ play: "play" }));
+
+    if (musicRef.current) {
+      musicRef.current.currentTime = Number(playTime);
+      setParam(changePlay({ play: "play" }));
+    }
+
     // }
 
     // }
@@ -467,10 +469,11 @@ export const Dynamic: React.FC<{
     // console.log("key======>", config);
     console.log("musicRef.current?.currentTime", musicRef.current?.currentTime);
 
-    localStorage.setItem(
-      "musicTime",
-      JSON.stringify(musicRef.current?.currentTime)
-    );
+    // localStorage.setItem(
+    //   "musicTime",
+    //   JSON.stringify(musicRef.current?.currentTime)
+    // );
+    setPlayTime(musicRef.current?.currentTime + "");
     setParam(changePlay({ play: "pause" }));
     setParam(changeToneQuality({ toneQuality: config }));
   };
