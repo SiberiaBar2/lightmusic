@@ -174,18 +174,10 @@ export const Dynamic: React.FC<{
       musicRef.current?.currentTime
     );
 
-    // if (musicRef.current?.currentTime || musicRef.current?.currentTime === 0) {
-
-    // if (toneQuality?.key !== localStorage.getItem("musicTime")) {
-
     if (musicRef.current) {
       musicRef.current.currentTime = Number(playTime);
       setParam(changePlay({ play: "play" }));
     }
-
-    // }
-
-    // }
   }, [toneQuality?.key]);
 
   const goPrevorNext = useToggleSongs({

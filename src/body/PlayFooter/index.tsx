@@ -21,7 +21,7 @@ export const PlayFooter: React.FC = () => {
   const { songId } = songsState;
   return (
     <>
-      {songId && !_.isEmpty(profile) ? (
+      {songId ? (
         <Dynamic param={songsState} setParam={dispatch} />
       ) : (
         <StaticFooter />
