@@ -57,7 +57,7 @@ import {
   useBoolean,
   useStateSync,
   useStorgeState,
-  useUpdate,
+  useKeyUpdate,
 } from "react-custom-hook-karlfranz";
 const singer = process.env.REACT_APP_SPA_URL as string;
 
@@ -168,7 +168,7 @@ export const Dynamic: React.FC<{
   );
 
   const [playTime, setPlayTime] = useStorgeState("0", "musicTime");
-  useUpdate(() => {
+  useKeyUpdate(() => {
     console.log(
       " useEffect musicRef.current?.currentTime",
       musicRef.current?.currentTime
@@ -453,7 +453,8 @@ export const Dynamic: React.FC<{
   );
 
   const MUSICQUALITY = {
-    color: "#333333",
+    // color: "#333333",
+    // background: "rgb(0, 0, 0.3)",
   };
 
   const onChangeToneQuality = (config: { key: string; label: string }) => {
@@ -664,7 +665,14 @@ export const Dynamic: React.FC<{
         size="24"
         fill="rgb(237, 195, 194)"
       /> */}
-          <Dropdown menu={{ items }} placement="bottomLeft" arrow>
+          <Dropdown
+            // overlayStyle={{
+            //   backgroundColor: "rgb(0, 0, 0.4)",
+            // }}
+            menu={{ items }}
+            placement="bottomLeft"
+            arrow
+          >
             <span>{toneQuality?.label || "-"}</span>
           </Dropdown>
           <Tooltip title={PLAYTYPE[type.type]}>

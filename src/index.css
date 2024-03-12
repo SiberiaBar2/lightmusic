@@ -64,3 +64,11 @@ html {
 .ant-menu-item-active {
   background-color: rgba(0, 0, 0, 0.1) !important;
 }
+
+:where(.css-dev-only-do-not-override-zydqis).ant-dropdown .ant-dropdown-menu, :where(.css-dev-only-do-not-override-zydqis).ant-dropdown-menu-submenu .ant-dropdown-menu {
+  background: rgb(0, 0, 0.3);
+}
+
+:where(.css-dev-only-do-not-override-zydqis).ant-dropdown-placement-top>.ant-dropdown-arrow, :where(.css-dev-only-do-not-override-zydqis).ant-dropdown-placement-topLeft>.ant-dropdown-arrow, :where(.css-dev-only-do-not-override-zydqis).ant-dropdown-placement-topRight>.ant-dropdown-arrow {
+  display: none;
+}

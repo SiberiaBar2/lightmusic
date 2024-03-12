@@ -8690,10 +8690,10 @@ react-app-polyfill@^3.0.0:
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
 
-react-custom-hook-karlfranz@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.npmjs.org/react-custom-hook-karlfranz/-/react-custom-hook-karlfranz-1.2.4.tgz#ad2a23c1b75c3802713fa19fa892cebfccc884b6"
-  integrity sha512-3EJN9T0OzT7Ztdz3875xHpDRFiqcgOld7wK/zrxEeis8qkXdNFS3knTwA0G4Z88wUJuzb3lOenTNaot95L3kaQ==
+react-custom-hook-karlfranz@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.npmjs.org/react-custom-hook-karlfranz/-/react-custom-hook-karlfranz-2.0.3.tgz#306c2331e2401c1e738b0b0d7b2bb5c96afd88eb"
+  integrity sha512-d1xz/rvrOAuTssUjin9MOzjz49Tz4P0DhuDFmIG1Zxin/o8XyyjX57wDRQdCDJ5izPMKBS5WaEKy+wtsYuTu3w==
   dependencies:
     "@types/node" "^20.11.22"
     lodash "^4.17.21"
