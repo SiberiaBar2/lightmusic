@@ -72,3 +72,13 @@ html {
 :where(.css-dev-only-do-not-override-zydqis).ant-dropdown-placement-top>.ant-dropdown-arrow, :where(.css-dev-only-do-not-override-zydqis).ant-dropdown-placement-topLeft>.ant-dropdown-arrow, :where(.css-dev-only-do-not-override-zydqis).ant-dropdown-placement-topRight>.ant-dropdown-arrow {
   display: none;
 }
+
+/* online */
+
+:where(.css-zydqis).ant-dropdown-placement-top>.ant-dropdown-arrow, :where(.css-zydqis).ant-dropdown-placement-topLeft>.ant-dropdown-arrow, :where(.css-zydqis).ant-dropdown-placement-topRight>.ant-dropdown-arrow {
+  display: none;
+}
+
+:where(.css-zydqis).ant-dropdown .ant-dropdown-menu, :where(.css-zydqis).ant-dropdown-menu-submenu .ant-dropdown-menu {
+  background-color: rgb(0, 0, 0.3);
+}
