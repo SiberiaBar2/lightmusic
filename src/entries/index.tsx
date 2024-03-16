@@ -8,7 +8,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import { FloatButton } from "antd";
-import ReactLoading from "react-loading";
 import confetti from "canvas-confetti";
 import {
   RecommendSongSheet,
@@ -25,7 +24,7 @@ import {
 import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useMountRef } from "react-custom-hook-karlfranz";
 
 localStorage.setItem("zhixue", "false");
@@ -94,7 +93,7 @@ const Entries = () => {
         height: "100vh",
         position: "absolute",
         zIndex: 100,
-        display: mountStatus.current ? "none" : "block",
+        display: mountStatus.current && picUrl ? "none" : "block",
       }}
     >
       <div
@@ -106,12 +105,9 @@ const Entries = () => {
           alignItems: "center",
         }}
       >
-        <ReactLoading
-          type="bars"
-          color="rgb(240, 124, 130)"
-          height={"7%"}
-          width={"7%"}
-        />
+        <Loading>
+          <div className="loading"></div>
+        </Loading>
       </div>
     </div>
   );
@@ -178,8 +174,7 @@ const Entries = () => {
       <div
         ref={backRef}
         style={{
-          backgroundImage:
-            "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
+          backgroundImage: `url(${stringAdds(picUrl)})`,
           zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
@@ -270,5 +265,34 @@ const CenterContent = styled.div`
 const TopIcon = styled.span`
   path {
     color: rgb(240, 124, 130);
+  }
+`;
+
+const Loading = styled.div`
+  @keyframes loading {
+    50% {
+      transform: rotatez(180deg);
+      border-width: 30px;
+    }
+    100% {
+      transform: rotatez(360deg);
+    }
+  }
+  .loading::before {
+    content: "";
+    color: white;
+    height: 30px;
+    width: 30px;
+    background: transparent;
+    border-radius: 50%;
+    border: 15px ridge lime;
+    border-color: rgb(240, 124, 130) transparent;
+    animation: loading 1s infinite;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 20px;
   }
 `;

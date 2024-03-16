@@ -21,7 +21,6 @@ export const Header = () => {
   // const { changeLogin } = loginSlice.actions;
 
   const { getUserInfo, changeLogin } = loginSlice.actions;
-  // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
   console.log("profile", profile);

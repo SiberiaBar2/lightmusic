@@ -11,18 +11,8 @@ export const Ilike: React.FC = () => {
   const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
     _.pick(state.ilike, ["likes"])
   );
-
   const { likes } = likeState;
-
-  // 解构赋值 真正的默认值
-  // const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
-  // loginState;
-  // console.log("likes", likes);
-
-  const { data: { songs = [] } = {} } = useSongDetail(
-    likes.join(",")
-    // likes.slice(30).join(",")
-  );
+  const { data: { songs = [] } = {} } = useSongDetail(likes.join(","));
 
   return (
     <div>

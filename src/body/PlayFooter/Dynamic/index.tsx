@@ -169,11 +169,6 @@ export const Dynamic: React.FC<{
 
   const [playTime, setPlayTime] = useStorgeState("0", "musicTime");
   useKeyUpdate(() => {
-    console.log(
-      " useEffect musicRef.current?.currentTime",
-      musicRef.current?.currentTime
-    );
-
     if (musicRef.current) {
       musicRef.current.currentTime = Number(playTime);
       setParam(changePlay({ play: "play" }));
@@ -186,10 +181,6 @@ export const Dynamic: React.FC<{
     songsState,
     play,
   });
-
-  // useEffect(() => {
-  //   setParam(changePicturl({ picturl: picUrl }));
-  // }, [picUrl]);
 
   const audioTimeUpdate = useCallback(() => {
     const { currentTime = 0 } = musicRef.current;
@@ -224,12 +215,6 @@ export const Dynamic: React.FC<{
     setDura(dura);
   }, [setDura, musicRef.current]);
 
-  // document.addEventListener("visibilitychange", function () {
-  //   if (document.hidden) {
-  //     console.log("笔记本盖子已关闭");
-  //     setParam(changePlay({ play: "pause" }));
-  //   }
-  // });
   const playMusic = useCallback(() => {
     // 使用 async await 辅助 try catch 捕获异步错误
     const isAuto = async () => {
@@ -323,11 +308,6 @@ export const Dynamic: React.FC<{
     saveStorge(type);
   }, []);
 
-  // useMemo(() => {
-  //   if (musicRef.current?.currentTime && duration) {
-  //     musicRef.current.currentTime = duration;
-  //   }
-  // }, [toneQuality?.key]);
   const getElement = (type: number) => {
     switch (type) {
       case PlayType.dan:
@@ -418,24 +398,17 @@ export const Dynamic: React.FC<{
 
   const renderDivOne = () => (
     <DivOne>
-      {picUrl ? (
-        <div
-          onClick={debouncedCallback(
-            (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
-              drawerRef.current.changeVisiable();
-              e.stopPropagation();
-            }
-          )}
-        >
-          <img src={stringAdds(picUrl)} alt="" />
-        </div>
-      ) : (
-        <div
-          onClick={debouncedCallback(() => drawerRef.current.changeVisiable())}
-        >
-          <p>music</p>
-        </div>
-      )}
+      <div
+        onClick={debouncedCallback(
+          (e: MouseEvent<HTMLDivElement, MouseEvent>) => {
+            drawerRef.current.changeVisiable();
+            e.stopPropagation();
+          }
+        )}
+      >
+        <img src={stringAdds(picUrl)} alt="" />
+      </div>
+
       <div>
         <Tooltip title={songAndAuth()}>
           <SongsInfo>
@@ -452,20 +425,7 @@ export const Dynamic: React.FC<{
     </DivOne>
   );
 
-  const MUSICQUALITY = {
-    // color: "#333333",
-    // background: "rgb(0, 0, 0.3)",
-  };
-
   const onChangeToneQuality = (config: { key: string; label: string }) => {
-    // changeToneQuality
-    // console.log("key======>", config);
-    console.log("musicRef.current?.currentTime", musicRef.current?.currentTime);
-
-    // localStorage.setItem(
-    //   "musicTime",
-    //   JSON.stringify(musicRef.current?.currentTime)
-    // );
     setPlayTime(musicRef.current?.currentTime + "");
     setParam(changePlay({ play: "pause" }));
     setParam(changeToneQuality({ toneQuality: config }));
@@ -476,7 +436,6 @@ export const Dynamic: React.FC<{
       label: (
         <label>
           <div
-            style={MUSICQUALITY}
             onClick={() =>
               onChangeToneQuality({
                 key: "standard",
@@ -494,7 +453,6 @@ export const Dynamic: React.FC<{
       label: (
         <label>
           <div
-            style={MUSICQUALITY}
             onClick={() =>
               onChangeToneQuality({
                 key: "higher",
@@ -512,7 +470,6 @@ export const Dynamic: React.FC<{
       label: (
         <label>
           <div
-            style={MUSICQUALITY}
             onClick={() =>
               onChangeToneQuality({
                 key: "exhigh",
@@ -530,7 +487,6 @@ export const Dynamic: React.FC<{
       label: (
         <label>
           <div
-            style={MUSICQUALITY}
             onClick={() =>
               onChangeToneQuality({
                 key: "lossless",
@@ -548,7 +504,6 @@ export const Dynamic: React.FC<{
       label: (
         <label>
           <div
-            style={MUSICQUALITY}
             onClick={() =>
               onChangeToneQuality({
                 key: "hires",
@@ -566,7 +521,6 @@ export const Dynamic: React.FC<{
       label: (
         <label>
           <div
-            style={MUSICQUALITY}
             onClick={() =>
               onChangeToneQuality({
                 key: "jyeffect",
@@ -584,7 +538,6 @@ export const Dynamic: React.FC<{
       label: (
         <label>
           <div
-            style={MUSICQUALITY}
             onClick={() =>
               onChangeToneQuality({
                 key: "sky",
@@ -602,7 +555,6 @@ export const Dynamic: React.FC<{
       label: (
         <label>
           <div
-            style={MUSICQUALITY}
             onClick={() =>
               onChangeToneQuality({
                 key: "jymaster",
@@ -726,14 +678,9 @@ export const Dynamic: React.FC<{
     );
   };
 
-  // console.log("崇轩");
-
-  const [value, { toggle, on, off }] = useBoolean();
   return (
     <Container id={"player"}>
       <FatherHoc {...hocConfig}>
-        {/* <div>111? {value ? "是" : "否"}</div> */}
-        {/* <div onClick={() => toggle()}>改变</div> */}
         {renderDivOne()}
         {renderDivRight()}
         <Audio {...audioConfig} />

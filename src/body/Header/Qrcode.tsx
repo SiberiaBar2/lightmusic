@@ -21,7 +21,6 @@ const Qrcode: React.FC = () => {
   >((state) => state.login);
   // const { changeLogin } = loginSlice.actions;
 
-  // 解构赋值 真正的默认值
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
   const timerRef = useRef(null) as React.MutableRefObject<any>;
 

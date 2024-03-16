@@ -86,9 +86,9 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       <Wrap>
         <div
           style={{
-            // backgroundImage: `url(${stringAdds(picUrl)})`,
-            backgroundImage:
-              "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
+            backgroundImage: `url(${stringAdds(picUrl)})`,
+            // backgroundImage:
+            //   "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             position: "absolute",
