@@ -26,6 +26,7 @@ import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 import { useEffect, useRef, useState } from "react";
+import { useMountRef } from "react-custom-hook-karlfranz";
 
 localStorage.setItem("zhixue", "false");
 const count = 390;
@@ -44,7 +45,9 @@ function fire(particleRatio: any, opts: any) {
 const Entries = () => {
   const { data: { result = [] } = {} } = useNewSongs();
   const getIds = result.map((ele: any) => ele.id);
-  const [loading, setLoaing] = useState(false);
+  const mountStatus = useMountRef();
+
+  console.log("mountStatus", mountStatus.current);
 
   const backRef = useRef<any>(null);
   const {
@@ -84,20 +87,34 @@ const Entries = () => {
   };
 
   const renderLoading = () => (
-    <ReactLoading
-      type="bars"
-      color="rgb(240, 124, 130)"
-      height={"7%"}
-      width={"7%"}
-    />
+    <div
+      style={{
+        backgroundColor: "#fff",
+        width: "100vw",
+        height: "100vh",
+        position: "absolute",
+        zIndex: 100,
+        display: mountStatus.current ? "none" : "block",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ReactLoading
+          type="bars"
+          color="rgb(240, 124, 130)"
+          height={"7%"}
+          width={"7%"}
+        />
+      </div>
+    </div>
   );
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoaing(true), 2000);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [setLoaing, setTimeout, clearTimeout]);
 
   const MainView = () => (
     <Main id={"main"}>
@@ -157,13 +174,10 @@ const Entries = () => {
   );
 
   return (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     <Container>
       <div
         ref={backRef}
         style={{
-          // backgroundImage: `url(${stringAdds(picUrl)})`,
           backgroundImage:
             "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
           zIndex: "-2",
@@ -179,17 +193,8 @@ const Entries = () => {
           backgroundPosition: "50%",
         }}
       />
-      {/* {console.log(
-        "backRef.current?.style?.backgroundImage",
-        backRef.current?.style.backgroundImage,
-        "地址",
-        backRef.current?.style.backgroundImage
-      )} */}
-      {/* {loading ? renderView() : renderLoading()} */}
+      {renderLoading()}
       {renderView()}
-      {/* {loading && backRef.current?.style.backgroundImage?.includes("https")
-        ? renderView()
-        : renderLoading()} */}
     </Container>
   );
 };
@@ -232,9 +237,6 @@ const Header = styled.header`
 const Aside = styled.aside`
   width: 14%;
   height: 100%;
-  /* display: flex; */
-  /* align-items: center; */
-  /* justify-content: center; */
   position: relative;
   .ant-menu {
     background-color: transparent;
