@@ -95,7 +95,7 @@ export const Audio: React.FC<AudiosProps> = React.memo(
         // }}
         onError={(e) => {
           console.log("onError", e);
-          if (play) {
+          if (play === "play") {
             (async () => {
               try {
                 await (play && musicRef.current && musicRef.current.play());
