@@ -24,8 +24,8 @@ import {
 import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
-import { useRef } from "react";
-import { useMountRef } from "react-custom-hook-karlfranz";
+import { useEffect, useRef, useState } from "react";
+import { useMount, useMountRef } from "react-custom-hook-karlfranz";
 
 localStorage.setItem("zhixue", "false");
 const count = 390;
@@ -93,7 +93,7 @@ const Entries = () => {
         height: "100vh",
         position: "absolute",
         zIndex: 100,
-        display: mountStatus.current && picUrl ? "none" : "block",
+        display: mountStatus.current && isLoadPic ? "none" : "block",
       }}
     >
       <div
@@ -169,12 +169,24 @@ const Entries = () => {
     </View>
   );
 
+  const [isLoadPic, setIsLoadPic] = useState(false);
+  useEffect(() => {
+    const backgroundDiv = document.getElementById("backgroundDiv");
+    if (picUrl) {
+      if (backgroundDiv) {
+        backgroundDiv.style.backgroundImage = `url(${stringAdds(picUrl)})`;
+        setIsLoadPic(true);
+      }
+    }
+  }, [picUrl]);
+
   return (
     <Container>
       <div
-        ref={backRef}
+        // ref={backRef}
+        id="backgroundDiv"
         style={{
-          backgroundImage: `url(${stringAdds(picUrl)})`,
+          // backgroundImage: `url(${stringAdds(picUrl)})`,
           zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
