@@ -217,36 +217,35 @@ export const Dynamic: React.FC<{
 
   const playMusic = useCallback(() => {
     // 使用 async await 辅助 try catch 捕获异步错误
-    const isAuto = async () => {
-      let flag = true;
-      try {
-        if (musicRef.current?.src && !musicRef.current?.src.includes(singer)) {
-          play === "play"
-            ? await musicRef.current.play()
-            : await musicRef.current.pause();
-        }
-      } catch (err) {
-        flag = false;
+    // const isAuto = async () => {
+    // let flag = true;
+    try {
+      if (musicRef.current?.src && !musicRef.current?.src.includes(singer)) {
+        play === "play" ? musicRef.current.play() : musicRef.current.pause();
       }
-      return flag;
-    };
+    } catch (err) {
+      // flag = false;
+    }
+    // return flag;
+    // };
 
+    // isAuto();
     // 这里为什么没有在声明函数的时候调用
-    const content = () => {
-      isAuto().then((res) => {
-        if (res) {
-          console.warn("success");
-          return;
-        }
-        // 失败就一直调用，直到成功为止！
-        console.error("error", res);
-        setTimeout(() => {
-          content();
-        }, 1000);
-      });
-    };
+    // const content = () => {
+    //   isAuto().then((res) => {
+    //     if (res) {
+    //       console.warn("success");
+    //       return;
+    //     }
+    //     // 失败就一直调用，直到成功为止！
+    //     console.error("error", res);
+    //     setTimeout(() => {
+    //       content();
+    //     }, 1000);
+    //   });
+    // };
 
-    content();
+    // content();
   }, [play, musicRef.current?.src]);
 
   // 播放暂停
@@ -394,6 +393,7 @@ export const Dynamic: React.FC<{
     data,
     setParam,
     changePlay,
+    goPrevorNext,
   };
 
   const renderDivOne = () => (
