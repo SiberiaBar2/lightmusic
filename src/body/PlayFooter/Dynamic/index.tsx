@@ -224,6 +224,7 @@ export const Dynamic: React.FC<{
         play === "play" ? musicRef.current.play() : musicRef.current.pause();
       }
     } catch (err) {
+      // console.log("eeeeeee", err);
       // flag = false;
     }
     // return flag;

@@ -93,17 +93,19 @@ export const Audio: React.FC<AudiosProps> = React.memo(
         // onSuspend={(e) => {
         //   console.log("onSuspend", e);
         // }}
-        onError={() => {
-          console.log("onError");
-          // (async () => {
-          //   try {
-          //     await (play && musicRef.current && musicRef.current.play());
-          //   } catch (error) {
-          //     console.log("catch error", error);
-          //     message.warning("当前音乐不可播放，已自动播放下一曲");
-          //     goPrevorNext("next");
-          //   }
-          // })();
+        onError={(e) => {
+          console.log("onError", e);
+          if (play) {
+            (async () => {
+              try {
+                await (play && musicRef.current && musicRef.current.play());
+              } catch (error) {
+                console.log("catch error", error);
+                message.warning("当前音乐不可播放，已自动播放下一曲");
+                goPrevorNext("next");
+              }
+            })();
+          }
         }}
       />
     );
