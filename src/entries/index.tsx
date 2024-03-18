@@ -210,6 +210,8 @@ const Entries = () => {
           filter: "blur(12px)",
           opacity: "0.7",
           backgroundPosition: "50%",
+          transition: "all 0.8s",
+          scale: "(1,1)",
         }}
       />
       {renderLoading()}
