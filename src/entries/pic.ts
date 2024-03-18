@@ -1,11 +1,22 @@
-import cloud from "assets/cloud.jpg";
-import light from "assets/light.jpg";
-import night from "assets/night.jpg";
-import settingSun from "assets/setting-sun.jpg";
-import sky from "assets/sky.jpg";
+declare const require: {
+  context(
+    directory: string,
+    useSubdirectories?: boolean,
+    regExp?: RegExp
+  ): {
+    keys(): string[];
+    <T>(id: string): T;
+    <T>(id: string): T;
+    resolve(id: string): string;
+  };
+};
 
-const backList = [cloud, light, night, settingSun, sky];
+const requireAll = (requireContext: any) => {
+  return requireContext.keys().map(requireContext);
+};
+
+const BACKGROUNDS = requireAll(require.context("assets", false));
 
 export const getBack = () => {
-  return backList[Math.floor(Math.random() * 5)];
+  return BACKGROUNDS[Math.floor(Math.random() * BACKGROUNDS.length)];
 };

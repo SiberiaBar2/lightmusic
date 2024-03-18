@@ -191,6 +191,9 @@ const Entries = () => {
   //   }
   // }, [picUrl]);
 
+  window.onload = function () {
+    console.log("aaaaaaaaaaaaaaa");
+  };
   return (
     <Container>
       <div
