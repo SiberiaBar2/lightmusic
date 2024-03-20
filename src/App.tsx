@@ -5,7 +5,8 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persist } from "store";
 import { https, useHttp } from "utils";
-import { useRequest } from "hooks/useRequest";
+// import { useRequest } from "hooks/useRequest";
+import { useRequest } from "react-custom-hook-karlfranz";
 
 // 为什么写为true就能触发？
 // document.addEventListener("scroll", handelScroll, true);

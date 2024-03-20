@@ -84,9 +84,9 @@ export const useRequest = <T extends object>(
     responsePath = "",
     refreshOnWindowFocus = false,
   } = options || {};
-  // const throttleCallback = useThrottle();
+  const throttleCallback = useThrottle();
   const debouncedCallback = useFuncDebounce();
-  // const [loading, { on: loadingOn, off: loadingOff }] = useBoolean();
+  const [loading, { on: loadingOn, off: loadingOff }] = useBoolean();
 
   //   const data = useRef<T>({} as T);
   const [data, setData] = useState<T>({} as T);
@@ -97,13 +97,13 @@ export const useRequest = <T extends object>(
    * refreshDeps
    */
 
-  // useEffect(() => {
-  //   // console.warn("useRequest refreshDeps element is change!", ele);
-  //   // getSyncDataWrap(requestConfig.current);
-  //   if (!_.isEmpty(refreshDeps)) {
-  //     debouncedCallback(getSyncDataWrap, 1000)(requestConfig.current);
-  //   }
-  // }, [...refreshDeps]);
+  useEffect(() => {
+    // console.warn("useRequest refreshDeps element is change!", ele);
+    // getSyncDataWrap(requestConfig.current);
+    if (!_.isEmpty(refreshDeps)) {
+      debouncedCallback(getSyncDataWrap, 1000)(requestConfig.current);
+    }
+  }, [...refreshDeps]);
 
   /**
    *
@@ -138,7 +138,7 @@ export const useRequest = <T extends object>(
   const getSyncData = (config?: unknown) => {
     console.warn("useRequest getSyncData config", config);
     try {
-      // loadingOn();
+      loadingOn();
       if (ready) {
         if (cacheKey) {
           const locationCacheData = JSON.parse(
@@ -149,9 +149,9 @@ export const useRequest = <T extends object>(
 
             console.log("少时诵诗书");
 
-            // saveData(locationCacheData);
+            saveData(locationCacheData);
             end?.success && end.success(locationCacheData);
-            // loadingOff();
+            loadingOff();
           }
         } else {
           const params = getParams(config);
@@ -165,18 +165,18 @@ export const useRequest = <T extends object>(
 
               if (_.get(res, CODEPATH) === RESPONSRCODE) {
                 console.log("壮年出征");
-                // saveData(res);
+                saveData(res);
                 end?.success && end.success(res);
                 cacheKey && localStorage.setItem(cacheKey, JSON.stringify(res));
-                // loadingOff();
+                loadingOff();
               } else {
                 message.error(FAILEDMESSAGE);
-                // loadingOff();
+                loadingOff();
                 Promise.reject(new Error(FAILEDMESSAGE));
               }
             })
             .catch((error) => {
-              // loadingOff();
+              loadingOff();
               end?.error && end.error(error);
               console.log("useRequest error catch!", error);
 
@@ -192,7 +192,7 @@ export const useRequest = <T extends object>(
       }
     } catch (error) {
       console.log(error);
-      // loadingOff();
+      loadingOff();
     }
   };
 
@@ -204,10 +204,10 @@ export const useRequest = <T extends object>(
 
       return debouncedCallback(getSyncData, debounceWait)(config);
     }
-    // if (throttleWait) {
-    //   console.log("22222");
-    //   return throttleCallback(getSyncData, throttleWait)(config);
-    // }
+    if (throttleWait) {
+      console.log("22222");
+      return throttleCallback(getSyncData, throttleWait)(config);
+    }
     console.log(333333, "config", config);
 
     return getSyncData(config);
@@ -244,57 +244,46 @@ export const useRequest = <T extends object>(
   /**
    * loop
    */
-  // const timer = useRef<NodeJS.Timeout | undefined>(undefined);
-  // const loopFunc = () => {
-  //   console.warn("useRequest loop is start!", loop);
-  //   timer.current = setTimeout(() => {
-  //     loopFunc();
-  //     getSyncDataWrap(requestConfig.current);
-  //   }, loop);
-  // };
-  //   watchEffect(() => {
-  //     if (loop) {
-  //       loopFunc();
-  //     }
-  //     if (!loop && timer.current) {
-  //       clearTimeout(timer.current);
-  //     }
-  //   });
-  //   onUnmounted(() => {
-  //     if (timer.current) clearTimeout(timer.current);
-  //   });
+  const timer = useRef<NodeJS.Timeout | undefined>(undefined);
+  const loopFunc = () => {
+    console.warn("useRequest loop is start!", loop);
+    timer.current = setTimeout(() => {
+      loopFunc();
+      getSyncDataWrap(requestConfig.current);
+    }, loop);
+  };
 
-  // useEffect(() => {
-  //   if (loop) {
-  //     loopFunc();
-  //   }
-  //   if (!loop && timer.current) {
-  //     clearTimeout(timer.current);
-  //   }
-  //   return () => {
-  //     if (timer.current) clearTimeout(timer.current);
-  //   };
-  // }, [loop, timer.current]);
+  useEffect(() => {
+    if (loop) {
+      loopFunc();
+    }
+    if (!loop && timer.current) {
+      clearTimeout(timer.current);
+    }
+    return () => {
+      if (timer.current) clearTimeout(timer.current);
+    };
+  }, [loop, timer.current]);
 
   /**
    * refreshOnWindowFocus
    */
-  // const windowFocusFunc = () => {
-  //   if (document.visibilityState === "visible" && refreshOnWindowFocus) {
-  //     debouncedCallback(run, 5000)(requestConfig.current);
-  //   }
-  // };
+  const windowFocusFunc = () => {
+    if (document.visibilityState === "visible" && refreshOnWindowFocus) {
+      debouncedCallback(run, 5000)(requestConfig.current);
+    }
+  };
 
-  // useEffect(() => {
-  //   document.addEventListener("visibilitychange", windowFocusFunc);
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", windowFocusFunc);
-  //   };
-  // }, []);
+  useEffect(() => {
+    document.addEventListener("visibilitychange", windowFocusFunc);
+    return () => {
+      document.removeEventListener("visibilitychange", windowFocusFunc);
+    };
+  }, []);
 
   return {
     data,
-    // loading,
+    loading,
     run,
   };
 };
