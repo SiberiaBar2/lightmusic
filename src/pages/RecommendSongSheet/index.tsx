@@ -1,7 +1,11 @@
 import { CSSProperties } from "react";
+import { useLocation } from "react-router-dom";
+import { Spin } from "antd";
 import styled from "@emotion/styled";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useRequest } from "react-custom-hook-karlfranz";
 import { Navigation, Pagination, Autoplay } from "swiper";
+
 import { AntCard } from "components/AntCard";
 import { CardList } from "components";
 import { arrAdds } from "utils/utils";
@@ -9,38 +13,66 @@ import {
   cookie,
   useBanner,
   useRecommend,
-  useRecommendResource,
-  useRecommendSongs,
+  // useRecommendResource,
+  // useRecommendSongs,
 } from "./utils";
 
 import "swiper/css/bundle";
-import { useLocation } from "react-router-dom";
-import { useRequest } from "hooks/useRequest";
 import { useHttp } from "utils";
 
+interface Recommends {
+  recommend: {
+    alg: string;
+    copywriter: string;
+    createTime: number;
+    creator: {
+      remarkName: null;
+      mutual: boolean;
+      followed: boolean;
+      avatarImgId: number;
+      backgroundImgId: number;
+      avatarImgIdStr: string;
+      backgroundImgIdStr: string;
+      signature: string;
+      userType: number;
+      lv: number;
+      detailDescription: string;
+      description: string;
+      nickname: string;
+      experts: {
+        expertTags: string[];
+        expertTagsName: string;
+        expertId: number;
+        name: string;
+        expertType: number;
+        expertTagsId: number;
+        expertTagsIdStr: string;
+      }[];
+      id: number;
+      name: string;
+      picUrl: string;
+      playcount: number;
+      trackCount: number;
+      type: number;
+      userId: number;
+    };
+  }[];
+}
+
 export const RecommendSongSheet: React.FC = () => {
-  const { data: recommend } = useRecommend();
-  const { data: banners } = useBanner();
+  const { data: recommend, loading: recommendLoaing } = useRecommend();
+  const { data: banners, loading: bannersLoading } = useBanner();
 
-  // const client = useHttp();
+  const client = useHttp();
   const query = useLocation();
-  // console.log("query", query);
-
   const { state } = query;
-  // const {} = useRequest(
-  //   // () => client("recommend/resource", { data: { cookie: state?.userCookie } }),
-  //   () => client("personalized"),
-  //   {},
-  //   {
-  //     success(res) {
-  //       console.log("查看返回", res);
-  //     },
-  //   }
-  // );
-
-  // const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
-  const { data: { recommend: recommends = [] } = {} } = useRecommendResource(
-    state?.userCookie
+  const {
+    data: { recommend: recommends = [] } = {},
+    loading: recommendsLoaing,
+  } = useRequest<Recommends>(() =>
+    client("recommend/resource", {
+      data: { cookie: state?.userCookie },
+    })
   );
 
   const renderSwiper = () => (
@@ -65,19 +97,17 @@ export const RecommendSongSheet: React.FC = () => {
       navigation={true}
       modules={[Autoplay, Pagination, Navigation]}
     >
-      {arrAdds(banners?.banners, "imageUrl")?.map(
-        (item: any, index: number) => (
-          <SwiperSlide
-            style={{ width: "100%" }}
-            key={item.encodeId}
-            virtualIndex={index}
-          >
-            <ImgContainer>
-              <Bannerimg src={item.imageUrl} alt="" />
-            </ImgContainer>
-          </SwiperSlide>
-        )
-      )}
+      {arrAdds(banners?.banners, "imageUrl")?.map((item, index: number) => (
+        <SwiperSlide
+          style={{ width: "100%" }}
+          key={item.encodeId}
+          virtualIndex={index}
+        >
+          <ImgContainer>
+            <Bannerimg src={item.imageUrl} alt="" />
+          </ImgContainer>
+        </SwiperSlide>
+      ))}
     </Swiper>
   );
 
@@ -100,13 +130,30 @@ export const RecommendSongSheet: React.FC = () => {
     </>
   );
 
+  const loading = !recommendLoaing && !bannersLoading && !recommendsLoaing;
+
   return (
     <>
-      {renderSwiper()}
-      {renderCardList()}
+      {loading ? (
+        <>
+          {renderSwiper()}
+          {renderCardList()}
+        </>
+      ) : (
+        <SpinContainer>
+          <Spin size="large" />
+        </SpinContainer>
+      )}
     </>
   );
 };
+
+const SpinContainer = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ImgContainer = styled.div`
   height: 33rem;
