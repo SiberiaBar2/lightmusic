@@ -62,10 +62,14 @@ const ENDCONFIG = {
   error: (error: Error) => {},
 };
 
-export const useRequest = <T = any>(
+type K = [
   syncFunc: (config?: any) => Promise<unknown>,
-  options: OptionsConfig = {},
-  end: EndConfig = ENDCONFIG
+  options?: OptionsConfig,
+  end?: EndConfig
+];
+
+export const useRequest = <T extends object>(
+  ...[syncFunc, options, end]: K
 ) => {
   const {
     loop = 0,
@@ -79,196 +83,141 @@ export const useRequest = <T = any>(
     loadingDelay = 0,
     responsePath = "",
     refreshOnWindowFocus = false,
-  } = options;
-  const throttleCallback = useThrottle();
+  } = options || {};
+  // const throttleCallback = useThrottle();
   const debouncedCallback = useFuncDebounce();
-  const [loading, { on: loadingOn, off: loadingOff }] = useBoolean();
+  // const [loading, { on: loadingOn, off: loadingOff }] = useBoolean();
 
   //   const data = useRef<T>({} as T);
-  const [data, setData] = useState();
+  const [data, setData] = useState<T>({} as T);
   const retryNumRef = useRef<number>(0);
   const requestConfig = useRef<unknown>();
 
   /**
    * refreshDeps
    */
-  //   refreshDeps.forEach((ele) => {
-  //     watch(
-  //       () => ele,
-  //       () => {
-  //         console.warn("useRequest refreshDeps element is change!", ele);
-  //         getSyncDataWrap(requestConfig.current);
-  //       },
-  //       {
-  //         deep: true,
-  //       }
-  //     );
-  //   });
 
-  useEffect(() => {
-    // console.warn("useRequest refreshDeps element is change!", ele);
-    // getSyncDataWrap(requestConfig.current);
-    if (!_.isEmpty(refreshDeps)) {
-      debouncedCallback(getSyncDataWrap, 1000)(requestConfig.current);
-    }
-  }, [...refreshDeps]);
+  // useEffect(() => {
+  //   // console.warn("useRequest refreshDeps element is change!", ele);
+  //   // getSyncDataWrap(requestConfig.current);
+  //   if (!_.isEmpty(refreshDeps)) {
+  //     debouncedCallback(getSyncDataWrap, 1000)(requestConfig.current);
+  //   }
+  // }, [...refreshDeps]);
 
   /**
    *
    * request func
    */
-  const retry = useCallback(
-    (config?: any) => {
-      if (retryNum) {
-        if (retryNumRef.current < retryNum) {
-          retryNumRef.current += 1;
-          getSyncData(config);
-        }
-      }
-    },
-    [retryNumRef.current, retryNum]
-  );
 
   const run = (config?: unknown) => {
     getSyncDataWrap(config);
   };
 
-  const saveData = useCallback(
-    (res: any) => {
-      if (responsePath) {
-        setData(_.get(res, responsePath, {}) || {});
-        //   data.current = _.get(res, responsePath, {}) || {};
-      } else {
-        setData(res);
-        //   data.current = res;
-      }
-    },
-    [responsePath]
-  );
+  console.log("rendercishu");
 
-  const getParams = useCallback((config?: unknown) => {
+  const saveData = (res: any) => {
+    if (responsePath) {
+      setData(_.get(res, responsePath, {}) || {});
+      //   data.current = _.get(res, responsePath, {}) || {};
+    } else {
+      setData(res);
+      //   data.current = res;
+    }
+  };
+
+  const getParams = (config?: unknown) => {
     if (Object.prototype.toString.call(config) === "[object Object]") {
       return !_.isEmpty(cleanObject(config as { [key: string]: unknown }))
         ? cleanObject(config as { [key: string]: unknown })
         : undefined;
     }
     return config;
-  }, []);
+  };
 
-  const getSyncData = useCallback(
-    (config?: unknown) => {
-      console.warn("useRequest getSyncData config", config);
-      try {
-        loadingOn();
-        if (ready) {
-          if (cacheKey) {
-            const locationCacheData = JSON.parse(
-              localStorage.getItem(cacheKey) || "{}"
-            );
-            if (!_.isEmpty(locationCacheData)) {
-              // data.current = locationCacheData;
+  const getSyncData = (config?: unknown) => {
+    console.warn("useRequest getSyncData config", config);
+    try {
+      // loadingOn();
+      if (ready) {
+        if (cacheKey) {
+          const locationCacheData = JSON.parse(
+            localStorage.getItem(cacheKey) || "{}"
+          );
+          if (!_.isEmpty(locationCacheData)) {
+            // data.current = locationCacheData;
 
-              saveData(locationCacheData);
-              end.success && end.success(locationCacheData);
-              loadingOff();
-            }
-          } else {
-            const params = getParams(config);
-            if (!_.isEmpty(config)) {
-              requestConfig.current = config;
-            }
+            console.log("少时诵诗书");
 
-            syncFunc(params)
-              .then((res) => {
-                console.log("res", res);
-
-                if (_.get(res, CODEPATH) === RESPONSRCODE) {
-                  saveData(res);
-                  end.success && end.success(res);
-                  cacheKey &&
-                    localStorage.setItem(cacheKey, JSON.stringify(res));
-                  loadingOff();
-                } else {
-                  message.error(FAILEDMESSAGE);
-                  loadingOff();
-                  Promise.reject(new Error(FAILEDMESSAGE));
-                }
-              })
-              .catch((error) => {
-                loadingOff();
-                end.error && end.error(error);
-                console.log("useRequest error catch!", error);
-
-                // retry(config);
-                if (retryNum) {
-                  if (retryNumRef.current < retryNum) {
-                    retryNumRef.current += 1;
-                    getSyncData(config);
-                  }
-                }
-              });
+            // saveData(locationCacheData);
+            end?.success && end.success(locationCacheData);
+            // loadingOff();
           }
+        } else {
+          const params = getParams(config);
+          if (!_.isEmpty(config)) {
+            requestConfig.current = config;
+          }
+
+          syncFunc(params)
+            .then((res) => {
+              console.log("res=====>", res);
+
+              if (_.get(res, CODEPATH) === RESPONSRCODE) {
+                console.log("壮年出征");
+                // saveData(res);
+                end?.success && end.success(res);
+                cacheKey && localStorage.setItem(cacheKey, JSON.stringify(res));
+                // loadingOff();
+              } else {
+                message.error(FAILEDMESSAGE);
+                // loadingOff();
+                Promise.reject(new Error(FAILEDMESSAGE));
+              }
+            })
+            .catch((error) => {
+              // loadingOff();
+              end?.error && end.error(error);
+              console.log("useRequest error catch!", error);
+
+              // retry(config);
+              if (retryNum) {
+                if (retryNumRef.current < retryNum) {
+                  retryNumRef.current += 1;
+                  getSyncData(config);
+                }
+              }
+            });
         }
-      } catch (error) {
-        console.log(error);
-        loadingOff();
       }
-    },
-    [
-      ready,
-      cacheKey,
-      syncFunc,
-      getParams,
-      saveData,
-      end,
-      retryNum,
-      retryNumRef.current,
-    ]
-  );
+    } catch (error) {
+      console.log(error);
+      // loadingOff();
+    }
+  };
 
-  const getSyncDataWrap = useCallback(
-    (config?: unknown) => {
-      if (debounceWait) {
-        console.log("11111");
+  const getSyncDataWrap = (config?: unknown) => {
+    console.log("sssssss");
 
-        return debouncedCallback(getSyncData, debounceWait)(config);
-      }
-      if (throttleWait) {
-        console.log("22222");
-        return throttleCallback(getSyncData, throttleWait)(config);
-      }
-      console.log(333333, "config", config);
+    if (debounceWait) {
+      console.log("11111");
 
-      return getSyncData(config);
-    },
-    [debounceWait, getSyncData]
-  );
+      return debouncedCallback(getSyncData, debounceWait)(config);
+    }
+    // if (throttleWait) {
+    //   console.log("22222");
+    //   return throttleCallback(getSyncData, throttleWait)(config);
+    // }
+    console.log(333333, "config", config);
+
+    return getSyncData(config);
+  };
 
   /**
    * is loadingDelay
    */
   const loadingDelatyTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  //   onMounted(() => {
-  //     if (manual) {
-  //       return;
-  //     }
-  //     if (loadingDelay) {
-  //       loadingDelatyTimer.current = setTimeout(() => {
-  //         getSyncDataWrap(requestConfig.current);
-  //       }, loadingDelay);
-  //       return;
-  //     }
-  //     getSyncDataWrap(requestConfig.current);
-  //   });
-  //   onUnmounted(() => {
-  //     if (loadingDelatyTimer.current) {
-  //       clearTimeout(loadingDelatyTimer.current);
-  //     }
-  //   });
-
   useEffect(() => {
-    // console.log("manual", manual);
-
     if (manual) {
       return;
     }
@@ -281,7 +230,7 @@ export const useRequest = <T = any>(
       return;
     }
 
-    // console.log("dasdasdasdsas");
+    console.log("dasdasdasdsas");
 
     getSyncDataWrap(requestConfig.current);
 
@@ -295,14 +244,14 @@ export const useRequest = <T = any>(
   /**
    * loop
    */
-  const timer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const loopFunc = useCallback(() => {
-    console.warn("useRequest loop is start!", loop);
-    timer.current = setTimeout(() => {
-      loopFunc();
-      getSyncDataWrap(requestConfig.current);
-    }, loop);
-  }, [timer.current, getSyncDataWrap, requestConfig.current]);
+  // const timer = useRef<NodeJS.Timeout | undefined>(undefined);
+  // const loopFunc = () => {
+  //   console.warn("useRequest loop is start!", loop);
+  //   timer.current = setTimeout(() => {
+  //     loopFunc();
+  //     getSyncDataWrap(requestConfig.current);
+  //   }, loop);
+  // };
   //   watchEffect(() => {
   //     if (loop) {
   //       loopFunc();
@@ -315,37 +264,37 @@ export const useRequest = <T = any>(
   //     if (timer.current) clearTimeout(timer.current);
   //   });
 
-  useEffect(() => {
-    if (loop) {
-      loopFunc();
-    }
-    if (!loop && timer.current) {
-      clearTimeout(timer.current);
-    }
-    return () => {
-      if (timer.current) clearTimeout(timer.current);
-    };
-  }, [loop, timer.current, loopFunc]);
+  // useEffect(() => {
+  //   if (loop) {
+  //     loopFunc();
+  //   }
+  //   if (!loop && timer.current) {
+  //     clearTimeout(timer.current);
+  //   }
+  //   return () => {
+  //     if (timer.current) clearTimeout(timer.current);
+  //   };
+  // }, [loop, timer.current]);
 
   /**
    * refreshOnWindowFocus
    */
-  const windowFocusFunc = () => {
-    if (document.visibilityState === "visible" && refreshOnWindowFocus) {
-      debouncedCallback(run, 5000)(requestConfig.current);
-    }
-  };
+  // const windowFocusFunc = () => {
+  //   if (document.visibilityState === "visible" && refreshOnWindowFocus) {
+  //     debouncedCallback(run, 5000)(requestConfig.current);
+  //   }
+  // };
 
-  useEffect(() => {
-    document.addEventListener("visibilitychange", windowFocusFunc);
-    return () => {
-      document.removeEventListener("visibilitychange", windowFocusFunc);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener("visibilitychange", windowFocusFunc);
+  //   return () => {
+  //     document.removeEventListener("visibilitychange", windowFocusFunc);
+  //   };
+  // }, []);
 
   return {
     data,
-    loading,
+    // loading,
     run,
   };
 };

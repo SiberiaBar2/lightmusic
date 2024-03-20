@@ -76,3 +76,11 @@ export const useHttp = () => {
     // [user?.token]
   );
 };
+
+export const https = () => {
+  //   const { user } = useAuth();
+  return (...[endpoint, config]: Parameters<typeof http>) =>
+    http(endpoint, { ...config });
+  //   http(endpoint, { ...config, token: user?.token }),
+  // [user?.token]
+};

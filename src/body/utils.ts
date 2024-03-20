@@ -8,7 +8,7 @@ import { changePlay } from "store/play";
 import { debounce } from "utils/utils";
 import { likeState } from "store/ilike";
 import { useHttp } from "utils";
-import { useRequest } from "hooks/useRequest";
+// import { useRequest } from "hooks/useRequest";
 
 type StrategyType = { [x: string | number]: () => void };
 
@@ -25,27 +25,27 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
 
   const client = useHttp();
   const cookie = localStorage.getItem("cookie");
-  const { run } = useRequest(
-    async (config) =>
-      // client("personalized"),
-      client("/playmode/intelligence/list", {
-        data: {
-          id: config.id,
-          pid: "24381616",
-          cookie: cookie,
-        },
-        method: "GET",
-      }),
-    {
-      // responsePath:,
-      manual: true,
-    },
-    {
-      success(res) {
-        console.log("rrrrr", res);
-      },
-    }
-  );
+  // const { run } = useRequest(
+  //   async (config) =>
+  //     // client("personalized"),
+  //     client("/playmode/intelligence/list", {
+  //       data: {
+  //         id: config.id,
+  //         pid: "24381616",
+  //         cookie: cookie,
+  //       },
+  //       method: "GET",
+  //     }),
+  //   {
+  //     // responsePath:,
+  //     manual: true,
+  //   },
+  //   {
+  //     success(res) {
+  //       console.log("rrrrr", res);
+  //     },
+  //   }
+  // );
 
   const { likes } = likeState;
 

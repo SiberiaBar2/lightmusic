@@ -15,15 +15,28 @@ import {
 
 import "swiper/css/bundle";
 import { useLocation } from "react-router-dom";
+import { useRequest } from "hooks/useRequest";
+import { useHttp } from "utils";
 
 export const RecommendSongSheet: React.FC = () => {
   const { data: recommend } = useRecommend();
   const { data: banners } = useBanner();
 
+  // const client = useHttp();
   const query = useLocation();
-  console.log("query", query);
+  // console.log("query", query);
 
   const { state } = query;
+  // const {} = useRequest(
+  //   // () => client("recommend/resource", { data: { cookie: state?.userCookie } }),
+  //   () => client("personalized"),
+  //   {},
+  //   {
+  //     success(res) {
+  //       console.log("查看返回", res);
+  //     },
+  //   }
+  // );
 
   // const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
   const { data: { recommend: recommends = [] } = {} } = useRecommendResource(
