@@ -17,16 +17,20 @@ export const cleanObject = (obj?: { [key: string]: unknown }) => {
 };
 
 // 为数组对象的图片地址http添加s
-export const arrAdds = (arr: any[], key: string) => {
+export const arrAdds = <T extends Record<string, any>>(
+  arr: T[],
+  key: string
+) => {
   if (Array.isArray(arr) && arr.length > 0) {
-    return arr.map((ele: any) => {
+    return arr.map((ele: T) => {
       const getHttp = ele[key]?.slice(0, 4) as string;
 
       if (ele[key]?.slice(0, 5)[ele[key]?.slice(0, 5)?.length - 1] === "s")
         return ele;
       const getEnd = ele[key]?.slice(4) as string;
       const item = { ...ele };
-      item.imageUrl = getHttp + "s" + getEnd;
+      // item.imageUrl = getHttp + "s" + getEnd;
+      (item as Record<string, any>)[key] = getHttp + "s" + getEnd;
       return item;
     });
   }
