@@ -59,6 +59,7 @@ import {
   useStorgeState,
   useKeyUpdate,
 } from "react-custom-hook-karlfranz";
+import styled from "@emotion/styled";
 const singer = process.env.REACT_APP_SPA_URL as string;
 
 const INITTIME = "00:00";
@@ -220,7 +221,7 @@ export const Dynamic: React.FC<{
     // const isAuto = async () => {
     // let flag = true;
     try {
-      if (musicRef.current?.src && !musicRef.current?.src.includes(singer)) {
+      if (data[0].url) {
         play === "play" ? musicRef.current.play() : musicRef.current.pause();
       }
     } catch (err) {
@@ -247,7 +248,7 @@ export const Dynamic: React.FC<{
     // };
 
     // content();
-  }, [play, musicRef.current?.src]);
+  }, [play, data[0]?.url]);
 
   // 播放暂停
   useEffect(() => {
@@ -431,7 +432,7 @@ export const Dynamic: React.FC<{
     setParam(changePlay({ play: "pause" }));
     setParam(changeToneQuality({ toneQuality: config }));
   };
-  const items: MenuProps["items"] = [
+  const items = [
     {
       key: "standard",
       label: (
@@ -619,12 +620,22 @@ export const Dynamic: React.FC<{
         fill="rgb(237, 195, 194)"
       /> */}
           <Dropdown
-            // overlayStyle={{
-            //   backgroundColor: "rgb(0, 0, 0.4)",
-            // }}
             menu={{ items }}
+            dropdownRender={(menus) => {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              const { items } = menus.props;
+              return (
+                <ToneQualityContainer>
+                  {items.map((ele: any) => {
+                    return (
+                      <ToneQualityDiv key={ele.key}>{ele.label}</ToneQualityDiv>
+                    );
+                  })}
+                </ToneQualityContainer>
+              );
+            }}
             placement="bottomLeft"
-            arrow
           >
             <span>{toneQuality?.label || "-"}</span>
           </Dropdown>
@@ -693,3 +704,22 @@ export const Dynamic: React.FC<{
 };
 
 Dynamic.whyDidYouRender = true;
+
+const ToneQualityContainer = styled.div`
+  width: 90px;
+  text-align: center;
+  border-radius: 10px;
+  background-color: rgb(43, 18, 22);
+  cursor: pointer;
+  padding: 5px;
+`;
+
+const ToneQualityDiv = styled.div`
+  width: 100%;
+  :hover {
+    background-color: rgb(0, 0, 0.9);
+  }
+  height: 30px;
+  line-height: 30px;
+  border-radius: 10px;
+`;

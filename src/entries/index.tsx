@@ -25,8 +25,12 @@ import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 import { useEffect, useRef, useState } from "react";
-import { useMountRef } from "react-custom-hook-karlfranz";
+import { useMountRef, useRequest } from "react-custom-hook-karlfranz";
 import { getBack } from "./pic";
+import { https } from "utils";
+import { useSelector } from "react-redux";
+import { RootState } from "store";
+import { LoginState } from "store/login";
 
 localStorage.setItem("zhixue", "false");
 const count = 390;
@@ -58,6 +62,32 @@ const Entries = () => {
   //   setIsLoadPic(true);
   // };
   // const backRef = useRef<any>(null);
+
+  const loginState = useSelector<RootState, Pick<LoginState, "data">>(
+    (state) => state.login
+  );
+  const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
+    loginState;
+  // const client = useHttp();
+  const client = https();
+  const { run } = useRequest(
+    () =>
+      client("user/playlist", {
+        data: {
+          uid: userId,
+          // cookie: localStorage.getItem("cookie"),
+          timestamp: new Date().getTime(),
+        },
+      }),
+    {
+      // refreshOnWindowFocus: true,
+    },
+    {
+      success(res) {
+        console.log("查看用户歌单", res);
+      },
+    }
+  );
   const {
     data: {
       songs: [
@@ -201,7 +231,8 @@ const Entries = () => {
         id="backgroundDiv"
         style={{
           // backgroundImage: `url(${stringAdds(picUrl)})`,
-          backgroundImage: `url(${BACK})`,
+          // backgroundImage: `url(${BACK})`,
+          background: "rgb(43, 18, 22)",
           zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",

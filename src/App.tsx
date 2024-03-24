@@ -1,12 +1,13 @@
 import Entries from "entries";
 import { ConfigProvider } from "antd";
 import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import store, { persist } from "store";
+import store, { RootState, persist } from "store";
 import { https, useHttp } from "utils";
 // import { useRequest } from "hooks/useRequest";
 import { useRequest } from "react-custom-hook-karlfranz";
+import { LoginState } from "store/login";
 
 // 为什么写为true就能触发？
 // document.addEventListener("scroll", handelScroll, true);
@@ -20,30 +21,6 @@ const queryClients = new QueryClient({
 
 function App() {
   console.log("rrrrrrrrrrrrrr");
-
-  // const client = useHttp();
-  const client = https();
-  const { run } = useRequest(
-    () =>
-      client("recommend/songs", {
-        data: {
-          cookie: localStorage.getItem("cookie"),
-        },
-      }),
-    {
-      // debounceWait: 1000,
-    }
-    // ,
-    // {
-    // refreshOnWindowFocus: true,
-    // }
-    // ,
-    // {
-    //   success(res) {
-    //     console.log("查看返回", res);
-    //   },
-    // }
-  );
   return (
     <ConfigProvider
       theme={{

@@ -73,48 +73,16 @@ export const Audio: React.FC<AudiosProps> = React.memo(
         style={{ display: "none" }}
         onTimeUpdate={audioTimeUpdate}
         onDurationChange={onDurationChange}
-        // onWaiting={(e) => {
-        //   console.log("onWaiting", e);
+        // onPlay={(e) => {
+        //   console.log("onPlay", e);
+        //   setParam(changePlay({ play: "play" }));
         // }}
-        onPlay={(e) => {
-          console.log("onPlay", e);
-          setParam(changePlay({ play: "play" }));
-        }}
-        onPause={(e) => {
-          console.log("onPaste", e, "play", play);
-          setParam(changePlay({ play: "pause" }));
-        }}
-        // onPlaying={(e) => {
-        //   console.log("onPlaying", e);
-        // }}
-        // onWaitingCapture={(e) => {
-        //   console.log("onWaitingCapture", e);
-        // }}
-        // onSuspend={(e) => {
-        //   console.log("onSuspend", e);
+        // onPause={(e) => {
+        //   console.log("onPaste", e, "play", play);
+        //   setParam(changePlay({ play: "pause" }));
         // }}
         onError={(e) => {
           console.log("onError", e);
-          // if (play === "play" && data[0].url) {
-          //   console.log("11111111111111111");
-
-          //   (async () => {
-          //     try {
-          //       console.log(
-          //         "musicRef.current",
-          //         musicRef.current,
-          //         musicRef.current.play,
-          //         data[0].url
-          //       );
-
-          //       await (play && musicRef.current && musicRef.current.play());
-          //     } catch (error) {
-          //       console.log("catch error", error);
-          //       message.warning("当前音乐不可播放，已自动播放下一曲");
-          //       goPrevorNext("next");
-          //     }
-          //   })();
-          // }
         }}
       />
     );

@@ -7,6 +7,18 @@ import {
 } from "./utils";
 import { PLAYCONSTANTS, COMMENT } from "./contants";
 
+const getDura = (dt: number) => {
+  const totalSeconds = Math.floor(dt / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  if (isNaN(minutes) || isNaN(seconds)) {
+    return "00:00";
+  }
+  const m = minutes < 10 ? "0" + minutes : minutes;
+  const s = seconds < 10 ? "0" + seconds : seconds;
+  return m + ":" + s;
+};
 export const useSongs = (songId: number | string, toneQuality: string) => {
   // 这里的if 会导致react hook数组发生变化 引发bug！经验证确认！
   // Uncaught TypeError: Cannot read properties of undefined (reading 'length')
@@ -34,6 +46,7 @@ export const useSongs = (songId: number | string, toneQuality: string) => {
         {
           al: { name, picUrl },
           ar: [{ name: authName }],
+          dt,
         },
       ],
     } = PLAYCONSTANTS,
@@ -58,5 +71,6 @@ export const useSongs = (songId: number | string, toneQuality: string) => {
     comments,
     userId,
     topComments,
+    dt: getDura(dt),
   };
 };
