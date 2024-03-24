@@ -23,30 +23,6 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
     _.pick(state.ilike, ["likes"])
   );
 
-  const client = useHttp();
-  const cookie = localStorage.getItem("cookie");
-  // const { run } = useRequest(
-  //   async (config) =>
-  //     // client("personalized"),
-  //     client("/playmode/intelligence/list", {
-  //       data: {
-  //         id: config.id,
-  //         pid: "24381616",
-  //         cookie: cookie,
-  //       },
-  //       method: "GET",
-  //     }),
-  //   {
-  //     // responsePath:,
-  //     manual: true,
-  //   },
-  //   {
-  //     success(res) {
-  //       console.log("rrrrr", res);
-  //     },
-  //   }
-  // );
-
   const { likes } = likeState;
 
   const strategy: StrategyType = {

@@ -70,24 +70,24 @@ const Entries = () => {
     loginState;
   // const client = useHttp();
   const client = https();
-  const { run } = useRequest(
-    () =>
-      client("user/playlist", {
-        data: {
-          uid: userId,
-          // cookie: localStorage.getItem("cookie"),
-          timestamp: new Date().getTime(),
-        },
-      }),
-    {
-      // refreshOnWindowFocus: true,
-    },
-    {
-      success(res) {
-        console.log("查看用户歌单", res);
-      },
-    }
-  );
+  // const { run } = useRequest(
+  //   () =>
+  //     client("user/playlist", {
+  //       data: {
+  //         uid: userId,
+  //         // cookie: localStorage.getItem("cookie"),
+  //         timestamp: new Date().getTime(),
+  //       },
+  //     }),
+  //   {
+  //     // refreshOnWindowFocus: true,
+  //   },
+  //   {
+  //     success(res) {
+  //       console.log("查看用户歌单", res);
+  //     },
+  //   }
+  // );
   const {
     data: {
       songs: [

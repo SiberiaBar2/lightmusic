@@ -24,11 +24,11 @@ import {
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
-import { Button, Dropdown, MenuProps, Slider, Tooltip } from "antd";
+import { Button, Dropdown, MenuProps, Slider, Tooltip, message } from "antd";
 import _ from "lodash";
 
 import { Audio } from "./component/Audio";
-
+import { likeState } from "store/ilike";
 import Drawer from "./component/Drawer";
 import { useFuncDebounce, useMount } from "hooks";
 import { Like } from "./component/like";
@@ -58,8 +58,11 @@ import {
   useStateSync,
   useStorgeState,
   useKeyUpdate,
+  useRequest,
 } from "react-custom-hook-karlfranz";
 import styled from "@emotion/styled";
+import { https, useHttp } from "utils";
+import { LoginState } from "store/login";
 const singer = process.env.REACT_APP_SPA_URL as string;
 
 const INITTIME = "00:00";
@@ -128,6 +131,76 @@ export const Dynamic: React.FC<{
   const { param, setParam } = props;
   const { songId, song, prevornext } = param;
 
+  const loginState = useSelector<RootState, Pick<LoginState, "data">>(
+    (state) => state.login
+  );
+  const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
+    loginState;
+
+  const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
+    _.pick(state.ilike, ["likes"])
+  );
+  const { likes: likeSongs } = likeState;
+  // const client = useHttp();
+  const client = https();
+  const { run: getUserPlaylist, data: playList } = useRequest<{ id: string }[]>(
+    ({ userId }: { userId: string }) =>
+      client("user/playlist", {
+        data: {
+          uid: userId,
+          timestamp: new Date().getTime(),
+        },
+      }),
+    {
+      responsePath: "playlist",
+      manual: true,
+    },
+    {
+      success(res) {
+        console.log("查看用户歌单", res);
+      },
+    }
+  );
+
+  console.log("playList", playList);
+
+  useEffect(() => {
+    console.log("userId====>", userId);
+
+    if (userId) {
+      getUserPlaylist({ userId });
+    }
+  }, [userId]);
+
+  const { run: getHeartBit } = useRequest(
+    ({ id, pid }: { id: string; pid: string }) =>
+      client("playmode/intelligence/list", {
+        data: { id, pid, timestamp: new Date().getTime() },
+      }),
+    {
+      manual: true,
+    },
+    {
+      success(res) {
+        console.log("心动模式数据", res);
+        const ids = res.data.map((item: any) => {
+          return item.id;
+        });
+        console.log("ids", ids);
+        handeChangeType(PlayType.shun);
+        setParam(
+          songsInfo({
+            ...songsState,
+            songId: ids[0],
+            song: 0,
+            prevornext: String(ids),
+          })
+        );
+        setParam(changePlay({ play: "play" }));
+        message.success("心动模式已开启");
+      },
+    }
+  );
   const [open, setOpen] = useState(true);
 
   const debouncedCallback = useFuncDebounce();
@@ -168,13 +241,21 @@ export const Dynamic: React.FC<{
     toneQuality?.key || ""
   );
 
+  console.log("data", data);
+
   const [playTime, setPlayTime] = useStorgeState("0", "musicTime");
-  useKeyUpdate(() => {
-    if (musicRef.current) {
-      musicRef.current.currentTime = Number(playTime);
-      setParam(changePlay({ play: "play" }));
-    }
-  }, [toneQuality?.key]);
+  useKeyUpdate(
+    () => {
+      if (musicRef.current) {
+        musicRef.current.currentTime = Number(playTime);
+        setParam(changePlay({ play: "play" }));
+      }
+    },
+    [toneQuality?.key],
+    (() => {
+      return singer.includes("localhost") ? 2 : 1;
+    })()
+  );
 
   const goPrevorNext = useToggleSongs({
     prevornext,
@@ -611,6 +692,39 @@ export const Dynamic: React.FC<{
             style={{ cursor: "pointer" }}
           />
           <Like songId={useMemo(() => songId, [songId])} />
+          <svg
+            fill="#d86267"
+            width="24px"
+            height="24px"
+            viewBox="0 0 7.68 7.68"
+            id="Flat"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={debouncedCallback(() => {
+              try {
+                console.log("likeSongs", likeSongs);
+                const startId =
+                  likeSongs.findIndex((id) => id === data[0].id) === -1
+                    ? likeSongs[0]
+                    : songId;
+                if (startId && playList[0]?.id) {
+                  getHeartBit({
+                    id: startId,
+                    pid: playList[0].id,
+                  });
+                } else {
+                  message.warning("请先收藏一些歌曲");
+                }
+              } catch (error) {
+                console.log(error);
+              }
+            })}
+          >
+            {/* eslint-disable-next-line max-len */}
+            <path d="M2.16 3.96H0.96a0.12 0.12 0 0 1 0 -0.24h1.136l0.444 -0.667a0.12 0.12 0 0 1 0.2 0L3.6 4.344l0.38 -0.57A0.12 0.12 0 0 1 4.08 3.72h0.72a0.12 0.12 0 0 1 0 0.24h-0.656l-0.444 0.667a0.12 0.12 0 0 1 -0.2 0L2.64 3.336l-0.38 0.57A0.12 0.12 0 0 1 2.16 3.96m3.12 -2.88a1.676 1.676 0 0 0 -1.44 0.814A1.68 1.68 0 0 0 0.72 2.76c0 0.042 0.001 0.085 0.004 0.127a0.12 0.12 0 0 0 0.24 -0.014A1.98 1.98 0 0 1 0.96 2.76a1.44 1.44 0 0 1 2.769 -0.555 0.12 0.12 0 0 0 0.111 0.074 0.12 0.12 0 0 0 0.111 -0.074A1.44 1.44 0 0 1 6.72 2.76c0 1.791 -2.466 3.334 -2.88 3.581 -0.25 -0.148 -1.242 -0.765 -1.99 -1.62a0.12 0.12 0 0 0 -0.181 0.158c0.885 1.013 2.062 1.678 2.112 1.706a0.12 0.12 0 0 0 0.117 0 9.39 9.39 0 0 0 1.522 -1.111C6.442 4.555 6.96 3.641 6.96 2.76a1.682 1.682 0 0 0 -1.68 -1.68" />
+          </svg>
         </DivTwo>
         <DivThree>
           {/* <Acoustic

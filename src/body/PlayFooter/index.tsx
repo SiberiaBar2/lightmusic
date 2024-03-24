@@ -19,6 +19,8 @@ export const PlayFooter: React.FC = () => {
   >((state) => state.login);
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
   const { songId } = songsState;
+  console.log("index songId", songId);
+
   return (
     <>
       {songId ? (
