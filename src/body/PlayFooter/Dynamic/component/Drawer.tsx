@@ -74,7 +74,7 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       height={"100vh"}
       open={visiable}
       onClose={onClose}
-      mask={false}
+      // mask={false}
       closeIcon={null}
       zIndex={100}
       headerStyle={{ display: "none" }}
@@ -86,7 +86,8 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
       <Wrap>
         <div
           style={{
-            backgroundImage: `url(${stringAdds(picUrl)})`,
+            // backgroundImage: `url(${stringAdds(picUrl)})`,
+            background: "rgb(43, 18, 22)",
             // backgroundImage:
             //   "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
             backgroundSize: "cover",
