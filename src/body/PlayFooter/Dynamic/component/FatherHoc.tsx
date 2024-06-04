@@ -39,20 +39,15 @@ export const FatherHoc: React.FC<FatherHocProps> = ({
   const songsType = useMemo(
     () => ({
       [PlayType.dan]: function () {
-        console.log("zhixing 单曲");
-        musicRef.current.currentTime = 0;
-        musicRef.current?.play();
+        goPrevorNext("dan");
       },
       [PlayType.shun]: function () {
-        console.log("zhixing 顺序");
         goPrevorNext("next");
       },
       [PlayType.liexun]: function () {
-        console.log("zhixing 列表");
         goPrevorNext("next");
       },
       [PlayType.sui]: function () {
-        console.log("zhixing 随机");
         goPrevorNext("next", "random");
       },
     }),

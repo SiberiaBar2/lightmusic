@@ -35,10 +35,11 @@ import _ from "lodash";
 import { songsState } from "store/songs";
 import { Like } from "./like";
 import { PlayTypeIcon } from "./PlayTypeIcon";
-import { useFuncDebounce } from "hooks";
+import { useFuncDebounce } from "@karlfranz/reacthooks";
 
 const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
-  const { lyric, time, picUrl, songId, type, handeChangeType } = props;
+  const { lyric, time, picUrl, songId, type, handeChangeType, musicRef } =
+    props;
 
   // console.log("time ---->", time);
 
@@ -132,6 +133,7 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
             <RoundWrap
               picUrl={stringAdds(picUrl)}
               type={type}
+              musicRef={musicRef}
               handeChangeType={handeChangeType}
             />
             <LyricWrap {...LryicConfig} />
@@ -144,11 +146,11 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
 };
 
 const RoundWrap: React.FC<
-  Pick<DrawProps, "picUrl"> & {
+  Pick<DrawProps, "picUrl" | "musicRef"> & {
     handeChangeType?: any;
     type: any;
   }
-> = React.memo(({ picUrl, handeChangeType, type }) => {
+> = React.memo(({ picUrl, handeChangeType, type, musicRef }) => {
   const dispatch = useDispatch();
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
@@ -165,6 +167,7 @@ const RoundWrap: React.FC<
     song,
     songsState,
     play,
+    musicRef,
   });
 
   const debouncedCallback = useFuncDebounce();

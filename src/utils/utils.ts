@@ -1,8 +1,8 @@
 const isVoid = (value: unknown) =>
   value === undefined || value === null || value === "";
-export const cleanObject = (obj?: { [key: string]: unknown }) => {
+export const cleanObject = <T extends { [key: string]: unknown }>(obj?: T) => {
   if (!obj) {
-    return {};
+    return {} as T;
   }
 
   const result = { ...obj };
@@ -42,7 +42,9 @@ export const stringAdds = (str: string) => {
   if (str.slice(0, 5)[str.slice(0, 5).length - 1] === "s") return str;
   const getHttp = str.slice(0, 4);
   const getEnd = str.slice(4);
-  return getHttp + "s" + getEnd;
+  const pictUrl = getHttp + "s" + getEnd;
+
+  return pictUrl;
 };
 
 // 传参的防抖

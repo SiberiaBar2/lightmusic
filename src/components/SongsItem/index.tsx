@@ -13,7 +13,7 @@ import { likeState, changelike } from "store/ilike";
 import { RootState } from "store";
 import { useDouble } from "body/utils";
 import { Keys } from "types";
-import { useFuncDebounce } from "hooks";
+import { useFuncDebounce } from "@karlfranz/reacthooks";
 const cookie = localStorage.getItem("cookie");
 
 const SONGSTYPE: { [x: number]: string } = {
@@ -194,12 +194,20 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
             //   e.stopPropagation();
             //   likeMusci();
             // }}
-            onClick={debouncedCallback(function (
+            onClick={_.debounce(function (
+              // onClick={debouncedCallback(function (
               e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
             ) {
+              console.log(
+                "自己1",
+                e,
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                this as MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+              );
               e.stopPropagation();
               likeMusci();
-            })}
+            }, 500)}
             theme={"filled"}
             size={22}
             fill="rgb(237, 90, 101)"
@@ -209,7 +217,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
           <ParkLike
             onClick={debouncedCallback(
               (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
-                console.log("自己");
+                console.log("自己2");
 
                 e.stopPropagation();
                 likeMusci();

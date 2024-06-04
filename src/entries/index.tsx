@@ -25,7 +25,7 @@ import { debounce, stringAdds } from "utils/utils";
 import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 import { useEffect, useRef, useState } from "react";
-import { useMountRef, useRequest } from "react-custom-hook-karlfranz";
+import { useMountRef, useQuery } from "@karlfranz/reacthooks";
 import { getBack } from "./pic";
 import { https } from "utils";
 import { useSelector } from "react-redux";

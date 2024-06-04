@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Spin } from "antd";
 import styled from "@emotion/styled";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useRequest } from "react-custom-hook-karlfranz";
+import { useQuery } from "@karlfranz/reacthooks";
 import { Navigation, Pagination, Autoplay } from "swiper";
 
 import { AntCard } from "components/AntCard";
@@ -69,7 +69,7 @@ export const RecommendSongSheet: React.FC = () => {
   const {
     data: { recommend: recommends = [] } = {},
     loading: recommendsLoaing,
-  } = useRequest<Recommends>(() =>
+  } = useQuery<Recommends, null>(() =>
     client("recommend/resource", {
       data: { cookie: state?.userCookie },
     })

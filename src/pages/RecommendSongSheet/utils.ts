@@ -1,6 +1,6 @@
 import { useHttp } from "utils";
 import { useQuery } from "react-query";
-import { useRequest } from "react-custom-hook-karlfranz";
+import { useQuery as useQueryC } from "@karlfranz/reacthooks";
 
 export const cookie = localStorage.getItem("cookie");
 
@@ -22,7 +22,7 @@ interface Recommend {
 
 export const useRecommend = () => {
   const client = useHttp();
-  return useRequest<Recommend>(() => client("personalized"));
+  return useQueryC<Recommend, null>(() => client("personalized"));
 
   // return useQuery({
   //   queryKey: "recommend",
@@ -43,9 +43,12 @@ export const useRecommendResource = (userCookie?: string) => {
 
 export const useBanner = () => {
   const client = useHttp();
-  return useRequest<{
-    banners: { imageUrl: string; encodeId: string }[];
-  }>(() => client("banner"));
+  return useQueryC<
+    {
+      banners: { imageUrl: string; encodeId: string }[];
+    },
+    null
+  >(() => client("banner"));
   // return useQuery({
   //   queryKey: "banner",
   //   queryFn: () => client("banner"),

@@ -9,7 +9,7 @@ import { RootState } from "store";
 import { likeState, changelike } from "store/ilike";
 import { useIlike } from "users";
 import { LoginState } from "store/login";
-import { useFuncDebounce } from "hooks";
+import { useFuncDebounce } from "@karlfranz/reacthooks";
 
 type SongIdType = string | number | undefined;
 const cookie = localStorage.getItem("cookie");
@@ -51,13 +51,6 @@ export const Like: React.FC<{
       );
     }
   }, [dispatch, changelike, ids, likes]);
-
-  // console.log("likes", likes);
-
-  // const islike = useMemo(
-  //   () => likes.find((item) => item === Number(songId)),
-  //   [likes, songId]
-  // );
 
   const islike = likes.find((item) => item === Number(songId));
 

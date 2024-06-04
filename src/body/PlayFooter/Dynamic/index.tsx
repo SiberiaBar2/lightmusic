@@ -30,7 +30,6 @@ import _ from "lodash";
 import { Audio } from "./component/Audio";
 import { likeState } from "store/ilike";
 import Drawer from "./component/Drawer";
-import { useFuncDebounce, useMount } from "hooks";
 import { Like } from "./component/like";
 import { useSongs } from "../useSongs";
 import { RootState } from "store";
@@ -56,13 +55,16 @@ import { ToneQualityState, changeToneQuality } from "store/toneQuality";
 import {
   useBoolean,
   useStateSync,
-  useStorgeState,
+  useSessonState,
   useKeyUpdate,
-  useRequest,
-} from "react-custom-hook-karlfranz";
+  useQuery,
+  useFuncDebounce,
+  useMount,
+} from "@karlfranz/reacthooks";
 import styled from "@emotion/styled";
-import { https, useHttp } from "utils";
+import { https } from "utils";
 import { LoginState } from "store/login";
+import { useReLoadImage } from "hooks";
 const singer = process.env.REACT_APP_SPA_URL as string;
 
 const INITTIME = "00:00";
@@ -143,19 +145,14 @@ export const Dynamic: React.FC<{
   const { likes: likeSongs } = likeState;
   // const client = useHttp();
   const client = https();
-  const { run: getUserPlaylist, data: playList } = useRequest<{ id: string }[]>(
-    ({ userId }: { userId: string }) =>
-      client("user/playlist", {
-        data: {
-          uid: userId,
-          timestamp: new Date().getTime(),
-        },
+  const { run: getUserPlaylist, data: playList } = useQuery(
+    () =>
+      client("playmode/intelligence/list", {
+        // data: { age },
       }),
     {
       responsePath: "playlist",
       manual: true,
-    },
-    {
       success(res) {
         console.log("查看用户歌单", res);
       },
@@ -172,15 +169,13 @@ export const Dynamic: React.FC<{
     }
   }, [userId]);
 
-  const { run: getHeartBit } = useRequest(
+  const { run: getHeartBit } = useQuery(
     ({ id, pid }: { id: string; pid: string }) =>
       client("playmode/intelligence/list", {
         data: { id, pid, timestamp: new Date().getTime() },
       }),
     {
       manual: true,
-    },
-    {
       success(res) {
         console.log("心动模式数据", res);
         const ids = res.data.map((item: any) => {
@@ -236,14 +231,20 @@ export const Dynamic: React.FC<{
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
 
+  const goPrevorNext = useToggleSongs({
+    prevornext,
+    song,
+    songsState,
+    play,
+    musicRef,
+  });
   const { name, picUrl, authName, lyric, data } = useSongs(
     songId || "",
-    toneQuality?.key || ""
+    toneQuality?.key || "",
+    goPrevorNext
   );
 
-  console.log("data", data);
-
-  const [playTime, setPlayTime] = useStorgeState("0", "musicTime");
+  const [playTime, setPlayTime] = useSessonState("0", "musicTime");
   useKeyUpdate(
     () => {
       if (musicRef.current) {
@@ -256,13 +257,6 @@ export const Dynamic: React.FC<{
       return singer.includes("localhost") ? 2 : 1;
     })()
   );
-
-  const goPrevorNext = useToggleSongs({
-    prevornext,
-    song,
-    songsState,
-    play,
-  });
 
   const audioTimeUpdate = useCallback(() => {
     const { currentTime = 0 } = musicRef.current;
@@ -295,14 +289,14 @@ export const Dynamic: React.FC<{
     const s = seconds < 10 ? "0" + seconds : seconds;
     const dura = m + ":" + s;
     setDura(dura);
-  }, [setDura, musicRef.current]);
+  }, [musicRef.current]);
 
   const playMusic = useCallback(() => {
     // 使用 async await 辅助 try catch 捕获异步错误
     // const isAuto = async () => {
     // let flag = true;
     try {
-      if (data[0].url) {
+      if (data?.[0]?.url) {
         play === "play" ? musicRef.current.play() : musicRef.current.pause();
       }
     } catch (err) {
@@ -329,7 +323,7 @@ export const Dynamic: React.FC<{
     // };
 
     // content();
-  }, [play, data[0]?.url]);
+  }, [play, data?.[0]?.url]);
 
   // 播放暂停
   useEffect(() => {
@@ -438,7 +432,8 @@ export const Dynamic: React.FC<{
     }
   };
 
-  const songAndAuth = useCallback(() => {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const songAndAuth = useMemo(() => {
     return name + "-" + authName;
   }, [name, authName]);
 
@@ -479,6 +474,8 @@ export const Dynamic: React.FC<{
     goPrevorNext,
   };
 
+  useReLoadImage(imgRef, picUrl);
+
   const renderDivOne = () => (
     <DivOne>
       <div
@@ -489,15 +486,15 @@ export const Dynamic: React.FC<{
           }
         )}
       >
-        <img src={stringAdds(picUrl)} alt="" />
+        <img ref={imgRef} />
       </div>
 
       <div>
-        <Tooltip title={songAndAuth()}>
+        <Tooltip title={songAndAuth}>
           <SongsInfo>
-            {songAndAuth() && songAndAuth().length > 16
-              ? songAndAuth().slice(0, 16) + "..."
-              : songAndAuth()}
+            {songAndAuth?.length > 16
+              ? songAndAuth?.slice(0, 16) + "..."
+              : songAndAuth}
           </SongsInfo>
         </Tooltip>
         <span style={{ width: "3.4rem", display: "inline-block" }}>{time}</span>
@@ -709,9 +706,11 @@ export const Dynamic: React.FC<{
                   likeSongs.findIndex((id) => id === data[0].id) === -1
                     ? likeSongs[0]
                     : songId;
+                console.log("startId", startId, playList[0]?.id);
+
                 if (startId && playList[0]?.id) {
                   getHeartBit({
-                    id: startId,
+                    id: startId as string,
                     pid: playList[0].id,
                   });
                 } else {

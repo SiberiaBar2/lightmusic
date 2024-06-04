@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { MutableRefObject, useCallback } from "react";
 import { useDispatch } from "react-redux";
 
 import { changePlay } from "store/play";
@@ -9,6 +9,7 @@ interface ToggleSongs {
   songsState: Pick<songsState, "songId" | "song" | "prevornext">;
   song: string | number;
   prevornext: string;
+  musicRef: MutableRefObject<HTMLAudioElement>;
 }
 
 export const useToggleSongs = ({
@@ -16,6 +17,7 @@ export const useToggleSongs = ({
   song,
   songsState,
   play,
+  musicRef,
 }: ToggleSongs) => {
   const dispatch = useDispatch();
   return useCallback(
@@ -31,6 +33,11 @@ export const useToggleSongs = ({
       if (togo > max) {
         togo = 0;
       }
+      if ((getSongsId?.length - 1 === 0 && togo === 0) || reback === "dan") {
+        musicRef.current.currentTime = 0;
+        musicRef.current?.play();
+      }
+
       // 生成一个歌曲列表下标数组之内的随机数
       if (reback === "random") {
         togo = Math.round(Math.random() * max);

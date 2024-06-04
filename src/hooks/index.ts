@@ -1,17 +1,15 @@
-import React, {
+import { String } from "lodash";
+import {
   useRef,
   useEffect,
   useCallback,
   useMemo,
   MutableRefObject,
   useState,
+  RefObject,
 } from "react";
 import { URLSearchParamsInit, useSearchParams } from "react-router-dom";
-import { cleanObject } from "utils/utils";
-
-export * from "./useFuncDebounce";
-export * from "./useBoolean";
-export * from "./useThrottle";
+import { cleanObject, stringAdds } from "utils/utils";
 
 export const useMount = (callBack: () => void) => {
   useEffect(() => {
@@ -127,4 +125,32 @@ export const useBackTop = () => {
     ) as HTMLButtonElement;
     backTopInstance?.click();
   });
+};
+
+// 预加载图片
+export const useReLoadImage = (
+  imgRef: RefObject<HTMLImageElement> | null,
+  picUrl: string,
+  alt?: string
+) => {
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    if (imgRef?.current && picUrl) {
+      const img = new Image();
+      img.src = picUrl;
+      img.onload = function () {
+        imgRef!.current!.src = stringAdds(picUrl);
+        imgRef!.current!.alt = alt || "";
+        setIsLoading(true);
+      };
+    }
+
+    return () => {
+      setIsLoading(false);
+    };
+  }, [imgRef?.current, picUrl]);
+
+  return {
+    isLoading,
+  } as const;
 };

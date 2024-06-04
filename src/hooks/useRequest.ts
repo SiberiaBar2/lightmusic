@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { message } from "antd";
 import _ from "lodash";
 
-import { useBoolean, useFuncDebounce, useThrottle } from ".";
+// import { useBoolean, useFuncDebounce, useThrottle } from ".";
 import { cleanObject } from "utils/utils";
 
 /**
@@ -68,222 +68,222 @@ type K = [
   end?: EndConfig
 ];
 
-export const useRequest = <T extends object>(
-  ...[syncFunc, options, end]: K
-) => {
-  const {
-    loop = 0,
-    ready = true,
-    retryNum = 0,
-    cacheKey = "",
-    manual = false,
-    refreshDeps = [],
-    debounceWait = 0,
-    throttleWait = 0,
-    loadingDelay = 0,
-    responsePath = "",
-    refreshOnWindowFocus = false,
-  } = options || {};
-  const throttleCallback = useThrottle();
-  const debouncedCallback = useFuncDebounce();
-  const [loading, { on: loadingOn, off: loadingOff }] = useBoolean();
+// export const useRequest = <T extends object>(
+//   ...[syncFunc, options, end]: K
+// ) => {
+//   const {
+//     loop = 0,
+//     ready = true,
+//     retryNum = 0,
+//     cacheKey = "",
+//     manual = false,
+//     refreshDeps = [],
+//     debounceWait = 0,
+//     throttleWait = 0,
+//     loadingDelay = 0,
+//     responsePath = "",
+//     refreshOnWindowFocus = false,
+//   } = options || {};
+//   const throttleCallback = useThrottle();
+//   const debouncedCallback = useFuncDebounce();
+//   const [loading, { on: loadingOn, off: loadingOff }] = useBoolean();
 
-  //   const data = useRef<T>({} as T);
-  const [data, setData] = useState<T>({} as T);
-  const retryNumRef = useRef<number>(0);
-  const requestConfig = useRef<unknown>();
+//   //   const data = useRef<T>({} as T);
+//   const [data, setData] = useState<T>({} as T);
+//   const retryNumRef = useRef<number>(0);
+//   const requestConfig = useRef<unknown>();
 
-  /**
-   * refreshDeps
-   */
+//   /**
+//    * refreshDeps
+//    */
 
-  useEffect(() => {
-    // console.warn("useRequest refreshDeps element is change!", ele);
-    // getSyncDataWrap(requestConfig.current);
-    if (!_.isEmpty(refreshDeps)) {
-      debouncedCallback(getSyncDataWrap, 1000)(requestConfig.current);
-    }
-  }, [...refreshDeps]);
+//   useEffect(() => {
+//     // console.warn("useRequest refreshDeps element is change!", ele);
+//     // getSyncDataWrap(requestConfig.current);
+//     if (!_.isEmpty(refreshDeps)) {
+//       debouncedCallback(getSyncDataWrap, 1000)(requestConfig.current);
+//     }
+//   }, [...refreshDeps]);
 
-  /**
-   *
-   * request func
-   */
+//   /**
+//    *
+//    * request func
+//    */
 
-  const run = (config?: unknown) => {
-    getSyncDataWrap(config);
-  };
+//   const run = (config?: unknown) => {
+//     getSyncDataWrap(config);
+//   };
 
-  console.log("rendercishu");
+//   console.log("rendercishu");
 
-  const saveData = (res: any) => {
-    if (responsePath) {
-      setData(_.get(res, responsePath, {}) || {});
-      //   data.current = _.get(res, responsePath, {}) || {};
-    } else {
-      setData(res);
-      //   data.current = res;
-    }
-  };
+//   const saveData = (res: any) => {
+//     if (responsePath) {
+//       setData(_.get(res, responsePath, {}) || {});
+//       //   data.current = _.get(res, responsePath, {}) || {};
+//     } else {
+//       setData(res);
+//       //   data.current = res;
+//     }
+//   };
 
-  const getParams = (config?: unknown) => {
-    if (Object.prototype.toString.call(config) === "[object Object]") {
-      return !_.isEmpty(cleanObject(config as { [key: string]: unknown }))
-        ? cleanObject(config as { [key: string]: unknown })
-        : undefined;
-    }
-    return config;
-  };
+//   const getParams = (config?: unknown) => {
+//     if (Object.prototype.toString.call(config) === "[object Object]") {
+//       return !_.isEmpty(cleanObject(config as { [key: string]: unknown }))
+//         ? cleanObject(config as { [key: string]: unknown })
+//         : undefined;
+//     }
+//     return config;
+//   };
 
-  const getSyncData = (config?: unknown) => {
-    console.warn("useRequest getSyncData config", config);
-    try {
-      loadingOn();
-      if (ready) {
-        if (cacheKey) {
-          const locationCacheData = JSON.parse(
-            localStorage.getItem(cacheKey) || "{}"
-          );
-          if (!_.isEmpty(locationCacheData)) {
-            // data.current = locationCacheData;
+//   const getSyncData = (config?: unknown) => {
+//     console.warn("useRequest getSyncData config", config);
+//     try {
+//       loadingOn();
+//       if (ready) {
+//         if (cacheKey) {
+//           const locationCacheData = JSON.parse(
+//             localStorage.getItem(cacheKey) || "{}"
+//           );
+//           if (!_.isEmpty(locationCacheData)) {
+//             // data.current = locationCacheData;
 
-            console.log("少时诵诗书");
+//             console.log("少时诵诗书");
 
-            saveData(locationCacheData);
-            end?.success && end.success(locationCacheData);
-            loadingOff();
-          }
-        } else {
-          const params = getParams(config);
-          if (!_.isEmpty(config)) {
-            requestConfig.current = config;
-          }
+//             saveData(locationCacheData);
+//             end?.success && end.success(locationCacheData);
+//             loadingOff();
+//           }
+//         } else {
+//           const params = getParams(config);
+//           if (!_.isEmpty(config)) {
+//             requestConfig.current = config;
+//           }
 
-          syncFunc(params)
-            .then((res) => {
-              console.log("res=====>", res);
+//           syncFunc(params)
+//             .then((res) => {
+//               console.log("res=====>", res);
 
-              if (_.get(res, CODEPATH) === RESPONSRCODE) {
-                console.log("壮年出征");
-                saveData(res);
-                end?.success && end.success(res);
-                cacheKey && localStorage.setItem(cacheKey, JSON.stringify(res));
-                loadingOff();
-              } else {
-                message.error(FAILEDMESSAGE);
-                loadingOff();
-                Promise.reject(new Error(FAILEDMESSAGE));
-              }
-            })
-            .catch((error) => {
-              loadingOff();
-              end?.error && end.error(error);
-              console.log("useRequest error catch!", error);
+//               if (_.get(res, CODEPATH) === RESPONSRCODE) {
+//                 console.log("壮年出征");
+//                 saveData(res);
+//                 end?.success && end.success(res);
+//                 cacheKey && localStorage.setItem(cacheKey, JSON.stringify(res));
+//                 loadingOff();
+//               } else {
+//                 message.error(FAILEDMESSAGE);
+//                 loadingOff();
+//                 Promise.reject(new Error(FAILEDMESSAGE));
+//               }
+//             })
+//             .catch((error) => {
+//               loadingOff();
+//               end?.error && end.error(error);
+//               console.log("useRequest error catch!", error);
 
-              // retry(config);
-              if (retryNum) {
-                if (retryNumRef.current < retryNum) {
-                  retryNumRef.current += 1;
-                  getSyncData(config);
-                }
-              }
-            });
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      loadingOff();
-    }
-  };
+//               // retry(config);
+//               if (retryNum) {
+//                 if (retryNumRef.current < retryNum) {
+//                   retryNumRef.current += 1;
+//                   getSyncData(config);
+//                 }
+//               }
+//             });
+//         }
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       loadingOff();
+//     }
+//   };
 
-  const getSyncDataWrap = (config?: unknown) => {
-    console.log("sssssss");
+//   const getSyncDataWrap = (config?: unknown) => {
+//     console.log("sssssss");
 
-    if (debounceWait) {
-      console.log("11111");
+//     if (debounceWait) {
+//       console.log("11111");
 
-      return debouncedCallback(getSyncData, debounceWait)(config);
-    }
-    if (throttleWait) {
-      console.log("22222");
-      return throttleCallback(getSyncData, throttleWait)(config);
-    }
-    console.log(333333, "config", config);
+//       return debouncedCallback(getSyncData, debounceWait)(config);
+//     }
+//     if (throttleWait) {
+//       console.log("22222");
+//       return throttleCallback(getSyncData, throttleWait)(config);
+//     }
+//     console.log(333333, "config", config);
 
-    return getSyncData(config);
-  };
+//     return getSyncData(config);
+//   };
 
-  /**
-   * is loadingDelay
-   */
-  const loadingDelatyTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  useEffect(() => {
-    if (manual) {
-      return;
-    }
-    if (loadingDelay) {
-      console.log("loadingDelay");
+//   /**
+//    * is loadingDelay
+//    */
+//   const loadingDelatyTimer = useRef<NodeJS.Timeout | undefined>(undefined);
+//   useEffect(() => {
+//     if (manual) {
+//       return;
+//     }
+//     if (loadingDelay) {
+//       console.log("loadingDelay");
 
-      loadingDelatyTimer.current = setTimeout(() => {
-        getSyncDataWrap(requestConfig.current);
-      }, loadingDelay);
-      return;
-    }
+//       loadingDelatyTimer.current = setTimeout(() => {
+//         getSyncDataWrap(requestConfig.current);
+//       }, loadingDelay);
+//       return;
+//     }
 
-    console.log("dasdasdasdsas");
+//     console.log("dasdasdasdsas");
 
-    getSyncDataWrap(requestConfig.current);
+//     getSyncDataWrap(requestConfig.current);
 
-    return () => {
-      if (loadingDelatyTimer.current) {
-        clearTimeout(loadingDelatyTimer.current);
-      }
-    };
-  }, []);
+//     return () => {
+//       if (loadingDelatyTimer.current) {
+//         clearTimeout(loadingDelatyTimer.current);
+//       }
+//     };
+//   }, []);
 
-  /**
-   * loop
-   */
-  const timer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const loopFunc = () => {
-    console.warn("useRequest loop is start!", loop);
-    timer.current = setTimeout(() => {
-      loopFunc();
-      getSyncDataWrap(requestConfig.current);
-    }, loop);
-  };
+//   /**
+//    * loop
+//    */
+//   const timer = useRef<NodeJS.Timeout | undefined>(undefined);
+//   const loopFunc = () => {
+//     console.warn("useRequest loop is start!", loop);
+//     timer.current = setTimeout(() => {
+//       loopFunc();
+//       getSyncDataWrap(requestConfig.current);
+//     }, loop);
+//   };
 
-  useEffect(() => {
-    if (loop) {
-      loopFunc();
-    }
-    if (!loop && timer.current) {
-      clearTimeout(timer.current);
-    }
-    return () => {
-      if (timer.current) clearTimeout(timer.current);
-    };
-  }, [loop, timer.current]);
+//   useEffect(() => {
+//     if (loop) {
+//       loopFunc();
+//     }
+//     if (!loop && timer.current) {
+//       clearTimeout(timer.current);
+//     }
+//     return () => {
+//       if (timer.current) clearTimeout(timer.current);
+//     };
+//   }, [loop, timer.current]);
 
-  /**
-   * refreshOnWindowFocus
-   */
-  const windowFocusFunc = () => {
-    if (document.visibilityState === "visible" && refreshOnWindowFocus) {
-      debouncedCallback(run, 5000)(requestConfig.current);
-    }
-  };
+//   /**
+//    * refreshOnWindowFocus
+//    */
+//   const windowFocusFunc = () => {
+//     if (document.visibilityState === "visible" && refreshOnWindowFocus) {
+//       debouncedCallback(run, 5000)(requestConfig.current);
+//     }
+//   };
 
-  useEffect(() => {
-    document.addEventListener("visibilitychange", windowFocusFunc);
-    return () => {
-      document.removeEventListener("visibilitychange", windowFocusFunc);
-    };
-  }, []);
+//   useEffect(() => {
+//     document.addEventListener("visibilitychange", windowFocusFunc);
+//     return () => {
+//       document.removeEventListener("visibilitychange", windowFocusFunc);
+//     };
+//   }, []);
 
-  return {
-    data,
-    loading,
-    run,
-  };
-};
+//   return {
+//     data,
+//     loading,
+//     run,
+//   };
+// };

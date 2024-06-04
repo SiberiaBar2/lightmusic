@@ -6,7 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import store, { RootState, persist } from "store";
 import { https, useHttp } from "utils";
 // import { useRequest } from "hooks/useRequest";
-import { useRequest } from "react-custom-hook-karlfranz";
+import { useQuery } from "@karlfranz/reacthooks";
 import { LoginState } from "store/login";
 
 // 为什么写为true就能触发？
@@ -20,12 +20,14 @@ const queryClients = new QueryClient({
 });
 
 function App() {
-  console.log("rrrrrrrrrrrrrr");
   return (
     <ConfigProvider
       theme={{
         token: {
           colorPrimary: "rgb(48, 22, 28)", // rgb(59, 129, 140)
+          // colorPrimary: "rgb(59, 129, 140)", // rgb(59, 129, 140)
+          // colorPrimary: "#fff",
+          colorText: "rgb(249, 241, 219)",
         },
         components: {
           Slider: {
@@ -33,6 +35,10 @@ function App() {
             trackBg: "rgba(0, 0, 0, 0.6)",
             railBg: "rgba(0, 0, 0, 0.4)",
             railHoverBg: "rgba(0, 0, 0, 0.4)",
+          },
+          Message: {
+            contentBg: "rgba(0, 0, 0, 0.6)",
+            colorSuccess: "red",
           },
         },
       }}
