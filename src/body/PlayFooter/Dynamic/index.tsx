@@ -433,9 +433,9 @@ export const Dynamic: React.FC<{
   };
 
   const imgRef = useRef<HTMLImageElement>(null);
-  const songAndAuth = useMemo(() => {
-    return name + "-" + authName;
-  }, [name, authName]);
+  const { text: songAndAuth } = useReLoadImage(imgRef, picUrl, "picture", () =>
+    name && authName ? name + "-" + authName : ""
+  );
 
   const DrawerConfig: DrawProps & {
     handeChangeType: any;
@@ -473,8 +473,6 @@ export const Dynamic: React.FC<{
     changePlay,
     goPrevorNext,
   };
-
-  useReLoadImage(imgRef, picUrl);
 
   const renderDivOne = () => (
     <DivOne>

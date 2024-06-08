@@ -4,6 +4,7 @@ import React, {
   useMemo,
   useState,
   ForwardedRef,
+  useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Divider, Drawer as AntDrawer } from "antd";
@@ -36,6 +37,7 @@ import { songsState } from "store/songs";
 import { Like } from "./like";
 import { PlayTypeIcon } from "./PlayTypeIcon";
 import { useFuncDebounce } from "@karlfranz/reacthooks";
+import { useReLoadImage } from "hooks";
 
 const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   const { lyric, time, picUrl, songId, type, handeChangeType, musicRef } =
@@ -170,6 +172,8 @@ const RoundWrap: React.FC<
     musicRef,
   });
 
+  const imgRef = useRef<HTMLImageElement>(null);
+  useReLoadImage(imgRef, picUrl, "pict", () => "");
   const debouncedCallback = useFuncDebounce();
   const getElement = (type: number) => {
     switch (type) {
@@ -221,7 +225,7 @@ const RoundWrap: React.FC<
   return (
     <Round>
       <div>
-        <img src={stringAdds(picUrl)} alt="" />
+        <img ref={imgRef} />
       </div>
       <Player>
         <GoStart

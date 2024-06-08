@@ -131,16 +131,28 @@ export const useBackTop = () => {
 export const useReLoadImage = (
   imgRef: RefObject<HTMLImageElement> | null,
   picUrl: string,
-  alt?: string
+  alt?: string,
+  customFunc?: () => any
 ) => {
   const [isLoading, setIsLoading] = useState(false);
+  const prevText = useRef("");
+
+  const text = useMemo(() => {
+    if (isLoading && customFunc?.()) {
+      prevText.current = customFunc?.();
+      return prevText.current;
+    }
+    return prevText.current;
+  }, [isLoading, ...customFunc?.()]);
   useEffect(() => {
     if (imgRef?.current && picUrl) {
       const img = new Image();
       img.src = picUrl;
       img.onload = function () {
-        imgRef!.current!.src = stringAdds(picUrl);
-        imgRef!.current!.alt = alt || "";
+        if (imgRef?.current) {
+          imgRef.current.src = stringAdds(picUrl);
+          imgRef.current.alt = alt || "";
+        }
         setIsLoading(true);
       };
     }
@@ -152,5 +164,6 @@ export const useReLoadImage = (
 
   return {
     isLoading,
+    text,
   } as const;
 };

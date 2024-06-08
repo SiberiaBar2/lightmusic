@@ -39,7 +39,7 @@ export const FatherHoc: React.FC<FatherHocProps> = ({
   const songsType = useMemo(
     () => ({
       [PlayType.dan]: function () {
-        goPrevorNext("dan");
+        goPrevorNext("next", "dan");
       },
       [PlayType.shun]: function () {
         goPrevorNext("next");
