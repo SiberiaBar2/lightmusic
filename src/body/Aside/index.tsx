@@ -3,19 +3,30 @@ import type { MenuProps } from "antd";
 import { Menu } from "antd";
 import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
-import { asideList, ROUTERPATH } from "../contants";
+import {
+  asideList,
+  noLoginAsideList,
+  ROUTERPATH,
+  NOLOGINROUTERPATH,
+} from "../contants";
+import { useLogin } from "body/Header/utils";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
-const items: MenuItem[] = asideList.map((aside) => {
-  return {
-    key: aside,
-    label: aside,
-  };
-});
-
 export const Aside: React.FC = () => {
   const navigate = useNavigate();
+
+  const loginStatus = useLogin();
+  console.log("useLogin", loginStatus);
+
+  const items: MenuItem[] = (loginStatus ? asideList : noLoginAsideList).map(
+    (aside) => {
+      return {
+        key: aside,
+        label: aside,
+      };
+    }
+  );
 
   const nowSecKey =
     (sessionStorage.getItem("secondKeys") as string) || "推荐歌单";
@@ -24,7 +35,7 @@ export const Aside: React.FC = () => {
   const onClick: MenuProps["onClick"] = (e) => {
     sessionStorage.setItem("subMenu", e.keyPath[1]);
     sessionStorage.setItem("secondKeys", e.key);
-    navigate(`${ROUTERPATH[e.key]}`);
+    navigate(`${loginStatus ? ROUTERPATH[e.key] : NOLOGINROUTERPATH[e.key]}`);
   };
 
   return (

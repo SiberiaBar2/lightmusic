@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "react-query";
+import { useSelector } from "react-redux";
 import { useHttp } from "utils";
 
 // 热搜榜
@@ -122,4 +123,16 @@ export const useGetQrcodeUrl = (key?: string) => {
       select: (res) => ({ qrimg: res?.data?.qrimg }),
     }
   );
+};
+
+import { LoginState } from "store/login";
+import { RootState } from "store";
+import _ from "lodash";
+export const useLogin = () => {
+  const loginState = useSelector<
+    RootState,
+    Pick<LoginState, "data" | "islogin">
+  >((state) => state.login);
+  const { data: { data: { profile = {} } = {} } = {} } = loginState;
+  return _.isEmpty(profile) ? false : true;
 };

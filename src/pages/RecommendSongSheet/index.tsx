@@ -19,6 +19,7 @@ import {
 
 import "swiper/css/bundle";
 import { useHttp } from "utils";
+import { useLogin } from "body/Header/utils";
 
 interface Recommends {
   recommend: {
@@ -66,11 +67,12 @@ export const RecommendSongSheet: React.FC = () => {
   const client = useHttp();
   const query = useLocation();
   const { state } = query;
+  const loginStatus = useLogin();
   const {
     data: { recommend: recommends = [] } = {},
     loading: recommendsLoaing,
   } = useQuery<Recommends, null>(() =>
-    client("recommend/resource", {
+    client(loginStatus ? "recommend/resource" : "personalized", {
       data: { cookie: state?.userCookie },
     })
   );
