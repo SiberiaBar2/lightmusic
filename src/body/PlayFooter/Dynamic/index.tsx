@@ -148,29 +148,35 @@ export const Dynamic: React.FC<{
 
   // const client = useHttp();
   const client = https();
-  // const { run: getUserPlaylist, data: playList } = useQuery(
-  //   () =>
-  //     client("playmode/intelligence/list", {
-  //       // data: { age },
-  //     }),
-  //   {
-  //     responsePath: "playlist",
-  //     manual: true,
-  //     success(res) {
-  //       console.log("查看用户歌单", res);
-  //     },
-  //   }
-  // );
+  const { run: getUserPlaylist, data: playList } = useQuery(
+    ({ userId }: { userId: string }) =>
+      client("user/playlist", {
+        // data: { age },
+        data: {
+          uid: userId,
+        },
+      }),
+    {
+      responsePath: "playlist",
+      manual: true,
+      success(res) {
+        console.log("查看用户歌单", res);
+      },
+      error(error) {
+        console.log("error====>", error);
+      },
+    }
+  );
 
-  // console.log("playList", playList);
+  console.log("playList", playList);
 
-  // useEffect(() => {
-  //   console.log("userId====>", userId);
+  useEffect(() => {
+    console.log("userId====>", userId);
 
-  //   if (userId) {
-  //     getUserPlaylist({ userId });
-  //   }
-  // }, [userId]);
+    if (userId) {
+      getUserPlaylist({ userId });
+    }
+  }, [userId]);
 
   const { run: getHeartBit } = useQuery(
     ({ id, pid }: { id: string; pid: string }) =>
@@ -707,12 +713,12 @@ export const Dynamic: React.FC<{
                   likeSongs.findIndex((id) => id === data[0].id) === -1
                     ? likeSongs[0]
                     : songId;
-                console.log("startId", startId, likeSongs?.[0]);
+                console.log("startId", startId, playList?.[0]?.id);
 
-                if (startId && likeSongs?.[0]) {
+                if (startId && playList?.[0]?.id) {
                   getHeartBit({
                     id: startId as string,
-                    pid: likeSongs?.[0] + "",
+                    pid: playList[0].id,
                   });
                 } else {
                   message.warning("请先收藏一些歌曲");
