@@ -143,31 +143,34 @@ export const Dynamic: React.FC<{
     _.pick(state.ilike, ["likes"])
   );
   const { likes: likeSongs } = likeState;
+
+  console.log("likes", likeSongs);
+
   // const client = useHttp();
   const client = https();
-  const { run: getUserPlaylist, data: playList } = useQuery(
-    () =>
-      client("playmode/intelligence/list", {
-        // data: { age },
-      }),
-    {
-      responsePath: "playlist",
-      manual: true,
-      success(res) {
-        console.log("查看用户歌单", res);
-      },
-    }
-  );
+  // const { run: getUserPlaylist, data: playList } = useQuery(
+  //   () =>
+  //     client("playmode/intelligence/list", {
+  //       // data: { age },
+  //     }),
+  //   {
+  //     responsePath: "playlist",
+  //     manual: true,
+  //     success(res) {
+  //       console.log("查看用户歌单", res);
+  //     },
+  //   }
+  // );
 
-  console.log("playList", playList);
+  // console.log("playList", playList);
 
-  useEffect(() => {
-    console.log("userId====>", userId);
+  // useEffect(() => {
+  //   console.log("userId====>", userId);
 
-    if (userId) {
-      getUserPlaylist({ userId });
-    }
-  }, [userId]);
+  //   if (userId) {
+  //     getUserPlaylist({ userId });
+  //   }
+  // }, [userId]);
 
   const { run: getHeartBit } = useQuery(
     ({ id, pid }: { id: string; pid: string }) =>
@@ -704,12 +707,12 @@ export const Dynamic: React.FC<{
                   likeSongs.findIndex((id) => id === data[0].id) === -1
                     ? likeSongs[0]
                     : songId;
-                console.log("startId", startId, playList[0]?.id);
+                console.log("startId", startId, likeSongs?.[0]);
 
-                if (startId && playList[0]?.id) {
+                if (startId && likeSongs?.[0]) {
                   getHeartBit({
                     id: startId as string,
-                    pid: playList[0].id,
+                    pid: likeSongs?.[0] + "",
                   });
                 } else {
                   message.warning("请先收藏一些歌曲");
