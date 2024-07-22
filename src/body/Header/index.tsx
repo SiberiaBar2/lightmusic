@@ -24,7 +24,7 @@ export const Header = () => {
   const { getUserInfo, changeLogin } = loginSlice.actions;
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
-  // console.log("profile", profile);
+  console.log("profile=====>", profile);
 
   const [reset, setReset] = useState(false);
   const { data: text } = useYiyan(reset);
@@ -43,7 +43,7 @@ export const Header = () => {
       stroe.dispatch(getUserInfo({ data: {} }));
       stroe.dispatch(changeLogin({ islogin: false }));
     }
-  }, [loginStatus]);
+  }, [!loginStatus]);
   // const { data: { data: { unikey } } = { data: { unikey: "" } } } = useQrKey();
   // // console.log("loginKey", unikey);
 

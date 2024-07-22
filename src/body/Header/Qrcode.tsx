@@ -35,20 +35,20 @@ const Qrcode: React.FC = () => {
   // console.log("unikey", unikey);
 
   const infoData = (data: any) => {
-    // console.log(
-    //   "执行多少次",
-    //   data,
-    //   "!_.isEmpty(data.data)",
-    //   !_.isEmpty(data.data)
-    // );
+    console.log(
+      "执行多少次",
+      data,
+      "!_.isEmpty(data.data)",
+      !_.isEmpty(data.data)
+    );
 
     if (data?.data && !_.isEmpty(data.data)) {
       stroe.dispatch(getUserInfo({ data: data.data }));
       stroe.dispatch(changeLogin({ islogin: true }));
 
-      setTimeout(() => {
-        location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   location.reload();
+      // }, 1000);
     }
   };
   const { mutate: getUserInfoSync } = useGetLoginValue(infoData);
