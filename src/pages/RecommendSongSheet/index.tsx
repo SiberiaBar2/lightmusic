@@ -68,13 +68,17 @@ export const RecommendSongSheet: React.FC = () => {
   const query = useLocation();
   const { state } = query;
   const loginStatus = useLogin();
-  const {
-    data: { recommend: recommends = [] } = {},
-    loading: recommendsLoaing,
-  } = useQuery<Recommends, null>(() =>
-    client(loginStatus ? "recommend/resource" : "personalized", {
-      data: { cookie: state?.userCookie },
-    })
+  const { data: recommends, loading: recommendsLoaing } = useQuery<
+    Recommends[],
+    null
+  >(
+    () =>
+      client(loginStatus ? "recommend/resource" : "personalized", {
+        data: { cookie: state?.userCookie },
+      }),
+    {
+      responsePath: loginStatus ? "recommend" : "result",
+    }
   );
 
   const renderSwiper = () => (

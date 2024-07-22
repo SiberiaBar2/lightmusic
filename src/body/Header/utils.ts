@@ -134,7 +134,6 @@ export const useLogin = () => {
     Pick<LoginState, "data" | "islogin">
   >((state) => state.login);
   const { data: { data: { profile = {} } = {} } = {} } = loginState;
-  console.log("profile", profile);
 
   return _.isEmpty(profile) ? false : true;
 };
