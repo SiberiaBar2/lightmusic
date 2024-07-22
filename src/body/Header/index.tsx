@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Left, Right, Search, Refresh } from "@icon-park/react";
@@ -9,7 +9,7 @@ import { HotList } from "./HotList";
 import stroe, { RootState } from "store";
 import { loginSlice, LoginState } from "store/login";
 import { stringAdds } from "utils/utils";
-import { useYiyan } from "./utils";
+import { useLogin, useYiyan } from "./utils";
 
 export const Header = () => {
   const [open, setOpen] = useState(false);
@@ -20,10 +20,11 @@ export const Header = () => {
   >((state) => state.login);
   // const { changeLogin } = loginSlice.actions;
 
+  const loginStatus = useLogin();
   const { getUserInfo, changeLogin } = loginSlice.actions;
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
 
-  console.log("profile", profile);
+  // console.log("profile", profile);
 
   const [reset, setReset] = useState(false);
   const { data: text } = useYiyan(reset);
@@ -38,11 +39,11 @@ export const Header = () => {
 
   // 解除登录态
   useEffect(() => {
-    if (!profile && _.isEmpty(profile)) {
+    if (loginStatus) {
       stroe.dispatch(getUserInfo({ data: {} }));
       stroe.dispatch(changeLogin({ islogin: false }));
     }
-  }, [profile]);
+  }, [loginStatus]);
   // const { data: { data: { unikey } } = { data: { unikey: "" } } } = useQrKey();
   // // console.log("loginKey", unikey);
 
@@ -149,7 +150,7 @@ export const Header = () => {
         }}
       />
       <Users>
-        {_.isEmpty(profile) ? (
+        {!loginStatus ? (
           <Button
             style={{
               fontSize: "0.9rem",
