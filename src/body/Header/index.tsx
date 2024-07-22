@@ -39,11 +39,11 @@ export const Header = () => {
 
   // 解除登录态
   useEffect(() => {
-    if (loginStatus) {
+    if (!loginStatus) {
       stroe.dispatch(getUserInfo({ data: {} }));
       stroe.dispatch(changeLogin({ islogin: false }));
     }
-  }, [!loginStatus]);
+  }, [loginStatus]);
   // const { data: { data: { unikey } } = { data: { unikey: "" } } } = useQrKey();
   // // console.log("loginKey", unikey);
 
