@@ -38,6 +38,7 @@ import { Like } from "./like";
 import { PlayTypeIcon } from "./PlayTypeIcon";
 import { useFuncDebounce } from "@karlfranz/reacthooks";
 import { useReLoadImage } from "hooks";
+import { useBackGroundColor } from "entries/utils";
 
 const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   const { lyric, time, picUrl, songId, type, handeChangeType, musicRef } =
@@ -70,27 +71,27 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
     time,
   };
 
-  return (
-    <AntDrawer
-      keyboard
-      placement="bottom"
-      height={"100vh"}
-      open={visiable}
-      onClose={onClose}
-      // mask={false}
-      closeIcon={null}
-      zIndex={100}
-      headerStyle={{ display: "none" }}
-      style={{
-        color: "rgb(43, 51, 62)",
-      }}
-      bodyStyle={{ padding: 0 }}
+  const themeColor = useBackGroundColor(picUrl, "drawer");
+
+  return visiable ? (
+    <DrawerModal
+    // keyboard
+    // placement="bottom"
+    // height={"100vh"}
+    // open={visiable}
+    // onClose={onClose}
+    // // mask={false}
+    // closeIcon={null}
+    // zIndex={100}
+    // headerStyle={{ display: "none" }}
+    // bodyStyle={{ padding: 0 }}
     >
       <Wrap>
         <div
+          id="drawer"
           style={{
             // backgroundImage: `url(${stringAdds(picUrl)})`,
-            background: "rgb(43, 18, 22)",
+            background: themeColor || "rgb(43, 18, 22)",
             // backgroundImage:
             //   "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
             backgroundSize: "cover",
@@ -116,10 +117,10 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
             }}
             theme="outline"
             size="24"
-            fill="rgba(0, 0, 0, 0.4)"
+            fill="rgb(251, 236, 222)"
             onClick={() => changeVisiable()}
           />
-          <DoubleUp
+          {/* <DoubleUp
             style={{
               bottom: "2rem",
               left: "5rem",
@@ -128,9 +129,9 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
             }}
             theme="outline"
             size="24"
-            fill="rgba(0, 0, 0, 0.4)"
+            fill="rgb(251, 236, 222)"
             onClick={() => changeVisiable()}
-          />
+          /> */}
           <Container>
             <RoundWrap
               picUrl={stringAdds(picUrl)}
@@ -143,8 +144,8 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
           {/* <CommonWrap songId={songId} /> */}
         </Component>
       </Wrap>
-    </AntDrawer>
-  );
+    </DrawerModal>
+  ) : null;
 };
 
 const RoundWrap: React.FC<
@@ -246,6 +247,7 @@ const RoundWrap: React.FC<
               cursor: "pointer",
               margin: "0px 15px",
             }}
+            fill="rgb(251, 236, 222)"
           />
         ) : (
           <PauseOne
@@ -465,12 +467,13 @@ const Round = styled.div`
   margin-left: 1rem;
 
   div:nth-of-type(1) {
-    width: 35rem;
-    height: 35rem;
+    width: 38rem;
+    height: 38rem;
 
     img:nth-of-type(1) {
       width: 100%;
       height: 100%;
+      border-radius: 50%;
     }
   }
 `;
@@ -499,7 +502,7 @@ const Lyric = styled.div`
       list-style: none;
       width: 100%;
       line-height: 2rem;
-      font-size: 20px;
+      font-size: 1.7rem;
       font-weight: 450;
       letter-spacing: 0.1rem;
     }
@@ -527,6 +530,16 @@ const Player = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const DrawerModal = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: 0.5s;
+  background-color: rgba(0, 0, 0, 0.9);
 `;
 
 Drawer.whyDidYouRender = true;

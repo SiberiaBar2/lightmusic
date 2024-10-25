@@ -31,6 +31,10 @@ import { https } from "utils";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { LoginState } from "store/login";
+import { useSongs } from "body/PlayFooter/useSongs";
+import { songsState } from "store/songs";
+import Vibrant from "node-vibrant";
+import { useBackGroundColor } from "./utils";
 
 localStorage.setItem("zhixue", "false");
 const count = 390;
@@ -53,7 +57,26 @@ const Entries = () => {
   const getIds = result.map((ele: any) => ele.id);
   const mountStatus = useMountRef();
 
-  console.log("mountStatus", mountStatus.current);
+  const songsState = useSelector<
+    RootState,
+    Pick<songsState, "songId" | "song" | "prevornext">
+  >((state) => state.songs);
+  const { songId } = songsState;
+  const {
+    data: {
+      songs: [
+        {
+          al: { name, picUrl },
+          ar: [{ name: authName }],
+          dt,
+        },
+      ],
+    } = PLAYCONSTANTS,
+  } = useSongDetail(songId);
+
+  useBackGroundColor(picUrl, "backgroundDiv");
+
+  console.log("picUrl", picUrl);
 
   const [isLoadPic, setIsLoadPic] = useState(false);
   console.log("isLoadPic", isLoadPic);
@@ -88,15 +111,6 @@ const Entries = () => {
   //     },
   //   }
   // );
-  const {
-    data: {
-      songs: [
-        {
-          al: { picUrl },
-        },
-      ],
-    } = PLAYCONSTANTS,
-  } = useSongDetail(getIds[5]);
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
@@ -232,7 +246,8 @@ const Entries = () => {
         style={{
           // backgroundImage: `url(${stringAdds(picUrl)})`,
           // backgroundImage: `url(${BACK})`,
-          background: "rgb(43, 18, 22)",
+          // background: themeColor || "#fff",
+          background: "rgb(0, 0, 0.3)",
           zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
@@ -263,6 +278,8 @@ const Container = styled.div`
   align-items: center;
   overflow-y: hidden;
   position: relative;
+  background-color: "rgba(0, 0, 0, 0.7)";
+  /* background-color: black; */
 `;
 
 const View = styled.div`
