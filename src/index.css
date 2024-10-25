@@ -43,6 +43,7 @@ html {
   /* color: rgb(192, 196, 195); */
   /* color: rgb(181, 170, 144); */
   /* color: rgb(249, 241, 219); */
+  color: rgb(251, 236, 222);
 }
 
 .ant-modal-header {
@@ -64,3 +65,4 @@ html {
 .ant-menu-item-active {
   background-color: rgba(0, 0, 0, 0.1) !important;
 }
+

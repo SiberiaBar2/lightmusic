@@ -241,23 +241,19 @@ const Entries = () => {
   return (
     <Container>
       <div
-        // ref={backRef}
         id="backgroundDiv"
         style={{
-          // backgroundImage: `url(${stringAdds(picUrl)})`,
-          // backgroundImage: `url(${BACK})`,
-          // background: themeColor || "#fff",
-          background: "rgb(0, 0, 0.3)",
           zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           position: "absolute",
+          background: "rgb(0, 0, 0.3)",
           left: 0,
           right: 0,
           top: 0,
           bottom: 0,
           filter: "blur(12px)",
-          opacity: "0.7",
+          // opacity: "0.7",
           backgroundPosition: "50%",
           transition: "all 0.8s",
           scale: "(1,1)",
@@ -279,7 +275,6 @@ const Container = styled.div`
   overflow-y: hidden;
   position: relative;
   background-color: "rgba(0, 0, 0, 0.7)";
-  /* background-color: black; */
 `;
 
 const View = styled.div`

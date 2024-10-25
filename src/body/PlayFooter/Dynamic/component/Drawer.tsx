@@ -74,18 +74,7 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   const themeColor = useBackGroundColor(picUrl, "drawer");
 
   return visiable ? (
-    <DrawerModal
-    // keyboard
-    // placement="bottom"
-    // height={"100vh"}
-    // open={visiable}
-    // onClose={onClose}
-    // // mask={false}
-    // closeIcon={null}
-    // zIndex={100}
-    // headerStyle={{ display: "none" }}
-    // bodyStyle={{ padding: 0 }}
-    >
+    <DrawerModal>
       <Wrap>
         <div
           id="drawer"
@@ -538,7 +527,11 @@ const DrawerModal = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   transition: 0.5s;
+  z-index: 999;
+  color: rgb(251, 236, 222);
   background-color: rgba(0, 0, 0, 0.9);
 `;
 

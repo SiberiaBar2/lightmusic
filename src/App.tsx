@@ -27,14 +27,18 @@ function App() {
           colorPrimary: "rgb(48, 22, 28)", // rgb(59, 129, 140)
           // colorPrimary: "rgb(59, 129, 140)", // rgb(59, 129, 140)
           // colorPrimary: "#fff",
-          colorText: "rgb(249, 241, 219)",
+          colorText: "rgb(200, 148, 5)",
         },
         components: {
           Slider: {
-            trackHoverBg: "rgba(0, 0, 0, 0.6)",
-            trackBg: "rgba(0, 0, 0, 0.6)",
+            trackHoverBg: "rgb(251, 236, 222)",
+            trackBg: "rgb(251, 236, 222)",
             railBg: "rgba(0, 0, 0, 0.4)",
             railHoverBg: "rgba(0, 0, 0, 0.4)",
+            // trackHoverBg: "rgba(12, 5, 5, 0.6)",
+            // trackBg: "rgba(0, 0, 0, 0.6)",
+            // railBg: "rgba(0, 0, 0, 0.4)",
+            // railHoverBg: "rgba(0, 0, 0, 0.4)",
           },
           Message: {
             contentBg: "rgba(0, 0, 0, 0.6)",
