@@ -243,7 +243,7 @@ const Entries = () => {
       <div
         id="backgroundDiv"
         style={{
-          zIndex: "-2",
+          // zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           position: "absolute",
@@ -253,7 +253,7 @@ const Entries = () => {
           top: 0,
           bottom: 0,
           filter: "blur(12px)",
-          // opacity: "0.7",
+          opacity: "0.7",
           backgroundPosition: "50%",
           transition: "all 0.8s",
           scale: "(1,1)",
@@ -274,7 +274,7 @@ const Container = styled.div`
   align-items: center;
   overflow-y: hidden;
   position: relative;
-  background-color: "rgba(0, 0, 0, 0.7)";
+  background-color: rgba(0, 0, 0, 0.7);
 `;
 
 const View = styled.div`
