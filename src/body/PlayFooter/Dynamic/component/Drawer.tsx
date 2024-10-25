@@ -532,7 +532,8 @@ const DrawerModal = styled.div`
   transition: 0.5s;
   z-index: 999;
   color: rgb(251, 236, 222);
-  background-color: rgba(0, 0, 0, 0.9);
+  /* background-color: rgba(0, 0, 0, 0.9); */
+  background-color: black;
 `;
 
 Drawer.whyDidYouRender = true;
