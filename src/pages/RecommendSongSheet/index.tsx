@@ -82,39 +82,42 @@ export const RecommendSongSheet: React.FC = () => {
   );
 
   const renderSwiper = () => (
-    <Swiper
-      style={
-        {
-          "--swiper-navigation-color": "#fff",
-          "--swiper-pagination-color": "#fff",
-          zIndex: 0,
-        } as CSSProperties
-      }
-      spaceBetween={30}
-      centeredSlides={true}
-      autoplay={{
-        delay: 2500,
-        disableOnInteraction: false,
-      }}
-      pagination={{
-        clickable: true,
-      }}
-      autoHeight={true}
-      navigation={true}
-      modules={[Autoplay, Pagination, Navigation]}
-    >
-      {arrAdds(banners?.banners, "imageUrl")?.map((item, index: number) => (
-        <SwiperSlide
-          style={{ width: "100%" }}
-          key={item.encodeId}
-          virtualIndex={index}
-        >
-          <ImgContainer>
-            <Bannerimg src={item.imageUrl} alt="" />
-          </ImgContainer>
-        </SwiperSlide>
-      ))}
-    </Swiper>
+    <SwiperWrap>
+      <Swiper
+        style={
+          {
+            "--swiper-navigation-color": "#fff",
+            "--swiper-pagination-color": "#fff",
+            zIndex: 0,
+            width: "80%",
+          } as CSSProperties
+        }
+        spaceBetween={30}
+        centeredSlides={true}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        autoHeight={true}
+        navigation={true}
+        modules={[Autoplay, Pagination, Navigation]}
+      >
+        {arrAdds(banners?.banners, "imageUrl")?.map((item, index: number) => (
+          <SwiperSlide
+            style={{ width: "100%" }}
+            key={item.encodeId}
+            virtualIndex={index}
+          >
+            <ImgContainer>
+              <Bannerimg src={item.imageUrl} alt="" />
+            </ImgContainer>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </SwiperWrap>
   );
 
   const renderCardList = () => (
@@ -168,4 +171,10 @@ const ImgContainer = styled.div`
 const Bannerimg = styled.img`
   width: 100%;
   height: 100%;
+`;
+
+const SwiperWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
 `;

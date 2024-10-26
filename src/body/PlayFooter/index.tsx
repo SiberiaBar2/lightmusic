@@ -4,7 +4,6 @@ import { Dynamic } from "./Dynamic";
 import { StaticFooter } from "./StaticFooter";
 import { songsState } from "store/songs";
 import { loginSlice, LoginState } from "store/login";
-import _ from "lodash";
 
 export const PlayFooter: React.FC = () => {
   const dispatch = useDispatch();

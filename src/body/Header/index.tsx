@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Left, Right, Search, Refresh } from "@icon-park/react";
 import { Avatar, Button, Input, Tooltip } from "antd";
+import { Left, Right, Search, Refresh } from "@icon-park/react";
 import styled from "@emotion/styled";
 import _ from "lodash";
+
 import { HotList } from "./HotList";
 import stroe, { RootState } from "store";
 import { loginSlice, LoginState } from "store/login";
@@ -18,7 +19,6 @@ export const Header = () => {
     RootState,
     Pick<LoginState, "data" | "islogin">
   >((state) => state.login);
-  // const { changeLogin } = loginSlice.actions;
 
   const loginStatus = useLogin();
   const { getUserInfo, changeLogin } = loginSlice.actions;
@@ -181,7 +181,6 @@ export const Header = () => {
               }}
             />
 
-            {/* <Tooltip title={profile.nickname}> */}
             <span
               title={profile.nickname}
               style={{
@@ -193,7 +192,6 @@ export const Header = () => {
             >
               {!_.isEmpty(profile) ? profile.nickname : null}
             </span>
-            {/* </Tooltip> */}
           </>
         )}
       </Users>
@@ -203,7 +201,7 @@ export const Header = () => {
   const renderRightContent = () => (
     <RightContent>
       <IconWrap>
-        <Left
+        {/* <Left
           theme="outline"
           size="24"
           fill="rgb(251, 236, 222)"
@@ -214,9 +212,9 @@ export const Header = () => {
           size="24"
           fill="rgb(251, 236, 222)"
           onClick={() => window.history.forward()}
-        />
+        /> */}
       </IconWrap>
-      <Zhixue onClick={changeZhixue}>🎉</Zhixue>
+      {/* <Zhixue onClick={changeZhixue}>🎉</Zhixue> */}
       <svg
         fill="#000000"
         width="20px"
@@ -242,11 +240,7 @@ export const Header = () => {
       {renderRightContent()}
       {!search && (
         <SearchContent style={{ display: open ? "" : "none" }}>
-          {/* {!search ? ( */}
           <HotList handelBlue={() => setOpen(false)} />
-          {/* ) :  */}
-          {/* // <Suggest param={debouncedParam} />
-          // null} */}
         </SearchContent>
       )}
     </Container>
@@ -263,9 +257,10 @@ const H4 = styled.h2`
   width: 19%;
   height: 100%;
   line-height: 4.75rem;
-  text-align: center;
+  text-align: left;
   position: relative;
   cursor: pointer;
+  padding-left: 2.5rem;
 
   > span {
     font-size: 0.1rem;
@@ -326,12 +321,9 @@ const Zhixue = styled.div`
 
 const Yiyan = styled.div`
   margin-right: 1rem;
-  width: 37rem;
   height: 5.5rem;
   overflow: hidden;
-  /* line-height: 5.5rem; */
   display: flex;
   justify-content: center;
   align-items: center;
-  /* border: 1px solid red; */
 `;

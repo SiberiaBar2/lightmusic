@@ -1,16 +1,10 @@
-import Entries from "entries";
 import { ConfigProvider } from "antd";
+import { Provider } from "react-redux";
 import { QueryClientProvider as QueryPrivider, QueryClient } from "react-query";
-import { Provider, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import store, { RootState, persist } from "store";
-import { https, useHttp } from "utils";
-// import { useRequest } from "hooks/useRequest";
-import { useQuery } from "@karlfranz/reacthooks";
-import { LoginState } from "store/login";
+import store, { persist } from "store";
+import Entries from "entries";
 
-// 为什么写为true就能触发？
-// document.addEventListener("scroll", handelScroll, true);
 const queryClients = new QueryClient({
   defaultOptions: {
     queries: {
@@ -24,9 +18,7 @@ function App() {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "rgb(48, 22, 28)", // rgb(59, 129, 140)
-          // colorPrimary: "rgb(59, 129, 140)", // rgb(59, 129, 140)
-          // colorPrimary: "#fff",
+          colorPrimary: "rgb(48, 22, 28)",
           colorText: "rgb(200, 148, 5)",
         },
         components: {
@@ -35,10 +27,6 @@ function App() {
             trackBg: "rgb(251, 236, 222)",
             railBg: "rgba(0, 0, 0, 0.4)",
             railHoverBg: "rgba(0, 0, 0, 0.4)",
-            // trackHoverBg: "rgba(12, 5, 5, 0.6)",
-            // trackBg: "rgba(0, 0, 0, 0.6)",
-            // railBg: "rgba(0, 0, 0, 0.4)",
-            // railHoverBg: "rgba(0, 0, 0, 0.4)",
           },
           Message: {
             contentBg: "rgba(0, 0, 0, 0.6)",

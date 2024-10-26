@@ -1,7 +1,8 @@
 import { Divider, Tooltip } from "antd";
-import styled from "@emotion/styled";
-import { useHotList } from "./utils";
 import { useNavigate } from "react-router-dom";
+import styled from "@emotion/styled";
+
+import { useHotList } from "./utils";
 
 export const HotList: React.FC<{
   handelBlue: () => void;
@@ -36,7 +37,7 @@ export const HotList: React.FC<{
 };
 
 const Container = styled.div`
-  font-size: 0.8rem;
+  font-size: 1rem;
 
   p {
     height: 4rem;
@@ -61,7 +62,6 @@ const Container = styled.div`
     }
 
     span:nth-of-type(2) {
-      /* color: rgb(50, 47, 59); */
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

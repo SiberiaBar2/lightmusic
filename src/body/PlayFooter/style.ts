@@ -5,8 +5,7 @@ export const Container = styled.footer`
   justify-content: space-between;
   align-items: center;
   height: 5.4rem;
-  position: fixed;
-  bottom: 0;
+  position: relative;
   width: 100%;
   color: rgb(93, 101, 95);
 
@@ -30,8 +29,6 @@ export const DivOne = styled.div`
   > div:nth-of-type(1) {
     width: 4rem;
     height: 4rem;
-    /* margin-left: 0.9rem; */
-    /* border: 1px solid darkblue; */
     text-align: center;
     cursor: pointer;
     position: relative;
@@ -154,7 +151,6 @@ export const SongsInfo = styled.div`
 export const DivRight = styled.div`
   display: flex;
   justify-content: space-between;
-  /* align-items: center; */
   width: calc(100% - 45%);
   height: 100%;
 `;

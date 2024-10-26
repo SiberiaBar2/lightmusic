@@ -21,19 +21,14 @@ import {
   Other,
   Login,
 } from "pages";
-import { debounce, stringAdds } from "utils/utils";
-import { useNewSongs, useSongDetail } from "body/PlayFooter/utils";
+import { debounce } from "utils/utils";
+import { useSongDetail } from "body/PlayFooter/utils";
 import { PLAYCONSTANTS } from "body/PlayFooter/contants";
-import { useEffect, useRef, useState } from "react";
-import { useMountRef, useQuery } from "@karlfranz/reacthooks";
+import { useMountRef } from "@karlfranz/reacthooks";
 import { getBack } from "./pic";
-import { https } from "utils";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
-import { LoginState } from "store/login";
-import { useSongs } from "body/PlayFooter/useSongs";
 import { songsState } from "store/songs";
-import Vibrant from "node-vibrant";
 import { useBackGroundColor } from "./utils";
 
 localStorage.setItem("zhixue", "false");
@@ -53,8 +48,6 @@ function fire(particleRatio: any, opts: any) {
 const BACK = getBack();
 
 const Entries = () => {
-  const { data: { result = [] } = {} } = useNewSongs();
-  const getIds = result.map((ele: any) => ele.id);
   const mountStatus = useMountRef();
 
   const songsState = useSelector<
@@ -66,51 +59,13 @@ const Entries = () => {
     data: {
       songs: [
         {
-          al: { name, picUrl },
-          ar: [{ name: authName }],
-          dt,
+          al: { picUrl },
         },
       ],
     } = PLAYCONSTANTS,
   } = useSongDetail(songId);
 
   useBackGroundColor(picUrl, "backgroundDiv");
-
-  console.log("picUrl", picUrl);
-
-  const [isLoadPic, setIsLoadPic] = useState(false);
-  console.log("isLoadPic", isLoadPic);
-  // window.onload = function () {
-  //   console.log("onloadonload");
-  //   setIsLoadPic(true);
-  // };
-  // const backRef = useRef<any>(null);
-
-  const loginState = useSelector<RootState, Pick<LoginState, "data">>(
-    (state) => state.login
-  );
-  const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
-    loginState;
-  // const client = useHttp();
-  const client = https();
-  // const { run } = useRequest(
-  //   () =>
-  //     client("user/playlist", {
-  //       data: {
-  //         uid: userId,
-  //         // cookie: localStorage.getItem("cookie"),
-  //         timestamp: new Date().getTime(),
-  //       },
-  //     }),
-  //   {
-  //     // refreshOnWindowFocus: true,
-  //   },
-  //   {
-  //     success(res) {
-  //       console.log("查看用户歌单", res);
-  //     },
-  //   }
-  // );
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
@@ -202,7 +157,9 @@ const Entries = () => {
     </Main>
   );
   const renderView = () => (
-    <View onClick={debounce(xuanlan, 2000)}>
+    <View
+    // onClick={debounce(xuanlan, 2000)}
+    >
       <ContainerMask />
       <Router>
         <CenterContent>
@@ -221,20 +178,6 @@ const Entries = () => {
       {/* <ReactQueryDevtools initialIsOpen={true} /> */}
     </View>
   );
-
-  // useMount(() => {
-  //   setIsLoadPic(true);
-  // });
-  // useEffect(() => {
-  //   const backgroundDiv = document.getElementById("backgroundDiv");
-  //   if (picUrl) {
-  //     if (backgroundDiv) {
-  //       backgroundDiv.style.backgroundImage = `url(${stringAdds(picUrl)})`;
-  //       setIsLoadPic(true);
-  //     }
-  //   }
-  // }, [picUrl]);
-
   window.onload = function () {
     console.log("aaaaaaaaaaaaaaa");
   };
@@ -243,7 +186,6 @@ const Entries = () => {
       <div
         id="backgroundDiv"
         style={{
-          // zIndex: "-2",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           position: "absolute",
@@ -314,7 +256,6 @@ const Main = styled.main`
   width: 100%;
   display: flex;
   height: calc(100% - 10.9rem);
-  position: relative;
 
   .ant-drawer {
     :focus {
@@ -331,7 +272,9 @@ const Section = styled.section`
 
 const CenterContent = styled.div`
   height: 100%;
-  position: relative;
+  /* position: relative; */
+  display: flex;
+  flex-direction: column;
 `;
 
 const TopIcon = styled.span`
