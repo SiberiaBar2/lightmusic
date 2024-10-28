@@ -8,6 +8,7 @@ import { changePlay } from "store/play";
 import { debounce } from "utils/utils";
 import { likeState } from "store/ilike";
 import { useHttp } from "utils";
+import { player } from "./PlayFooter/Dynamic";
 // import { useRequest } from "hooks/useRequest";
 
 type StrategyType = { [x: string | number]: () => void };
@@ -35,10 +36,10 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
           prevornext: String(songidlist),
         })
       );
-      dispatch(changePlay({ play: "init" }));
+      // dispatch(changePlay({ play: "init" }));
     },
     [Keys.double]: function () {
-      const islike = likes.includes(id as number);
+      // const islike = likes.includes(id as number);
 
       // console.log("islike", islike, "id", id);
 
@@ -48,15 +49,24 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
       //   });
       // }
 
-      dispatch(
-        songsInfo({
-          ...songsState,
-          songId: id,
-          song: songindex,
-          prevornext: String(songidlist),
-        })
-      );
-      dispatch(changePlay({ play: "play" }));
+      // dispatch(
+      //   songsInfo({
+      //     ...songsState,
+      //     songId: id,
+      //     song: songindex,
+      //     prevornext: String(songidlist),
+      //   })
+      // );
+
+      player.saveSongConfig({
+        prevornext: String(songidlist),
+        song: songindex as string,
+        songsState,
+      });
+      setTimeout(() => {
+        player.playMusic();
+      }, 500);
+      // dispatch(changePlay({ play: "play" }));
     },
   };
 

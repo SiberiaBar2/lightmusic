@@ -47,7 +47,12 @@ import {
 import { stringAdds } from "utils/utils";
 import { FatherHoc } from "./component/FatherHoc";
 import { NowList } from "./component/NowList";
-import { useToggleSongs } from "./component/utils";
+import {
+  BasicPlayer,
+  Controller,
+  TimeType,
+  useToggleSongs,
+} from "./component/utils";
 import { PlayTypeIcon } from "./component/PlayTypeIcon";
 import { ToneQualityState, changeToneQuality } from "store/toneQuality";
 // import { changePicturl } from "store/picturl";
@@ -127,6 +132,8 @@ const reducer = (_: StateActionType, action: StateActionType) => {
   }
 };
 
+export const player = new Controller();
+
 export const Dynamic: React.FC<{
   param: songsState;
   setParam: reduxDispatch<AnyAction>;
@@ -147,8 +154,6 @@ export const Dynamic: React.FC<{
   const { likes: likeSongs } = likeState;
 
   console.log("likes", likeSongs);
-
-  // const client = useHttp();
   const client = https();
   const { run: getUserPlaylist, data: playList } = useQuery(
     ({ userId }: { userId: string }) =>
@@ -202,7 +207,7 @@ export const Dynamic: React.FC<{
             prevornext: String(ids),
           })
         );
-        setParam(changePlay({ play: "play" }));
+        // setParam(changePlay({ play: "play" }));
         message.success("心动模式已开启");
       },
     }
@@ -221,10 +226,14 @@ export const Dynamic: React.FC<{
   const musicRef = useRef() as React.MutableRefObject<HTMLAudioElement>;
   const nowListRef = useRef() as React.MutableRefObject<NowListType>;
 
-  const [time, setTime] = useState(INITTIME);
-  const [dura, setDura] = useState(INITTIME);
+  const [time, setTime] = useState<TimeType>({
+    time: 0,
+    timeStr: "00:00",
+  } as TimeType);
+  // const [dura, setDura] = useState(INITTIME);
 
-  const [duration, setDuration] = useState(0);
+  player.saveRenderTime(setTime);
+  // const [duration, setDuration] = useState(0);
 
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
@@ -249,99 +258,101 @@ export const Dynamic: React.FC<{
     play,
     musicRef,
   });
-  const { name, picUrl, authName, lyric, data } = useSongs(
+  const { name, picUrl, authName, lyric, data, songs, dt } = useSongs(
     songId || "",
-    toneQuality?.key || "",
-    goPrevorNext
+    toneQuality?.key || ""
+    // goPrevorNext
   );
 
-  const [playTime, setPlayTime] = useSessonState("0", "musicTime");
-  useKeyUpdate(
-    () => {
-      if (musicRef.current) {
-        musicRef.current.currentTime = Number(playTime);
-        setParam(changePlay({ play: "play" }));
-      }
-    },
-    [toneQuality?.key],
-    (() => {
-      return singer.includes("localhost") ? 2 : 1;
-    })()
-  );
+  console.log("ddddd", data);
 
-  const audioTimeUpdate = useCallback(() => {
-    const { currentTime = 0 } = musicRef.current;
-    const minutes = parseInt(currentTime / 60 + "");
-    const seconds = parseInt((currentTime % 60) + "");
+  // useEffect(() => {
+  //   data[0]?.url && player.changeUrl(data[0]?.url);
+  // }, []);
+  // const [playTime, setPlayTime] = useSessonState("0", "musicTime");
+  // useKeyUpdate(
+  //   () => {
+  //     if (musicRef.current) {
+  //       musicRef.current.currentTime = Number(playTime);
+  //       // setParam(changePlay({ play: "play" }));
+  //     }
+  //   },
+  //   [toneQuality?.key],
+  //   (() => {
+  //     return singer.includes("localhost") ? 2 : 1;
+  //   })()
+  // );
 
-    const timeStr =
-      (minutes < 10 ? "0" + minutes : minutes) +
-      ":" +
-      (seconds < 10 ? "0" + seconds : seconds);
+  // const audioTimeUpdate = useCallback(() => {
+  //   const { currentTime = 0 } = musicRef.current;
+  //   const minutes = parseInt(currentTime / 60 + "");
+  //   const seconds = parseInt((currentTime % 60) + "");
 
-    setTime(timeStr);
-    setDuration(currentTime);
-  }, [musicRef.current, setTime, setDuration]);
+  //   const timeStr =
+  //     (minutes < 10 ? "0" + minutes : minutes) +
+  //     ":" +
+  //     (seconds < 10 ? "0" + seconds : seconds);
+
+  //   setTime(timeStr);
+  //   setDuration(currentTime);
+  // }, [musicRef.current, setTime, setDuration]);
 
   // 切歌时重置播放进度
-  useMemo(() => {
-    setDuration(0);
-    localStorage.setItem("currentTime", "0");
-  }, [songId]);
+  // useMemo(() => {
+  //   // setDuration(0);
+  //   localStorage.setItem("currentTime", "0");
+  // }, [songId]);
 
   // 为什么 musicRef.current.src 的值是当前url地址栏？ 导致 出现播放源错误
   // 获得播放总时长
-  const onDurationChange = useCallback(() => {
-    // 时长发生变化时执行的函数 确保时长不为NAN
-    const { duration } = musicRef.current;
-    const minutes = parseInt(duration / 60 + ""); // 获取总时长分钟
-    const seconds = parseInt((duration % 60) + ""); // 获取总时长秒数
-    const m = minutes < 10 ? "0" + minutes : minutes;
-    const s = seconds < 10 ? "0" + seconds : seconds;
-    const dura = m + ":" + s;
-    setDura(dura);
-  }, [musicRef.current]);
+  // const onDurationChange = useCallback(() => {
+  //   // 时长发生变化时执行的函数 确保时长不为NAN
+  //   const { duration } = musicRef.current;
+  //   const minutes = parseInt(duration / 60 + ""); // 获取总时长分钟
+  //   const seconds = parseInt((duration % 60) + ""); // 获取总时长秒数
+  //   const m = minutes < 10 ? "0" + minutes : minutes;
+  //   const s = seconds < 10 ? "0" + seconds : seconds;
+  //   const dura = m + ":" + s;
+  //   // setDura(dura);
+  // }, [musicRef.current]);
 
-  const playMusic = useCallback(() => {
-    // 使用 async await 辅助 try catch 捕获异步错误
-    // const isAuto = async () => {
-    // let flag = true;
-    try {
-      if (data?.[0]?.url) {
-        play === "play" ? musicRef.current.play() : musicRef.current.pause();
-      }
-    } catch (err) {
-      // console.log("eeeeeee", err);
-      // flag = false;
-    }
-    // return flag;
-    // };
+  // const playMusic = useCallback(() => {
+  //   // 使用 async await 辅助 try catch 捕获异步错误
+  //   // const isAuto = async () => {
+  //   // let flag = true;
+  //   try {
+  //     if (data?.[0]?.url) {
+  //       play === "play" ? musicRef.current.play() : musicRef.current.pause();
+  //     }
+  //   } catch (err) {
+  //     // console.log("eeeeeee", err);
+  //     // flag = false;
+  //   }
+  //   // return flag;
+  //   // };
 
-    // isAuto();
-    // 这里为什么没有在声明函数的时候调用
-    // const content = () => {
-    //   isAuto().then((res) => {
-    //     if (res) {
-    //       console.warn("success");
-    //       return;
-    //     }
-    //     // 失败就一直调用，直到成功为止！
-    //     console.error("error", res);
-    //     setTimeout(() => {
-    //       content();
-    //     }, 1000);
-    //   });
-    // };
+  //   // isAuto();
+  //   // 这里为什么没有在声明函数的时候调用
+  //   // const content = () => {
+  //   //   isAuto().then((res) => {
+  //   //     if (res) {
+  //   //       console.warn("success");
+  //   //       return;
+  //   //     }
+  //   //     // 失败就一直调用，直到成功为止！
+  //   //     console.error("error", res);
+  //   //     setTimeout(() => {
+  //   //       content();
+  //   //     }, 1000);
+  //   //   });
+  //   // };
 
-    // content();
-  }, [play, data?.[0]?.url]);
+  //   // content();
+  // }, [play, data?.[0]?.url]);
 
-  // 播放暂停
-  useEffect(() => {
-    if (play !== "init") {
-      playMusic();
-    }
-  }, [playMusic, play]);
+  // useEffect(() => {
+  //   player.changeUrl(data[0]?.url);
+  // }, [data[0]?.url]);
 
   /**
    *  随时监听播放进度 以用来控制单曲、循环、列表，随机
@@ -401,7 +412,7 @@ export const Dynamic: React.FC<{
         return (
           <PlayOnce
             title="单曲播放"
-            onClick={debouncedCallback(() => handeChangeType(PlayType.dan))}
+            onClick={() => handeChangeType(PlayType.dan)}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -411,7 +422,7 @@ export const Dynamic: React.FC<{
         return (
           <LoopOnce
             title="顺序播放"
-            onClick={debouncedCallback(() => handeChangeType(PlayType.shun))}
+            onClick={() => handeChangeType(PlayType.shun)}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -421,7 +432,7 @@ export const Dynamic: React.FC<{
         return (
           <PlayCycle
             title="列表循环"
-            onClick={debouncedCallback(() => handeChangeType(PlayType.liexun))}
+            onClick={() => handeChangeType(PlayType.liexun)}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -431,7 +442,7 @@ export const Dynamic: React.FC<{
         return (
           <ShuffleOne
             title="随机播放"
-            onClick={debouncedCallback(() => handeChangeType(PlayType.sui))}
+            onClick={() => handeChangeType(PlayType.sui)}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -455,7 +466,7 @@ export const Dynamic: React.FC<{
     };
   } = {
     picUrl: picUrl,
-    time: time,
+    time: time?.timeStr,
     musicRef: musicRef,
     lyric: lyric,
     songId: songId,
@@ -463,26 +474,33 @@ export const Dynamic: React.FC<{
     type: type,
   };
 
-  const hocConfig = {
-    musicRef: musicRef,
-    songId: songId,
-    setParam: setParam,
-    type: type.type,
-    goPrevorNext,
-    duration,
-    setDuration,
-    play,
-  };
-
   const audioConfig = {
     musicRef,
-    audioTimeUpdate,
-    onDurationChange,
+    // audioTimeUpdate,
+    // onDurationChange,
     play,
     data,
     setParam,
     changePlay,
+    // goPrevorNext,
+  };
+
+  const { time: duraTionTime, timeStr: durationTime } = useMemo(() => {
+    return player.getDurationTime(dt);
+    // return "00:00";
+  }, [dt]);
+
+  const hocConfig = {
+    // musicRef: musicRef,
+    songId: songId,
+    setParam: setParam,
+    type: type.type,
     goPrevorNext,
+    duration: duraTionTime,
+    // setDuration,
+    play,
+    currentTime: time.time,
+    setTime,
   };
 
   const renderDivOne = () => (
@@ -506,17 +524,20 @@ export const Dynamic: React.FC<{
               : songAndAuth}
           </SongsInfo>
         </Tooltip>
-        <span style={{ width: "3.4rem", display: "inline-block" }}>{time}</span>
+        <span style={{ width: "3.4rem", display: "inline-block" }}>
+          {time?.timeStr}
+        </span>
         {/* <TimeChange ref={timeRef} audioTimeUpdate={audioTimeUpdate} /> */}
         <span style={{ margin: "0 0.5rem" }}>/</span>
-        <span>{dura}</span>
+        <span>{durationTime}</span>
       </div>
     </DivOne>
   );
 
   const onChangeToneQuality = (config: { key: string; label: string }) => {
-    setPlayTime(musicRef.current?.currentTime + "");
-    setParam(changePlay({ play: "pause" }));
+    // setPlayTime(musicRef.current?.currentTime + "");
+    // setParam(changePlay({ play: "pause" }));
+    player.changeToneQuality(config.key);
     setParam(changeToneQuality({ toneQuality: config }));
   };
   const items = [
@@ -658,22 +679,35 @@ export const Dynamic: React.FC<{
     },
   ];
 
+  console.log("play====>", play);
+
+  useEffect(() => {
+    console.log("song===>", song, songsState, prevornext);
+    (song || song === 0) &&
+      songsState &&
+      prevornext &&
+      player.saveSongConfig({
+        prevornext,
+        song,
+        songsState,
+      });
+  }, [prevornext, song, songsState]);
   const renderDivRight = () => {
     return (
       <DivRight>
         <DivTwo>
           <GoStart
-            onClick={debouncedCallback(() => goPrevorNext("prev"))}
+            // onClick={debouncedCallback(() => goPrevorNext("prev"))}
+            onClick={player.playPrev}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
             style={{ cursor: "pointer" }}
           />
+
           {play !== "play" ? (
             <Play
-              onClick={debouncedCallback(() => {
-                setParam(changePlay({ play: "play" }));
-              })}
+              onClick={() => player?.playMusic()}
               theme="outline"
               size="24"
               fill="rgb(251, 236, 222)"
@@ -681,9 +715,7 @@ export const Dynamic: React.FC<{
             />
           ) : (
             <PauseOne
-              onClick={debouncedCallback(() => {
-                setParam(changePlay({ play: "pause" }));
-              })}
+              onClick={() => player?.pauseMusic()}
               theme="outline"
               size="24"
               fill="rgb(251, 236, 222)"
@@ -691,7 +723,8 @@ export const Dynamic: React.FC<{
             />
           )}
           <GoEnd
-            onClick={debouncedCallback(() => goPrevorNext("next"))}
+            // onClick={debouncedCallback(() => goPrevorNext("next"))}
+            onClick={player.playNext}
             theme="outline"
             size="24"
             fill="rgb(251, 236, 222)"
@@ -699,7 +732,7 @@ export const Dynamic: React.FC<{
           />
           <Like songId={useMemo(() => songId, [songId])} />
 
-          {loginStatus ? (
+          {/* {loginStatus ? (
             <svg
               fill="#d86267"
               width="24px"
@@ -732,10 +765,9 @@ export const Dynamic: React.FC<{
                 }
               })}
             >
-              {/* eslint-disable-next-line max-len */}
               <path d="M2.16 3.96H0.96a0.12 0.12 0 0 1 0 -0.24h1.136l0.444 -0.667a0.12 0.12 0 0 1 0.2 0L3.6 4.344l0.38 -0.57A0.12 0.12 0 0 1 4.08 3.72h0.72a0.12 0.12 0 0 1 0 0.24h-0.656l-0.444 0.667a0.12 0.12 0 0 1 -0.2 0L2.64 3.336l-0.38 0.57A0.12 0.12 0 0 1 2.16 3.96m3.12 -2.88a1.676 1.676 0 0 0 -1.44 0.814A1.68 1.68 0 0 0 0.72 2.76c0 0.042 0.001 0.085 0.004 0.127a0.12 0.12 0 0 0 0.24 -0.014A1.98 1.98 0 0 1 0.96 2.76a1.44 1.44 0 0 1 2.769 -0.555 0.12 0.12 0 0 0 0.111 0.074 0.12 0.12 0 0 0 0.111 -0.074A1.44 1.44 0 0 1 6.72 2.76c0 1.791 -2.466 3.334 -2.88 3.581 -0.25 -0.148 -1.242 -0.765 -1.99 -1.62a0.12 0.12 0 0 0 -0.181 0.158c0.885 1.013 2.062 1.678 2.112 1.706a0.12 0.12 0 0 0 0.117 0 9.39 9.39 0 0 0 1.522 -1.111C6.442 4.555 6.96 3.641 6.96 2.76a1.682 1.682 0 0 0 -1.68 -1.68" />
             </svg>
-          ) : null}
+          ) : null} */}
         </DivTwo>
         <DivThree>
           {/* <Acoustic
@@ -778,15 +810,15 @@ export const Dynamic: React.FC<{
               )}
             />
           </Tooltip>
-          <VolumeWrap>
+          {/* <VolumeWrap>
             <div>
               <Slider
                 vertical
                 value={volume}
                 onChange={(volume) => {
                   setVolume(volume);
-                  musicRef.current.volume = volume * 0.01;
-                  volume && changeOpen(true);
+                  // musicRef.current.volume = volume * 0.01;
+                  // volume && changeOpen(true);
                 }}
                 min={0}
                 max={100}
@@ -809,7 +841,7 @@ export const Dynamic: React.FC<{
                 fill="rgb(251, 236, 222)"
               />
             )}
-          </VolumeWrap>
+          </VolumeWrap> */}
         </DivThree>
       </DivRight>
     );
@@ -820,7 +852,7 @@ export const Dynamic: React.FC<{
       <FatherHoc {...hocConfig}>
         {renderDivOne()}
         {renderDivRight()}
-        <Audio {...audioConfig} />
+        {/* <Audio {...audioConfig} /> */}
         <Drawer ref={drawerRef} {...DrawerConfig} />
         <NowList ref={nowListRef} />
       </FatherHoc>
@@ -834,9 +866,9 @@ const ToneQualityContainer = styled.div`
   width: 90px;
   text-align: center;
   border-radius: 10px;
-  background-color: rgb(43, 18, 22);
   cursor: pointer;
   padding: 5px;
+  background-color: rgba(0, 0, 0, 0.3);
 `;
 
 const ToneQualityDiv = styled.div`

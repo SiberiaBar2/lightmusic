@@ -34,7 +34,7 @@ export const CardList: React.FC<CardListProps> = ({
   const addConfig = (item: any, index: number, children: React.ReactNode) => {
     if (React.isValidElement<childrenReturnType>(children)) {
       return React.cloneElement(children, {
-        // ...item,
+        // ...item·,
         key: item.id,
         songindex: index,
         songidlist: songidlist,

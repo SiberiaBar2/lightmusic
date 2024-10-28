@@ -62,7 +62,9 @@ export const useSongs = (
       ],
     } = PLAYCONSTANTS,
   } = useSongDetail(songId);
+  const { data: dataDetail } = useSongDetail(songId);
 
+  console.log("dataDetail", dataDetail);
   const { data: { lrc: { lyric } } = { lrc: { lyric: "" } } } =
     useSonglyric(songId);
 
@@ -82,6 +84,7 @@ export const useSongs = (
     comments,
     userId,
     topComments,
-    dt: getDura(dt),
+    dt,
+    // dt: getDura(dt),
   };
 };

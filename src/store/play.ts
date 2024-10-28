@@ -5,7 +5,7 @@ export interface playState {
 }
 
 const initialState: playState = {
-  play: "init",
+  play: "pause",
 };
 
 export const playSlice = createSlice({

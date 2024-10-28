@@ -201,7 +201,7 @@ const Entries = () => {
           scale: "(1,1)",
         }}
       />
-      {renderLoading()}
+      {/* {renderLoading()} */}
       {renderView()}
     </Container>
   );

@@ -143,7 +143,7 @@ export const useReLoadImage = (
       return prevText.current;
     }
     return prevText.current;
-  }, [isLoading, ...customFunc?.()]);
+  }, [isLoading, customFunc]);
   useEffect(() => {
     if (imgRef?.current && picUrl) {
       const img = new Image();
