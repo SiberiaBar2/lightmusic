@@ -6,6 +6,7 @@ import { CardList } from "components";
 import SongsItem from "components/SongsItem";
 import { config } from "utils/customRender";
 import { useBackTop } from "hooks";
+import numeral from "numeral";
 
 export const SongList: React.FC = () => {
   useBackTop();
@@ -13,22 +14,30 @@ export const SongList: React.FC = () => {
   const { id } = useParams();
   const { data: songList, isLoading } = useSongList({ data: { id } });
 
+  const formatNumber = (num: number) => {
+    if (num < 10000) {
+      return num.toString(); // 小于一万直接显示
+    } else {
+      return numeral(num / 10000).format("0.0") + "万"; // 大于一万显示“万”单位，保留一位小数
+    }
+  };
   const renderInfoList = () => (
     <>
+      <Info>
+        <Span>歌曲数：{songList?.playlist?.tracks?.length}</Span>
+      </Info>
+      <Info>
+        <Span>
+          播放数：
+          {formatNumber(songList?.playlist?.playCount)}
+        </Span>
+      </Info>
       <Info>
         <Span>标签: </Span>
         {songList?.playlist?.tags.map((item: any, index: number) => {
           if (index !== 2) return <Span key={item}>{item}、</Span>;
           if (index === 2) return <Span key={item}>{item}</Span>;
         })}
-      </Info>
-      <Info>
-        <Span>歌曲数：{songList?.playlist?.tracks?.length}</Span>
-        <Span>;</Span>
-        <Span>
-          播放数：
-          {songList?.playlist?.playCount}
-        </Span>
       </Info>
       <Info>
         <Span>简介:</Span>

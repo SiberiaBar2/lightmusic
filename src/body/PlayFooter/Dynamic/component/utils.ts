@@ -86,34 +86,33 @@ export type TimeType = { time: number; timeStr: string };
 type SongConfig = {
   prevornext: string;
   song: string | number;
-  songsState: any;
+  // songsState: any;
+  songId: number;
 };
 const cookie = localStorage.getItem("cookie");
 
+const TIME = {
+  time: 0,
+  timeStr: "00:00",
+};
+
 export class BasicPlayer {
-  // public time = "";
-  // public volume = 0;
-  // public duration = "";
   public retry = 0;
-  public playUrl = "";
-  public oldPlayUrl = "";
-  public playList: any[] = [];
-  public songDetail: any = {};
+  public toneQuality = "";
   public noCopyRight = false;
+  public songsState: any = {};
+  public songPlayDetail: any = {};
+  public getSongsId: number[] = [];
+  public timer: NodeJS.Timer | null = null;
   public currentTime: number | undefined = 0;
   public audio: HTMLAudioElement | null = null;
-  public prevornext = "";
-  public song: number | string = "";
-  public songsState: any = {};
   public upDadeTime = {
-    time: 0,
-    timeStr: "00:00",
+    ...TIME,
   };
   public duraTionTime = {
-    time: 0,
-    timeStr: "00:00",
+    ...TIME,
   };
-  public toneQuality = "";
+
   public setRenderCurrentTime: (({ time, timeStr }: TimeType) => void) | null =
     null;
   public saveRenderTime = (h: typeof this.setRenderCurrentTime) => {
@@ -123,17 +122,11 @@ export class BasicPlayer {
     this.initAudio();
   }
   public initAudio = (url?: string) => {
-    console.log(
-      "store.getState",
-      store.getState?.()?.toneQuality?.toneQuality?.key
-    );
-
     this.toneQuality =
       store.getState?.()?.toneQuality?.toneQuality?.key || "standard";
 
     if (!this.audio) {
       this.audio = new Audio(url);
-      // this.audio.load();
       this.audio.volume = 0.5;
       this.audio.controls = true;
       this.audio.preload = "auto";
@@ -143,57 +136,85 @@ export class BasicPlayer {
         display: "none",
       }`
       );
+      this.audio.currentTime = this.currentTime!;
       this.audio.ontimeupdate = this.ontimeUpdate;
     }
   };
 
-  public saveSongDetail = (data: any) => {
-    this.songDetail = data;
-  };
-  public savePlayList = (list: any[]) => {
-    this.playList = list;
-  };
-  public changeUrl = (url: string, isOld?: boolean) => {
+  public clearAudio() {
     if (this.audio) {
-      this.retry = 0;
-      this.playList = [];
-      this.songDetail = {};
-      this.audio.src = url;
-      this.setRenderCurrentTime = null;
-      isOld ? (this.currentTime = 0) : null;
+      this.audio.pause();
+      this.audio.src = "";
+      this.audio.load();
+      this.audio = null;
+    }
+  }
+
+  public getSongUrl = async () => {
+    await this.getSongState();
+    await this.getSongPlayDetail(
+      this.getSongsId[this.songsState.song as number] + ""
+    );
+  };
+  public ensureHttps(url: string): string {
+    if (url.startsWith("http://")) {
+      return url.replace("http://", "https://");
+    }
+    return url;
+  }
+  public checkAudioResource = async (url: string) => {
+    try {
+      if (url) {
+        const response = await fetch(this.ensureHttps(url), { method: "HEAD" }); // 使用 HEAD 请求检查
+        console.log("response 检查资源是否有效", response.ok, response);
+      } else {
+        throw new Error("无地址");
+      }
+    } catch (error) {
+      await this.getSongUrl();
     }
   };
-
-  public playMusic = () => {
+  public playMusic = async () => {
+    this.clearAudio();
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    await this.checkAudioResource(this.songPlayDetail?.url);
     try {
-      // if (this.noCopyRight) {
-      // }
-      //长时间暂停可能会导致请求超时或文件缓存失效。浏览器会认为连接已经中断，导致音频无法正常播放。
-      if ((!this.audio || this.audio?.ended) && this.playUrl) {
-        this.audio = new Audio(this.playUrl); // 创建或重新加载音频文件
-      } else if (this.audio?.paused) {
-        // 长时间暂停后再恢复播放，音频文件可能已经被浏览器回收，导致后续播放无效
-        this.audio?.load(); // 重新加载音频
+      if (!this.songPlayDetail?.url) {
+        throw new Error("播放地址不存在或无权限");
       }
-
+      this.initAudio(this.songPlayDetail?.url);
       // 播放
       if (this.audio && this.audio.paused) {
-        console.log("this.currentTime play;", this.currentTime);
-        console.log("this.audio.src", this.audio.src, this.song);
-
-        this.audio.currentTime = this.currentTime!;
-        this.audio.ontimeupdate = this.ontimeUpdate;
         this.audio.play();
         store.dispatch(changePlay({ play: "play" }));
       }
-      console.log("play 1111", this.audio?.currentTime);
     } catch (error) {
-      console.error(error);
-      this.retry += 1;
-      // this.playMusic();
+      console.error("播放出错了", error);
+      console.log("播放错误", this.audio?.ended, this.songPlayDetail);
       if (this.retry >= 2) {
-        // 播放下一首
-        // this.playNext();
+        setTimeout(() => {
+          this.reset();
+          this.getSongState();
+
+          // 如果已经到播放列表的最后一项 停止切换下一曲
+          if (
+            this.getSongsId[this.songsState.song as number] ===
+            this.getSongsId[this.getSongsId?.length - 1]
+          ) {
+            return;
+          } else {
+            this.playNext();
+          }
+        }, 1000);
+      } else {
+        this.retry += 1;
+        setTimeout(() => {
+          console.log("重新播放", this.retry);
+          this.getSongPlayDetail(this.getSongsId[+this.songsState.song] + "");
+          this.playMusic();
+        }, 1000);
       }
     }
   };
@@ -203,38 +224,37 @@ export class BasicPlayer {
       if (this.audio && !this.audio.paused) {
         this.audio?.pause();
         store.dispatch(changePlay({ play: "pause" }));
+        if (this.timer) {
+          clearInterval(this.timer);
+        }
+        this.timer = setInterval(() => {
+          this.getSongUrl();
+        }, 900000);
       }
     } catch (error) {
       console.error(error);
-      this.pauseMusic();
     }
   };
 
-  public getSongUrl = async (id: string, level?: string) => {
+  public getSongPlayDetail = async (id: string) => {
     const client = https();
-    const res = await client("song/url/v1", { data: { id, cookie, level } });
-    return res?.data?.[0]?.url;
+    const res = await client("song/url/v1", {
+      data: { id, cookie, level: this.toneQuality },
+    });
+    this.songPlayDetail = res?.data?.[0];
   };
 
   public setCurrentTime = (time: number) => {
-    this.pauseMusic();
-    // 避开暂停中断播放的错误
-    setTimeout(() => {
-      this.currentTime = time;
-
-      if (time) {
-        this.playMusic();
-      }
-    }, 200);
+    this.currentTime = time;
+    this.audio!.currentTime = time;
+    this.ontimeUpdateStr();
+    if (this.audio?.paused) this.playMusic();
   };
 
   public getCurrentIndex = (index: number) => {
     let togo = index;
-    const getSongsId = this.prevornext
-      .split(",")
-      .map((ele: any) => Number(ele));
     const min = 0;
-    const max = getSongsId?.length - 1;
+    const max = this.getSongsId?.length - 1;
 
     if (togo < min) {
       togo = max;
@@ -245,73 +265,58 @@ export class BasicPlayer {
 
     return togo;
   };
-  public playPrev = () => {
-    const prev = this.getCurrentIndex(Number(this.song) - 1);
 
-    const getSongsId = this.prevornext
-      .split(",")
+  public getSongState = () => {
+    this.songsState = store.getState()?.songs;
+    this.getSongsId = this.songsState.prevornext
+      ?.split(",")
       .map((ele: any) => Number(ele));
-    console.log("getSongsId[prev]", getSongsId[prev], prev);
-
+  };
+  private changeSong = async (index: number) => {
     store.dispatch(
       songsInfo({
         ...this.songsState,
-        songId: getSongsId[prev],
-        song: prev,
+        songId: this.getSongsId[index],
+        song: index,
       })
     );
-    this.getSongUrl(getSongsId[prev] + "", this.toneQuality).then((url) => {
-      if (url) {
-        this.changeUrl(url);
-        this.playMusic();
-      }
-    });
+    this.reset();
+    await this.getSongUrl();
+    this.playMusic();
+  };
+  public playPrev = () => {
+    this.clearAudio();
+    this.getSongState();
+    const prev = this.getCurrentIndex(Number(this.songsState?.song) - 1);
+    this.songsState = {
+      ...this.songsState,
+      song: prev,
+    };
+    this.changeSong(prev);
   };
   public playNext = () => {
-    const next = this.getCurrentIndex(Number(this.song) + 1);
-    const getSongsId = this.prevornext
-      .split(",")
-      .map((ele: any) => Number(ele));
-    console.log("getSongsId[next]", getSongsId[next]);
+    this.clearAudio();
+    this.getSongState();
+    const next = this.getCurrentIndex(Number(this.songsState?.song) + 1);
+    this.songsState = {
+      ...this.songsState,
+      song: next,
+    };
+    this.changeSong(next);
+  };
+  public changeToneQuality = (toneQuality: string) => {
+    this.getSongState();
+    this.toneQuality = toneQuality;
+    this.currentTime = this.audio?.currentTime;
+    const index = +this.songsState.song;
     store.dispatch(
       songsInfo({
         ...this.songsState,
-        songId: getSongsId[next],
-        song: next,
+        songId: this.getSongsId[index],
+        song: index,
       })
     );
-    this.getSongUrl(getSongsId[next] + "", this.toneQuality).then((url) => {
-      if (url) {
-        this.changeUrl(url);
-        this.playMusic();
-      }
-    });
-  };
-  public changeToneQuality = (toneQuality: string) => {
-    this.toneQuality = toneQuality;
-    console.log(
-      "this.audio?.currentTime changeToneQuality",
-      this.audio?.currentTime
-    );
-    this.currentTime = this.audio?.currentTime;
-    // 重新发起请求
-    this.pauseMusic();
-
-    const getSongsId = this.prevornext
-      .split(",")
-      .map((ele: any) => Number(ele));
-    setTimeout(() => {
-      this.getSongUrl(
-        getSongsId[this.song as number] + "",
-        this.toneQuality
-      ).then((url) => {
-        console.log("url====>url", url);
-        if (url) {
-          this.changeUrl(url, true);
-          this.playMusic();
-        }
-      });
-    }, 200);
+    this.playMusic();
   };
   public getDurationTime = (dt: number) => {
     if (dt) {
@@ -331,18 +336,18 @@ export class BasicPlayer {
     return this.duraTionTime;
   };
   public changeVolume = (volume: number) => {
-    // this.volume = volume;
     this.audio!.volume = volume;
   };
   // 获取当前播放进度、时长
-  public ontimeUpdate = (event: Event) => {
+  public ontimeUpdate = () => {
     // 保存播放进度
     if (this.audio?.currentTime) {
-      console.log("sdsdasdsadas", this.audio?.currentTime);
       this.currentTime = this.audio?.currentTime;
     }
-
-    console.log("this.currentTime=====>", this.currentTime);
+    // 播放完毕 并且是vip歌曲 表示当前用户不是vip 试听结束
+    if (this.audio?.ended && this.songPlayDetail?.fee === 1) {
+      this.playNext();
+    }
     this.ontimeUpdateStr();
   };
 
@@ -350,8 +355,6 @@ export class BasicPlayer {
     const currentTime = this.audio?.currentTime || 0;
     const minutes = parseInt(currentTime / 60 + "");
     const seconds = parseInt((currentTime % 60) + "");
-
-    console.log("currentTime", currentTime);
 
     const currentTimeStr =
       (minutes < 10 ? "0" + minutes : minutes) +
@@ -363,59 +366,71 @@ export class BasicPlayer {
     this.setRenderCurrentTime?.({ ...this.upDadeTime }); // ??
   };
 
-  public saveSongConfig = (config: SongConfig) => {
-    this.prevornext = config.prevornext;
-    this.song = config.song;
-    this.songsState = config.songsState;
-
-    const getSongsId = this.prevornext
-      .split(",")
+  public saveSongConfig = async (config: SongConfig) => {
+    this.reset();
+    this.clearAudio();
+    this.songsState = { ...config };
+    this.getSongsId = this.songsState.prevornext
+      ?.split(",")
       .map((ele: any) => Number(ele));
-    this.getSongUrl(
-      getSongsId[this.song as number] + "",
-      this.toneQuality
-    ).then((url) => {
-      console.log("初始化", url, this.toneQuality);
 
-      if (url) {
-        this.changeUrl(url);
-      }
-    });
+    store.dispatch(
+      songsInfo({
+        ...this.songsState,
+        songId: config.songId,
+        song: +this.songsState?.song,
+        prevornext: config.prevornext,
+      })
+    );
+    await this.getSongUrl();
+    this.playMusic();
+  };
+  public reset = () => {
+    this.retry = 0;
+    this.currentTime = 0;
+    this.upDadeTime.time = 0;
+    this.upDadeTime.timeStr = "00:00";
+    this.setRenderCurrentTime?.({ ...this.upDadeTime });
   };
 }
 
 export class Controller extends BasicPlayer {
   public singlePlay = () => {
-    this.currentTime = 0;
-    this.upDadeTime.time = 0;
-    this.upDadeTime.timeStr = "00:00";
-    this.setRenderCurrentTime?.({ ...this.upDadeTime });
+    this.reset();
     this.playMusic();
   };
+  public playOrder = () => {
+    this.reset();
+    this.getSongState();
+    if (
+      this.getSongsId[this.songsState.song as number] ===
+      this.getSongsId[this.getSongsId?.length - 1]
+    ) {
+      this.pauseMusic();
+    }
+    this.playNext();
+  };
   public loopList = () => {
+    this.reset();
     this.playNext();
   };
   public playRandomly = () => {
-    const getSongsId = this.prevornext
-      .split(",")
-      .map((ele: any) => Number(ele));
-    const max = getSongsId?.length - 1;
+    this.reset();
+    this.getSongState();
+    const max = this.getSongsId?.length - 1;
     const random = Math.round(Math.random() * max);
 
     store.dispatch(
       songsInfo({
         ...this.songsState,
-        songId: getSongsId[random],
+        songId: this.getSongsId[random],
         song: random,
       })
     );
 
-    this.getSongUrl(getSongsId[random] + "", "jyeffect").then((url) => {
-      if (url) {
-        this.changeUrl(url);
-        this.playMusic();
-      }
-    });
+    this.getSongPlayDetail(this.getSongsId[random] + "");
+    this.reset();
+    this.playMusic();
   };
 
   // 喜欢歌曲
@@ -424,10 +439,6 @@ export class Controller extends BasicPlayer {
   };
   // 开启心动模式💓
   public openHeartbeat = () => {
-    // this.audio?.play();
-  };
-  // 改变音质
-  public chaneToneQuality = () => {
     // this.audio?.play();
   };
 }

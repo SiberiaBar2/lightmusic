@@ -64,33 +64,10 @@ https://github.com/Binaryify/NeteaseCloudMusicApi
 
 ### 演示
 
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/470bc7740cdc537a.png'></img>
+<img src='https://s3.bmp.ovh/imgs/2024/10/30/5ccc78689055219f.png'></img>
 
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/3d242e3243543d43.png'></img>
+<img src='https://s3.bmp.ovh/imgs/2024/10/30/c2dd0a005c6ec80b.png'></img>
 
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/3b0ca697f44b6247.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/a686ecfe7f7994ef.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/d6abbc119e2c9c6b.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/fa620450d360c5c8.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/f393389ed9596d5a.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/be2e485a72ed5a3c.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/20ece97d4089e87c.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/3497a29c91ab15ec.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/e0c1f09c7795e66c.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/6894e1704efb727b.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/394dc08f12f602c7.png'></img>
-
-<img src='https://s3.bmp.ovh/imgs/2023/05/07/a2d74e95deaf801c.png'></img>
 
 ### 部署
 

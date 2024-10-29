@@ -27,7 +27,6 @@ import { Dispatch as reduxDispatch, AnyAction } from "redux";
 import { Button, Dropdown, MenuProps, Slider, Tooltip, message } from "antd";
 import _ from "lodash";
 
-import { Audio } from "./component/Audio";
 import { likeState } from "store/ilike";
 import Drawer from "./component/Drawer";
 import { Like } from "./component/like";
@@ -92,7 +91,7 @@ const PLAYTYPE = {
 export interface DrawProps {
   picUrl: string;
   time: string;
-  musicRef: React.MutableRefObject<HTMLAudioElement>;
+  // musicRef: React.MutableRefObject<HTMLAudioElement>;
   lyric: string;
   songId?: number | string;
   handeChangeType?: any;
@@ -147,7 +146,6 @@ export const Dynamic: React.FC<{
   const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
     loginState;
 
-  const loginStatus = useLogin();
   const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
     _.pick(state.ilike, ["likes"])
   );
@@ -223,18 +221,15 @@ export const Dynamic: React.FC<{
   const [volume, setVolume] = useState(50);
 
   const drawerRef = useRef() as React.MutableRefObject<DrawRefType>;
-  const musicRef = useRef() as React.MutableRefObject<HTMLAudioElement>;
+  // const musicRef = useRef() as React.MutableRefObject<HTMLAudioElement>;
   const nowListRef = useRef() as React.MutableRefObject<NowListType>;
 
   const [time, setTime] = useState<TimeType>({
     time: 0,
     timeStr: "00:00",
   } as TimeType);
-  // const [dura, setDura] = useState(INITTIME);
 
   player.saveRenderTime(setTime);
-  // const [duration, setDuration] = useState(0);
-
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
   );
@@ -251,131 +246,21 @@ export const Dynamic: React.FC<{
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
 
-  const goPrevorNext = useToggleSongs({
-    prevornext,
-    song,
-    songsState,
-    play,
-    musicRef,
-  });
   const { name, picUrl, authName, lyric, data, songs, dt } = useSongs(
     songId || "",
     toneQuality?.key || ""
-    // goPrevorNext
   );
 
-  console.log("ddddd", data);
-
-  // useEffect(() => {
-  //   data[0]?.url && player.changeUrl(data[0]?.url);
-  // }, []);
-  // const [playTime, setPlayTime] = useSessonState("0", "musicTime");
-  // useKeyUpdate(
-  //   () => {
-  //     if (musicRef.current) {
-  //       musicRef.current.currentTime = Number(playTime);
-  //       // setParam(changePlay({ play: "play" }));
-  //     }
-  //   },
-  //   [toneQuality?.key],
-  //   (() => {
-  //     return singer.includes("localhost") ? 2 : 1;
-  //   })()
-  // );
-
-  // const audioTimeUpdate = useCallback(() => {
-  //   const { currentTime = 0 } = musicRef.current;
-  //   const minutes = parseInt(currentTime / 60 + "");
-  //   const seconds = parseInt((currentTime % 60) + "");
-
-  //   const timeStr =
-  //     (minutes < 10 ? "0" + minutes : minutes) +
-  //     ":" +
-  //     (seconds < 10 ? "0" + seconds : seconds);
-
-  //   setTime(timeStr);
-  //   setDuration(currentTime);
-  // }, [musicRef.current, setTime, setDuration]);
-
-  // 切歌时重置播放进度
-  // useMemo(() => {
-  //   // setDuration(0);
-  //   localStorage.setItem("currentTime", "0");
-  // }, [songId]);
-
-  // 为什么 musicRef.current.src 的值是当前url地址栏？ 导致 出现播放源错误
-  // 获得播放总时长
-  // const onDurationChange = useCallback(() => {
-  //   // 时长发生变化时执行的函数 确保时长不为NAN
-  //   const { duration } = musicRef.current;
-  //   const minutes = parseInt(duration / 60 + ""); // 获取总时长分钟
-  //   const seconds = parseInt((duration % 60) + ""); // 获取总时长秒数
-  //   const m = minutes < 10 ? "0" + minutes : minutes;
-  //   const s = seconds < 10 ? "0" + seconds : seconds;
-  //   const dura = m + ":" + s;
-  //   // setDura(dura);
-  // }, [musicRef.current]);
-
-  // const playMusic = useCallback(() => {
-  //   // 使用 async await 辅助 try catch 捕获异步错误
-  //   // const isAuto = async () => {
-  //   // let flag = true;
-  //   try {
-  //     if (data?.[0]?.url) {
-  //       play === "play" ? musicRef.current.play() : musicRef.current.pause();
-  //     }
-  //   } catch (err) {
-  //     // console.log("eeeeeee", err);
-  //     // flag = false;
-  //   }
-  //   // return flag;
-  //   // };
-
-  //   // isAuto();
-  //   // 这里为什么没有在声明函数的时候调用
-  //   // const content = () => {
-  //   //   isAuto().then((res) => {
-  //   //     if (res) {
-  //   //       console.warn("success");
-  //   //       return;
-  //   //     }
-  //   //     // 失败就一直调用，直到成功为止！
-  //   //     console.error("error", res);
-  //   //     setTimeout(() => {
-  //   //       content();
-  //   //     }, 1000);
-  //   //   });
-  //   // };
-
-  //   // content();
-  // }, [play, data?.[0]?.url]);
-
-  // useEffect(() => {
-  //   player.changeUrl(data[0]?.url);
-  // }, [data[0]?.url]);
-
-  /**
-   *  随时监听播放进度 以用来控制单曲、循环、列表，随机
-   *
-   *  加入 setTimeout 避免报错 ：元素没有播放的源错误
-   *  没有 setTimeout 会出现最大深度的错误
-   *  使用 time === dura && time !== "00:00" 对比
-   *  会引发执行两次的bug！导致顺序播放跳两首播放
-   *  log 发现 currentTime 这种对比也执行了两次
-   *  但两次是一起执行的 合并为一次了
-   *  2Dynamic.tsx:174 currentTime 287.111837 duration 287.111837
-   */
-
   // 初始音量
-  useMount(() => {
-    if (musicRef.current) musicRef.current.volume = volume * 0.01;
-  });
+  // useMount(() => {
+  //   if (musicRef.current) musicRef.current.volume = volume * 0.01;
+  // });
 
   const changeOpen = useCallback((open: boolean) => {
     setOpen(open);
     if (!open) {
-      musicRef.current.volume = 0;
-      setVolume(0);
+      // musicRef.current.volume = 0;
+      // setVolume(0);
       return;
     }
   }, []);
@@ -467,22 +352,11 @@ export const Dynamic: React.FC<{
   } = {
     picUrl: picUrl,
     time: time?.timeStr,
-    musicRef: musicRef,
+    // musicRef: musicRef,
     lyric: lyric,
     songId: songId,
     handeChangeType: handeChangeType,
     type: type,
-  };
-
-  const audioConfig = {
-    musicRef,
-    // audioTimeUpdate,
-    // onDurationChange,
-    play,
-    data,
-    setParam,
-    changePlay,
-    // goPrevorNext,
   };
 
   const { time: duraTionTime, timeStr: durationTime } = useMemo(() => {
@@ -491,16 +365,9 @@ export const Dynamic: React.FC<{
   }, [dt]);
 
   const hocConfig = {
-    // musicRef: musicRef,
-    songId: songId,
-    setParam: setParam,
     type: type.type,
-    goPrevorNext,
     duration: duraTionTime,
-    // setDuration,
-    play,
     currentTime: time.time,
-    setTime,
   };
 
   const renderDivOne = () => (
@@ -527,7 +394,6 @@ export const Dynamic: React.FC<{
         <span style={{ width: "3.4rem", display: "inline-block" }}>
           {time?.timeStr}
         </span>
-        {/* <TimeChange ref={timeRef} audioTimeUpdate={audioTimeUpdate} /> */}
         <span style={{ margin: "0 0.5rem" }}>/</span>
         <span>{durationTime}</span>
       </div>
@@ -535,8 +401,6 @@ export const Dynamic: React.FC<{
   );
 
   const onChangeToneQuality = (config: { key: string; label: string }) => {
-    // setPlayTime(musicRef.current?.currentTime + "");
-    // setParam(changePlay({ play: "pause" }));
     player.changeToneQuality(config.key);
     setParam(changeToneQuality({ toneQuality: config }));
   };
@@ -679,25 +543,11 @@ export const Dynamic: React.FC<{
     },
   ];
 
-  console.log("play====>", play);
-
-  useEffect(() => {
-    console.log("song===>", song, songsState, prevornext);
-    (song || song === 0) &&
-      songsState &&
-      prevornext &&
-      player.saveSongConfig({
-        prevornext,
-        song,
-        songsState,
-      });
-  }, [prevornext, song, songsState]);
   const renderDivRight = () => {
     return (
       <DivRight>
         <DivTwo>
           <GoStart
-            // onClick={debouncedCallback(() => goPrevorNext("prev"))}
             onClick={player.playPrev}
             theme="outline"
             size="24"
@@ -707,7 +557,7 @@ export const Dynamic: React.FC<{
 
           {play !== "play" ? (
             <Play
-              onClick={() => player?.playMusic()}
+              onClick={player?.playMusic}
               theme="outline"
               size="24"
               fill="rgb(251, 236, 222)"
@@ -715,7 +565,7 @@ export const Dynamic: React.FC<{
             />
           ) : (
             <PauseOne
-              onClick={() => player?.pauseMusic()}
+              onClick={player?.pauseMusic}
               theme="outline"
               size="24"
               fill="rgb(251, 236, 222)"
@@ -852,7 +702,6 @@ export const Dynamic: React.FC<{
       <FatherHoc {...hocConfig}>
         {renderDivOne()}
         {renderDivRight()}
-        {/* <Audio {...audioConfig} /> */}
         <Drawer ref={drawerRef} {...DrawerConfig} />
         <NowList ref={nowListRef} />
       </FatherHoc>

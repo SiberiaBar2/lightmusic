@@ -189,7 +189,8 @@ const Entries = () => {
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           position: "absolute",
-          background: "rgb(0, 0, 0.3)",
+          background:
+            "linear-gradient(rgb(6, 28, 30), rgb(21, 108, 117), rgb(6, 28, 30))",
           left: 0,
           right: 0,
           top: 0,

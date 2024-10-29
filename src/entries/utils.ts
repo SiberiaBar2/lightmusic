@@ -118,8 +118,7 @@ const getMostFrequentColor = (imageUrl: string): Promise<string> => {
           img.height
         ).data;
         const colorCount: { [key: string]: number } = {};
-        let dominantColor = "";
-        let maxCount = 0;
+        const colors: string[] = [];
 
         // 逐像素分析颜色
         for (let i = 0; i < imageData.length; i += 4) {
@@ -129,14 +128,42 @@ const getMostFrequentColor = (imageUrl: string): Promise<string> => {
           const color = `rgb(${r},${g},${b})`;
 
           colorCount[color] = (colorCount[color] || 0) + 1;
+        }
 
-          if (colorCount[color] > maxCount) {
-            maxCount = colorCount[color];
-            dominantColor = color;
+        // 按照占比从高到低排序
+        // eslint-disable-next-line guard-for-in
+        for (const color in colorCount) {
+          colors.push(color);
+        }
+        colors.sort((a, b) => colorCount[b] - colorCount[a]);
+
+        // 检查颜色是否接近黑色或白色
+        const isCloseToBlackOrWhite = (color: string) => {
+          const match = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+          if (match) {
+            const r = parseInt(match[1]);
+            const g = parseInt(match[2]);
+            const b = parseInt(match[3]);
+
+            // 判断非常接近黑色或白色
+            const isBlack = r < 15 && g < 15 && b < 15;
+            const isWhite = r > 240 && g > 240 && b > 240;
+
+            return isBlack || isWhite;
+          }
+          return false;
+        };
+
+        // 找到合适的颜色
+        for (const color of colors) {
+          if (!isCloseToBlackOrWhite(color)) {
+            resolve(color);
+            return;
           }
         }
 
-        resolve(dominantColor);
+        // 如果所有颜色都接近黑色或白色，返回默认颜色
+        resolve("rgb(21, 108, 117)");
       } else {
         reject("Canvas context not supported");
       }
@@ -162,7 +189,7 @@ export const useBackGroundColor = (picUrl: string, id: string) => {
         }
       });
     }
-  }, [picUrl]);
+  }, [picUrl, id]);
 
   return themeColor;
 };

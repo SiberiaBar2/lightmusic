@@ -7,10 +7,11 @@ import React, {
   useRef,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Divider, Drawer as AntDrawer } from "antd";
+import _ from "lodash";
+import styled from "@emotion/styled";
+import { Divider } from "antd";
 import {
   DoubleDown,
-  DoubleUp,
   GoEnd,
   GoStart,
   LoopOnce,
@@ -20,47 +21,30 @@ import {
   PlayOnce,
   ShuffleOne,
 } from "@icon-park/react";
-import styled from "@emotion/styled";
 
-import { DrawProps, DrawRefType, PlayType } from "..";
+import { DrawProps, DrawRefType, player, PlayType } from "..";
 import { Common } from "../../Common";
 import { IsSame } from "../../IsSame";
 import { useSongs } from "../../useSongs";
 import { CardList } from "components";
 import { stringAdds } from "utils/utils";
-import "./index.css";
-import { playState, changePlay } from "store/play";
-import { useToggleSongs } from "./utils";
+import { playState } from "store/play";
 import { RootState } from "store";
-import _ from "lodash";
 import { songsState } from "store/songs";
 import { Like } from "./like";
-import { PlayTypeIcon } from "./PlayTypeIcon";
 import { useFuncDebounce } from "@karlfranz/reacthooks";
 import { useReLoadImage } from "hooks";
 import { useBackGroundColor } from "entries/utils";
 
-const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
-  const { lyric, time, picUrl, songId, type, handeChangeType, musicRef } =
-    props;
+import "./index.css";
 
-  // console.log("time ---->", time);
+const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
+  const { lyric, time, picUrl, songId, type, handeChangeType } = props;
 
   const [visiable, setVisiable] = useState(false);
 
-  /**
-   *
-   *  item. content:string 评论内容 commentId:number ，评论id ， timeStr:string 时间字符， time:number 时间戳，
-   *  item. user 用户信息 ，avatarUrl: string 头像地址，nickname:string 昵称， userId:number 用户id， userType:number 用户类型
-   *  console.log("hotComments", hotComments);
-   *  data name：string 歌曲名，id： number 歌曲id， artists:[] 0.name 作者， picUrl ： 歌曲图片
-   */
-
   const changeVisiable = () => {
     songId && setVisiable(!visiable);
-  };
-  const onClose = () => {
-    setVisiable(false);
   };
   useImperativeHandle(ref, () => ({
     changeVisiable,
@@ -79,10 +63,9 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
         <div
           id="drawer"
           style={{
-            // backgroundImage: `url(${stringAdds(picUrl)})`,
-            background: themeColor || "rgb(43, 18, 22)",
-            // backgroundImage:
-            //   "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
+            background:
+              themeColor ||
+              "linear-gradient(rgb(6, 28, 30), rgb(21, 108, 117), rgb(6, 28, 30))",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             position: "absolute",
@@ -109,23 +92,10 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
             fill="rgb(251, 236, 222)"
             onClick={() => changeVisiable()}
           />
-          {/* <DoubleUp
-            style={{
-              bottom: "2rem",
-              left: "5rem",
-              cursor: "pointer",
-              position: "absolute",
-            }}
-            theme="outline"
-            size="24"
-            fill="rgb(251, 236, 222)"
-            onClick={() => changeVisiable()}
-          /> */}
           <Container>
             <RoundWrap
               picUrl={stringAdds(picUrl)}
               type={type}
-              musicRef={musicRef}
               handeChangeType={handeChangeType}
             />
             <LyricWrap {...LryicConfig} />
@@ -138,11 +108,11 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
 };
 
 const RoundWrap: React.FC<
-  Pick<DrawProps, "picUrl" | "musicRef"> & {
+  Pick<DrawProps, "picUrl"> & {
     handeChangeType?: any;
     type: any;
   }
-> = React.memo(({ picUrl, handeChangeType, type, musicRef }) => {
+> = React.memo(({ picUrl, handeChangeType, type }) => {
   const dispatch = useDispatch();
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
@@ -152,15 +122,7 @@ const RoundWrap: React.FC<
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
   const { play } = playState;
-  const { songId, song, prevornext } = songsState;
-
-  const goPrevorNext = useToggleSongs({
-    prevornext,
-    song,
-    songsState,
-    play,
-    musicRef,
-  });
+  const { songId } = songsState;
 
   const imgRef = useRef<HTMLImageElement>(null);
   useReLoadImage(imgRef, picUrl, "pict", () => "");
@@ -219,7 +181,7 @@ const RoundWrap: React.FC<
       </div>
       <Player>
         <GoStart
-          onClick={debouncedCallback(() => goPrevorNext("prev"))}
+          onClick={player.playPrev}
           theme="outline"
           size="30"
           fill="rgb(251, 236, 222)"
@@ -227,9 +189,7 @@ const RoundWrap: React.FC<
         />
         {play !== "play" ? (
           <Play
-            onClick={debouncedCallback(() =>
-              dispatch(changePlay({ play: "play" }))
-            )}
+            onClick={player?.playMusic}
             theme="outline"
             size="30"
             style={{
@@ -240,9 +200,7 @@ const RoundWrap: React.FC<
           />
         ) : (
           <PauseOne
-            onClick={debouncedCallback(() =>
-              dispatch(changePlay({ play: "pause" }))
-            )}
+            onClick={player?.pauseMusic}
             theme="outline"
             size="30"
             fill="rgb(251, 236, 222)"
@@ -253,7 +211,7 @@ const RoundWrap: React.FC<
           />
         )}
         <GoEnd
-          onClick={debouncedCallback(() => goPrevorNext("next"))}
+          onClick={player.playNext}
           theme="outline"
           size="30"
           fill="rgb(251, 236, 222)"
@@ -289,72 +247,22 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
 
   const div = document.getElementById("lyricdiv") as HTMLElement;
 
-  // console.log("div", div);
-
-  // const containerHeight = document.querySelector("#container")
-  //   ?.clientHeight as number;
-  // const liHeight = div?.children[0].clientHeight as number;
-
-  // console.log("liHeight", liHeight);
-
-  // const maxOffset = (div?.clientHeight as number) - containerHeight;
-
   useMemo(() => {
-    // const lines = lyric.split("\n");
-    // console.log("lines", lines);
-
     const timeArr: string[] = [];
     const lrcArr: string[] = [];
     const regex = /\[(\d{2}:\d{2})\.\d{2,3}\](.+)/g;
-    // console.log("regex.exec(lyric)", regex.exec(lyric));
     let tmp = regex.exec(lyric);
-    // console.log("tmp", tmp);
-
-    // console.log("time", time);
 
     while (tmp) {
       timeArr.push(tmp[1]);
       lrcArr.push(tmp[2]);
       tmp = regex.exec(lyric); // 不写页面崩溃
     }
-    // console.log("timeArr", timeArr);
 
     setLrc(lrcArr);
     const index = timeArr.findIndex((item: any) => {
-      // console.log("time", time);
-      // console.log("tim--->item-", item);
-      // console.log("item === time", item === time);
-
       return item === time;
     });
-
-    // console.log("index", index);
-
-    // console.log("time---->", time);
-    // console.log("divdivdiv", div);
-
-    // let offset = liHeight * index + liHeight / 2 - containerHeight / 2;
-    // // 处理边界问题
-
-    // if (offset < 0) {
-    //   offset = 0;
-    // }
-    // if (offset > maxOffset) {
-    //   offset = maxOffset;
-    // }
-    // if (div) {
-    //   div.style.transform = `translateY(-${offset})rem`;
-    //   // 去除之前的active
-    //   let li = div.querySelector(".active");
-    //   if (li) {
-    //     li.classList.remove("active");
-    //   }
-
-    //   li = div.children[index];
-    //   if (li) {
-    //     li.classList.add("active");
-    //   }
-    // }
 
     if (index !== -1 && div) {
       div.style.top = -index * 4 + 21 + "rem";
@@ -367,7 +275,6 @@ const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
         div.children[index].classList.add("active");
       }
     }
-    // console.log("index----->", index);
   }, [lyric, time]);
   return (
     <Lyric id="container">

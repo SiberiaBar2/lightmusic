@@ -14,6 +14,8 @@ import { RootState } from "store";
 import { useDouble } from "body/utils";
 import { Keys } from "types";
 import { useFuncDebounce } from "@karlfranz/reacthooks";
+import { useLogin } from "body/Header/utils";
+
 const cookie = localStorage.getItem("cookie");
 
 const SONGSTYPE: { [x: number]: string } = {
@@ -27,6 +29,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
   const { songindex, songidlist, customrender, item, ...other } = props;
   const { id, name, fee } = item;
 
+  const loginStatus = useLogin();
   const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
     _.pick(state.ilike, ["likes"])
   );
@@ -185,50 +188,56 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         {SONGSTYPE[fee as number] ? (
           <AntTag>{SONGSTYPE[fee as number]}</AntTag>
         ) : null}
-        {likes.includes(id) ? (
-          <ParkLike
-            // onClick={(
-            //   e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-            // ) => {
-            //   console.log("自己", e);
-            //   e.stopPropagation();
-            //   likeMusci();
-            // }}
-            onClick={_.debounce(function (
-              // onClick={debouncedCallback(function (
-              e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-            ) {
-              console.log(
-                "自己1",
-                e,
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                this as MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-              );
-              e.stopPropagation();
-              likeMusci();
-            }, 500)}
-            theme={"filled"}
-            size={22}
-            fill="rgb(237, 90, 101)"
-            style={{ cursor: "pointer", display: "flex", alignItems: "center" }}
-          />
-        ) : (
-          <ParkLike
-            onClick={debouncedCallback(
-              (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
-                console.log("自己2");
-
+        {loginStatus ? (
+          likes.includes(id) ? (
+            <ParkLike
+              // onClick={(
+              //   e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+              // ) => {
+              //   console.log("自己", e);
+              //   e.stopPropagation();
+              //   likeMusci();
+              // }}
+              onClick={_.debounce(function (
+                // onClick={debouncedCallback(function (
+                e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+              ) {
+                console.log(
+                  "自己1",
+                  e,
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  this as MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+                );
                 e.stopPropagation();
                 likeMusci();
-              }
-            )}
-            theme={"outline"}
-            size={22}
-            fill="rgb(237, 90, 101)"
-            style={{ cursor: "pointer" }}
-          />
-        )}
+              }, 500)}
+              theme={"filled"}
+              size={22}
+              fill="rgb(237, 90, 101)"
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
+            />
+          ) : (
+            <ParkLike
+              onClick={debouncedCallback(
+                (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
+                  console.log("自己2");
+
+                  e.stopPropagation();
+                  likeMusci();
+                }
+              )}
+              theme={"outline"}
+              size={22}
+              fill="rgb(237, 90, 101)"
+              style={{ cursor: "pointer" }}
+            />
+          )
+        ) : null}
         {/* {!canUse ? <span>暂无版权</span> : null} */}
       </span>
       {customrender ? customrender(item) : null}
