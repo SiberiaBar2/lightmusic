@@ -108,7 +108,7 @@ export const Header = () => {
 
   const renderUser = () => (
     <User>
-      <Tooltip title={text}>
+      {/* <Tooltip title={text}>
         <Yiyan>
           {text ? (
             <>
@@ -129,7 +129,7 @@ export const Header = () => {
             </>
           ) : null}
         </Yiyan>
-      </Tooltip>
+      </Tooltip> */}
       <Input
         value={search}
         onChange={(e) => {
@@ -161,7 +161,7 @@ export const Header = () => {
               navigate("login/unlogin");
             }}
           >
-            请登录
+            登录
           </Button>
         ) : (
           <>
@@ -181,7 +181,7 @@ export const Header = () => {
               }}
             />
 
-            <span
+            {/* <span
               title={profile.nickname}
               style={{
                 margin: "0 0.5rem",
@@ -191,7 +191,7 @@ export const Header = () => {
               }}
             >
               {!_.isEmpty(profile) ? profile.nickname : null}
-            </span>
+            </span> */}
           </>
         )}
       </Users>

@@ -189,7 +189,7 @@ const Entries = () => {
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
           position: "absolute",
-          background: "rgb(0, 0, 0.3)",
+          background: "rgb(21, 108, 117)",
           left: 0,
           right: 0,
           top: 0,

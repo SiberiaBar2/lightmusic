@@ -22,7 +22,7 @@ import {
 } from "@icon-park/react";
 import styled from "@emotion/styled";
 
-import { DrawProps, DrawRefType, PlayType } from "..";
+import { DrawProps, DrawRefType, player, PlayType } from "..";
 import { Common } from "../../Common";
 import { IsSame } from "../../IsSame";
 import { useSongs } from "../../useSongs";
@@ -79,10 +79,7 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
         <div
           id="drawer"
           style={{
-            // backgroundImage: `url(${stringAdds(picUrl)})`,
-            background: themeColor || "rgb(43, 18, 22)",
-            // backgroundImage:
-            //   "url(https://p2.music.126.net/CDIrh1-2fnF4qFV14TvcEg==/109951169244525778.jpg)",
+            background: themeColor || "rgb(21, 108, 117)",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             position: "absolute",
@@ -219,7 +216,7 @@ const RoundWrap: React.FC<
       </div>
       <Player>
         <GoStart
-          onClick={debouncedCallback(() => goPrevorNext("prev"))}
+          onClick={player.playPrev}
           theme="outline"
           size="30"
           fill="rgb(251, 236, 222)"
@@ -227,9 +224,7 @@ const RoundWrap: React.FC<
         />
         {play !== "play" ? (
           <Play
-            onClick={debouncedCallback(() =>
-              dispatch(changePlay({ play: "play" }))
-            )}
+            onClick={player?.playMusic}
             theme="outline"
             size="30"
             style={{
@@ -240,9 +235,7 @@ const RoundWrap: React.FC<
           />
         ) : (
           <PauseOne
-            onClick={debouncedCallback(() =>
-              dispatch(changePlay({ play: "pause" }))
-            )}
+            onClick={player?.pauseMusic}
             theme="outline"
             size="30"
             fill="rgb(251, 236, 222)"
@@ -253,7 +246,7 @@ const RoundWrap: React.FC<
           />
         )}
         <GoEnd
-          onClick={debouncedCallback(() => goPrevorNext("next"))}
+          onClick={player.playNext}
           theme="outline"
           size="30"
           fill="rgb(251, 236, 222)"

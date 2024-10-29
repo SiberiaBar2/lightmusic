@@ -49,7 +49,7 @@ export const StaticFooter: React.FC = () => {
   };
 
   return (
-    <Container onClick={init}>
+    <Container>
       <Progress>
         <Slider
           value={0}
@@ -60,7 +60,7 @@ export const StaticFooter: React.FC = () => {
       </Progress>
       <DivOne>
         <div>
-          <p>music</p>
+          <p>-</p>
         </div>
         <div>
           <span>00:00 / 00:00</span>

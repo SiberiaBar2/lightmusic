@@ -681,17 +681,17 @@ export const Dynamic: React.FC<{
 
   console.log("play====>", play);
 
-  useEffect(() => {
-    console.log("song===>", song, songsState, prevornext);
-    (song || song === 0) &&
-      songsState &&
-      prevornext &&
-      player.saveSongConfig({
-        prevornext,
-        song,
-        songsState,
-      });
-  }, [prevornext, song, songsState]);
+  // useEffect(() => {
+  //   console.log("song===>", song, songsState, prevornext);
+  //   (song || song === 0) &&
+  //     songsState &&
+  //     prevornext &&
+  //     player.saveSongConfig({
+  //       prevornext,
+  //       song,
+  //       songsState,
+  //     });
+  // }, [prevornext, song, songsState]);
   const renderDivRight = () => {
     return (
       <DivRight>
@@ -707,7 +707,7 @@ export const Dynamic: React.FC<{
 
           {play !== "play" ? (
             <Play
-              onClick={() => player?.playMusic()}
+              onClick={player?.playMusic}
               theme="outline"
               size="24"
               fill="rgb(251, 236, 222)"
@@ -715,7 +715,7 @@ export const Dynamic: React.FC<{
             />
           ) : (
             <PauseOne
-              onClick={() => player?.pauseMusic()}
+              onClick={player?.pauseMusic}
               theme="outline"
               size="24"
               fill="rgb(251, 236, 222)"

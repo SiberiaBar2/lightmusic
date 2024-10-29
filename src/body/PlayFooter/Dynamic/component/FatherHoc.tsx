@@ -60,18 +60,21 @@ export const FatherHoc: React.FC<FatherHocProps> = ({
   );
 
   const [cur, setCur] = useState(0);
+
+  const curT = parseInt(currentTime + "");
   useEffect(() => {
-    console.log("currentTime >>>", currentTime, duration);
-    if (currentTime > duration) {
-      console.log("播放完毕");
-      // setCur(0);
-      // console.log("播放完了");
-      // localStorage.setItem("currentTime", "0");
+    // console.log("currentTime >>>", currentTime, duration);
+    if (duration && curT >= duration) {
+      console.log("播放完毕", curT, duration, type);
       // songsType[type]();
       switch (type) {
         case PlayType.dan:
           console.log("单曲播放");
           player.singlePlay();
+          break;
+        case PlayType.shun:
+          console.log("列表循环");
+          player.loopList();
           break;
         case PlayType.liexun:
           console.log("列表循环");
@@ -85,7 +88,7 @@ export const FatherHoc: React.FC<FatherHocProps> = ({
           break;
       }
     }
-  }, [type, currentTime, duration]);
+  }, [type, curT, duration]);
 
   return (
     <>

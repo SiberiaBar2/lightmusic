@@ -28,14 +28,14 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
 
   const strategy: StrategyType = {
     [Keys.single]: function () {
-      dispatch(
-        songsInfo({
-          ...songsState,
-          songId: id,
-          song: songindex,
-          prevornext: String(songidlist),
-        })
-      );
+      // dispatch(
+      //   songsInfo({
+      //     ...songsState,
+      //     songId: id,
+      //     song: songindex,
+      //     prevornext: String(songidlist),
+      //   })
+      // );
       // dispatch(changePlay({ play: "init" }));
     },
     [Keys.double]: function () {
@@ -61,11 +61,12 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
       player.saveSongConfig({
         prevornext: String(songidlist),
         song: songindex as string,
-        songsState,
+        // songsState,
+        songId: id as number,
       });
-      setTimeout(() => {
-        player.playMusic();
-      }, 500);
+      // setTimeout(() => {
+      //   player.playMusic();
+      // }, 500);
       // dispatch(changePlay({ play: "play" }));
     },
   };
