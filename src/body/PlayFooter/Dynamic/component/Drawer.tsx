@@ -5,6 +5,7 @@ import React, {
   useState,
   ForwardedRef,
   useRef,
+  useEffect,
 } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
@@ -37,9 +38,11 @@ import { useReLoadImage } from "hooks";
 import { useBackGroundColor } from "entries/utils";
 
 import "./index.css";
+import { https } from "utils";
+import { useSonglyric } from "body/PlayFooter/utils";
 
 const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
-  const { lyric, time, picUrl, songId, type, handeChangeType } = props;
+  const { time, picUrl, songId, type, handeChangeType } = props;
 
   const [visiable, setVisiable] = useState(false);
 
@@ -51,11 +54,12 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   }));
 
   const LryicConfig = {
-    lyric,
+    // lyric,
     time,
+    songId,
   };
 
-  const themeColor = useBackGroundColor(picUrl, "drawer");
+  // const themeColor = useBackGroundColor(picUrl, "drawer");
 
   return visiable ? (
     <DrawerModal>
@@ -63,9 +67,9 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
         <div
           id="drawer"
           style={{
-            background:
-              themeColor ||
-              "linear-gradient(rgb(6, 28, 30), rgb(21, 108, 117), rgb(6, 28, 30))",
+            background: props?.backGroundColor,
+            // themeColor ||
+            // "linear-gradient(rgb(6, 28, 30), rgb(21, 108, 117), rgb(6, 28, 30))",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             position: "absolute",
@@ -239,12 +243,14 @@ const RoundWrap: React.FC<
 });
 
 // 抽离组件，将频繁渲染的状态单独提出， 自身状态变化 不影响其他组件重复渲染
-const LyricWrap: React.FC<Pick<DrawProps, "lyric" | "time">> = ({
-  lyric,
+const LyricWrap: React.FC<Pick<DrawProps, "songId" | "time">> = ({
+  songId,
   time,
 }) => {
+  const { data } = useSonglyric(songId);
   const [lrc, setLrc] = useState<string[]>([""]);
 
+  const lyric = _.get(data, "lrc.lyric");
   const div = document.getElementById("lyricdiv") as HTMLElement;
 
   useMemo(() => {

@@ -14,7 +14,7 @@ export const IsSame: React.FC<any> = (props) => {
     string | number,
     number | undefined,
     string | undefined
-  >(id, songindex, String(songidlist));
+  >(id, songindex, String(songidlist), []);
 
   return (
     <Container

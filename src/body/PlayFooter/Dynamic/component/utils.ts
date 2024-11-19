@@ -1,3 +1,5 @@
+import { createVibrantGradient, getMostFrequentColor } from "entries/utils";
+import _ from "lodash";
 import { MutableRefObject, useCallback } from "react";
 import { useDispatch } from "react-redux";
 
@@ -86,8 +88,8 @@ export type TimeType = { time: number; timeStr: string };
 type SongConfig = {
   prevornext: string;
   song: string | number;
-  // songsState: any;
   songId: number;
+  platList: any[];
 };
 const cookie = localStorage.getItem("cookie");
 
@@ -96,6 +98,12 @@ const TIME = {
   timeStr: "00:00",
 };
 
+export type SongDetailConfig = Record<
+  "picUrl" | "name" | "authName" | "backGroundColor",
+  string
+> & {
+  dt: number;
+};
 export class BasicPlayer {
   public retry = 0;
   public toneQuality = "";
@@ -117,6 +125,11 @@ export class BasicPlayer {
     null;
   public saveRenderTime = (h: typeof this.setRenderCurrentTime) => {
     this.setRenderCurrentTime = h;
+  };
+
+  public setRenderSongConfig: ((c: SongDetailConfig) => void) | null = null;
+  public setSongConfig = (h: React.SetStateAction<any>) => {
+    if (!this.setRenderSongConfig) this.setRenderSongConfig = h;
   };
   constructor() {
     this.initAudio();
@@ -166,7 +179,7 @@ export class BasicPlayer {
     try {
       if (url) {
         const response = await fetch(this.ensureHttps(url), { method: "HEAD" }); // 使用 HEAD 请求检查
-        console.log("response 检查资源是否有效", response.ok, response);
+        // console.log("response 检查资源是否有效", response.ok, response);
       } else {
         throw new Error("无地址");
       }
@@ -175,12 +188,12 @@ export class BasicPlayer {
     }
   };
   public playMusic = async () => {
-    this.clearAudio();
     if (this.timer) {
       clearInterval(this.timer);
     }
     await this.checkAudioResource(this.songPlayDetail?.url);
     try {
+      this.clearAudio();
       if (!this.songPlayDetail?.url) {
         throw new Error("播放地址不存在或无权限");
       }
@@ -220,28 +233,68 @@ export class BasicPlayer {
   };
 
   public pauseMusic = () => {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    this.timer = setInterval(() => {
+      this.getSongUrl();
+    }, 900000);
     try {
       if (this.audio && !this.audio.paused) {
         this.audio?.pause();
         store.dispatch(changePlay({ play: "pause" }));
-        if (this.timer) {
-          clearInterval(this.timer);
-        }
-        this.timer = setInterval(() => {
-          this.getSongUrl();
-        }, 900000);
+        // if (this.timer) {
+        //   clearInterval(this.timer);
+        // }
+        // this.timer = setInterval(() => {
+        //   this.getSongUrl();
+        // }, 900000);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  public changeBackGroundColor = (picUrl: string) => {
+    return getMostFrequentColor(picUrl).then((color) => {
+      const backElement = document.getElementById("backgroundDiv");
+      const backGroundColor = createVibrantGradient(color);
+      if (backElement) {
+        backElement.style.background = backGroundColor;
+      }
+      return backGroundColor;
+    });
+  };
+
+  public getSongDetailConfig = async (id: string) => {
+    if (id) {
+      this.getSongState();
+      const nowSongDetail = this.songsState?.platList?.find(
+        (ele: any) => ele.id == id
+      );
+      const picUrl = _.get(nowSongDetail, "al.picUrl");
+      const name = _.get(nowSongDetail, "name");
+      const authName = _.get(nowSongDetail, "ar[0].name");
+      const dt = _.get(nowSongDetail, "dt");
+
+      const backGroundColor = await this.changeBackGroundColor(picUrl);
+      const songDetailConfig = {
+        picUrl,
+        authName,
+        name,
+        dt,
+        backGroundColor,
+      };
+      this.setRenderSongConfig?.(songDetailConfig);
+    }
+  };
   public getSongPlayDetail = async (id: string) => {
     const client = https();
-    const res = await client("song/url/v1", {
+    const songPlayUrlResult = await client("song/url/v1", {
       data: { id, cookie, level: this.toneQuality },
     });
-    this.songPlayDetail = res?.data?.[0];
+    this.getSongDetailConfig(id);
+    this.songPlayDetail = songPlayUrlResult?.data?.[0];
   };
 
   public setCurrentTime = (time: number) => {
@@ -276,6 +329,7 @@ export class BasicPlayer {
     store.dispatch(
       songsInfo({
         ...this.songsState,
+        prevornext: this.songsState.prevornext,
         songId: this.getSongsId[index],
         song: index,
       })
@@ -380,6 +434,7 @@ export class BasicPlayer {
         songId: config.songId,
         song: +this.songsState?.song,
         prevornext: config.prevornext,
+        platList: config.platList,
       })
     );
     await this.getSongUrl();
@@ -423,6 +478,7 @@ export class Controller extends BasicPlayer {
     store.dispatch(
       songsInfo({
         ...this.songsState,
+        prevornext: this.songsState.prevornext,
         songId: this.getSongsId[random],
         song: random,
       })

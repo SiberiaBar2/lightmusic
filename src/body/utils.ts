@@ -13,7 +13,12 @@ import { player } from "./PlayFooter/Dynamic";
 
 type StrategyType = { [x: string | number]: () => void };
 
-export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
+export const useDouble = <T, K, U>(
+  id: T,
+  songindex: K,
+  songidlist: U,
+  platList: any[]
+) => {
   const dispatch = useDispatch();
   const songsState = useSelector<
     RootState,
@@ -39,35 +44,12 @@ export const useDouble = <T, K, U>(id: T, songindex: K, songidlist: U) => {
       // dispatch(changePlay({ play: "init" }));
     },
     [Keys.double]: function () {
-      // const islike = likes.includes(id as number);
-
-      // console.log("islike", islike, "id", id);
-
-      // if (islike) {
-      //   run({
-      //     id: id,
-      //   });
-      // }
-
-      // dispatch(
-      //   songsInfo({
-      //     ...songsState,
-      //     songId: id,
-      //     song: songindex,
-      //     prevornext: String(songidlist),
-      //   })
-      // );
-
       player.saveSongConfig({
         prevornext: String(songidlist),
         song: songindex as string,
-        // songsState,
         songId: id as number,
+        platList: platList,
       });
-      // setTimeout(() => {
-      //   player.playMusic();
-      // }, 500);
-      // dispatch(changePlay({ play: "play" }));
     },
   };
 

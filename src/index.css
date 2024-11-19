@@ -66,3 +66,7 @@ html {
   background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
+
+* .ant-drawer-content {
+  background: rgba(0, 0, 0, 0.6) !important;
+}

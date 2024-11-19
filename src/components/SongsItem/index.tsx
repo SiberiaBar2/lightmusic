@@ -3,7 +3,7 @@ import { Tag, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import _ from "lodash";
-import { Like as ParkLike } from "@icon-park/react";
+import { Like as ParkLike, Play } from "@icon-park/react";
 
 import { useCheckMusic, useLike } from "body/PlayFooter/utils";
 import { childrenReturnType } from "components/CardList";
@@ -15,6 +15,7 @@ import { useDouble } from "body/utils";
 import { Keys } from "types";
 import { useFuncDebounce } from "@karlfranz/reacthooks";
 import { useLogin } from "body/Header/utils";
+import { player } from "body/PlayFooter/Dynamic";
 
 const cookie = localStorage.getItem("cookie");
 
@@ -26,8 +27,9 @@ const SONGSTYPE: { [x: number]: string } = {
 };
 
 const SongsItem: React.FC<childrenReturnType> = (props) => {
-  const { songindex, songidlist, customrender, item, ...other } = props;
-  const { id, name, fee } = item;
+  const { songindex, songidlist, customrender, item, dataSource, ...other } =
+    props;
+  const { id, al, fee } = item;
 
   const loginStatus = useLogin();
   const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
@@ -53,7 +55,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     string | number,
     number | undefined,
     string | undefined
-  >(id, songindex, String(songidlist));
+  >(id, songindex, String(songidlist), dataSource);
 
   const { songId } = songsState;
   // const isUse = (id: number) => {
@@ -152,6 +154,15 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     }
     getMsgColor("请先登录");
   }, [cookie, tolike, islike, songId, dispatch, changelike]);
+
+  const renderAuth = () => {
+    return item?.ar?.map((ele: any, index: number) => {
+      if (index === 0) {
+        return ele.name + "  ";
+      }
+      return "/" + "  " + ele.name;
+    });
+  };
   return (
     <div
       style={{
@@ -159,7 +170,8 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         justifyContent: "space-between",
         width: "100%",
         cursor: "pointer",
-        height: 22,
+        height: "4rem",
+        lineHeight: "4rem",
         // color: canUse
         //   ? isActive()
         //     ? "rgb(136, 58, 30)"
@@ -170,7 +182,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         //     ? "rgb(124, 171, 177)"
         //     : ""
         //   : "rgb(116, 120, 122)",
-        padding: "1rem 0.3rem",
+        // padding: "1rem 0.3rem",
         background: isActive() ? "rgba(0, 0, 0, 0.2)" : "",
         borderRadius: "0.3rem",
       }}
@@ -183,8 +195,33 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         strategy[(e as MouseEvent<Element, MouseEvent>).detail]();
       }, 300)}
     >
-      <span style={{ display: "flex" }}>
-        <span style={{ marginRight: "1rem" }}>{name}</span>
+      <Line>
+        <Play
+          onClick={() => {
+            player.saveSongConfig({
+              prevornext: String(songidlist),
+              song: songindex!,
+              songId: id as number,
+              platList: dataSource,
+            });
+          }}
+          theme="outline"
+          size="18"
+          fill="rgb(251, 236, 222)"
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            marginLeft: "0.5rem",
+          }}
+        />
+        <ImgWrap>
+          <img src={al?.picUrl} alt="" />
+        </ImgWrap>
+        <span style={{ marginRight: "0.5rem" }}>{item.name}</span>
+        {/* {item.name !== al?.name ? (
+          <span style={{ marginRight: "1rem" }}>({al?.name})</span>
+        ) : null} */}
         {SONGSTYPE[fee as number] ? (
           <AntTag>{SONGSTYPE[fee as number]}</AntTag>
         ) : null}
@@ -234,13 +271,17 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
               theme={"outline"}
               size={22}
               fill="rgb(237, 90, 101)"
-              style={{ cursor: "pointer" }}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
             />
           )
         ) : null}
         {/* {!canUse ? <span>暂无版权</span> : null} */}
-      </span>
-      {customrender ? customrender(item) : null}
+      </Line>
+      <Container>{renderAuth()}</Container>
     </div>
   );
 };
@@ -254,4 +295,26 @@ const AntTag = styled(Tag)`
   height: 22px;
   width: 32px;
   background: transparent;
+`;
+
+const Line = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const ImgWrap = styled.div`
+  width: 3rem;
+  height: 3rem;
+  margin: 0 1rem;
+
+  > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.5rem;
+  }
+`;
+
+const Container = styled.div`
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
 `;

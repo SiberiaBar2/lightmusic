@@ -65,7 +65,7 @@ const Entries = () => {
     } = PLAYCONSTANTS,
   } = useSongDetail(songId);
 
-  useBackGroundColor(picUrl, "backgroundDiv");
+  // useBackGroundColor(picUrl, "backgroundDiv");
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;

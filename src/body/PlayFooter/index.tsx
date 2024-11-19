@@ -9,7 +9,7 @@ export const PlayFooter: React.FC = () => {
   const dispatch = useDispatch();
   const songsState = useSelector<
     RootState,
-    Pick<songsState, "songId" | "song" | "prevornext">
+    Pick<songsState, "songId" | "song" | "prevornext" | "platList">
   >((state) => state.songs);
 
   const loginState = useSelector<

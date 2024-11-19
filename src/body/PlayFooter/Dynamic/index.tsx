@@ -49,6 +49,7 @@ import { NowList } from "./component/NowList";
 import {
   BasicPlayer,
   Controller,
+  SongDetailConfig,
   TimeType,
   useToggleSongs,
 } from "./component/utils";
@@ -88,16 +89,25 @@ const PLAYTYPE = {
   [PlayType.sui]: "随机播放",
 };
 
+const INITSONGDETAIL = {
+  name: "",
+  picUrl: "",
+  authName: "",
+  dt: 0,
+  backGroundColor:
+    "linear-gradient(rgb(6, 28, 30), rgb(21, 108, 117), rgb(6, 28, 30))",
+};
+
 export interface DrawProps {
   picUrl: string;
   time: string;
-  // musicRef: React.MutableRefObject<HTMLAudioElement>;
-  lyric: string;
+  // lyric: string;
   songId?: number | string;
   handeChangeType?: any;
   type: {
     type: PlayType;
   };
+  backGroundColor: string;
 }
 
 type StateActionType = { type: PlayType };
@@ -138,7 +148,7 @@ export const Dynamic: React.FC<{
   setParam: reduxDispatch<AnyAction>;
 }> = (props) => {
   const { param, setParam } = props;
-  const { songId, song, prevornext } = param;
+  const { songId } = param;
 
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
     (state) => state.login
@@ -146,17 +156,10 @@ export const Dynamic: React.FC<{
   const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
     loginState;
 
-  const likeState = useSelector<RootState, Pick<likeState, "likes">>((state) =>
-    _.pick(state.ilike, ["likes"])
-  );
-  const { likes: likeSongs } = likeState;
-
-  console.log("likes", likeSongs);
   const client = https();
   const { run: getUserPlaylist, data: playList } = useQuery(
     ({ userId }: { userId: string }) =>
       client("user/playlist", {
-        // data: { age },
         data: {
           uid: userId,
         },
@@ -165,7 +168,7 @@ export const Dynamic: React.FC<{
       responsePath: "playlist",
       manual: true,
       success(res) {
-        console.log("查看用户歌单", res);
+        // console.log("查看用户歌单", res);
       },
       error(error) {
         console.log("error====>", error);
@@ -173,11 +176,7 @@ export const Dynamic: React.FC<{
     }
   );
 
-  console.log("playList", playList);
-
   useEffect(() => {
-    console.log("userId====>", userId);
-
     if (userId) {
       getUserPlaylist({ userId });
     }
@@ -210,7 +209,7 @@ export const Dynamic: React.FC<{
       },
     }
   );
-  const [open, setOpen] = useState(true);
+  // const [open, setOpen] = useState(true);
 
   const debouncedCallback = useFuncDebounce();
   // 持久化存储播放类型
@@ -218,7 +217,7 @@ export const Dynamic: React.FC<{
     type: Number(localStorage.getItem("playtype")) || PlayType.liexun,
   });
 
-  const [volume, setVolume] = useState(50);
+  // const [volume, setVolume] = useState(50);
 
   const drawerRef = useRef() as React.MutableRefObject<DrawRefType>;
   // const musicRef = useRef() as React.MutableRefObject<HTMLAudioElement>;
@@ -246,24 +245,24 @@ export const Dynamic: React.FC<{
     Pick<songsState, "songId" | "song" | "prevornext">
   >((state) => state.songs);
 
-  const { name, picUrl, authName, lyric, data, songs, dt } = useSongs(
-    songId || "",
-    toneQuality?.key || ""
-  );
+  const [songDetailConfig, setSongDetailConfig] =
+    useState<SongDetailConfig>(INITSONGDETAIL);
 
-  // 初始音量
-  // useMount(() => {
-  //   if (musicRef.current) musicRef.current.volume = volume * 0.01;
-  // });
-
-  const changeOpen = useCallback((open: boolean) => {
-    setOpen(open);
-    if (!open) {
-      // musicRef.current.volume = 0;
-      // setVolume(0);
-      return;
-    }
+  useEffect(() => {
+    player.setSongConfig(setSongDetailConfig);
+    player.getSongDetailConfig(songId + "");
   }, []);
+
+  const { name, picUrl, authName, dt, backGroundColor } = songDetailConfig;
+
+  // const changeOpen = useCallback((open: boolean) => {
+  //   setOpen(open);
+  //   if (!open) {
+  //     // musicRef.current.volume = 0;
+  //     // setVolume(0);
+  //     return;
+  //   }
+  // }, []);
 
   // 函数 提入组件内部与 useReducer的 reducer 区分开来，
   // 避免 reducer 纯函数受到副作用污染
@@ -339,10 +338,12 @@ export const Dynamic: React.FC<{
     }
   };
 
-  const imgRef = useRef<HTMLImageElement>(null);
-  const { text: songAndAuth } = useReLoadImage(imgRef, picUrl, "picture", () =>
-    name && authName ? name + "-" + authName : ""
-  );
+  // const imgRef = useRef<HTMLImageElement>(null);
+  // const { text: songAndAuth } = useReLoadImage(imgRef, picUrl, "picture", () =>
+  //   name && authName ? name + "-" + authName : ""
+  // );
+
+  const songAndAuth = name + "-" + authName;
 
   const DrawerConfig: DrawProps & {
     handeChangeType: any;
@@ -353,10 +354,11 @@ export const Dynamic: React.FC<{
     picUrl: picUrl,
     time: time?.timeStr,
     // musicRef: musicRef,
-    lyric: lyric,
+    // lyric: lyric,
     songId: songId,
     handeChangeType: handeChangeType,
     type: type,
+    backGroundColor,
   };
 
   const { time: duraTionTime, timeStr: durationTime } = useMemo(() => {
@@ -380,7 +382,7 @@ export const Dynamic: React.FC<{
           }
         )}
       >
-        <img ref={imgRef} />
+        {picUrl ? <img src={picUrl} /> : "-"}
       </div>
 
       <div>

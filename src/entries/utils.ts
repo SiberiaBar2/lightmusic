@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const createVibrantGradient = (dominantColor: string): string => {
+export const createVibrantGradient = (dominantColor: string): string => {
   // 生成鲜艳的颜色和更深的颜色
   const enhanceAndDarkenColor = (
     color: string,
@@ -96,7 +96,7 @@ const createVibrantGradient = (dominantColor: string): string => {
   return `linear-gradient(${dark}, ${vibrant}, ${dark})`; // 生成渐变
 };
 
-const getMostFrequentColor = (imageUrl: string): Promise<string> => {
+export const getMostFrequentColor = (imageUrl: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = "Anonymous"; // 允许跨域

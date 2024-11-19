@@ -48,17 +48,21 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   }, [data]);
 
   return (
-    <div>
-      <p>等级： {level}</p>
-      <p>听歌数： {listenSongs}</p>
-      <p>viptype： {vipType}</p>
-      <p onClick={() => confirm()}>退出登录</p>
-    </div>
+    <Content>
+      <div>
+        <p>等级： {level}</p>
+        <p>听歌数： {listenSongs}</p>
+        <p>viptype： {vipType}</p>
+        <p onClick={() => confirm()}>退出登录</p>
+      </div>
+    </Content>
   );
 };
 
 const Content = styled.div`
-  height: 8rem;
-  line-height: 5rem;
-  padding: 2rem;
+  position: relative;
+  > div {
+    position: absolute;
+    width: 14rem;
+  }
 `;

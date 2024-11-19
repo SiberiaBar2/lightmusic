@@ -1,19 +1,18 @@
 import styled from "@emotion/styled";
 import { Skeleton, Image } from "antd";
 import { useParams } from "react-router-dom";
-import { useSongList } from "./utils";
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
 import { config } from "utils/customRender";
 import { useBackTop } from "hooks";
 import numeral from "numeral";
+import { useRankingSongs } from "components/CardSongs/utils";
 
 export const SongList: React.FC = () => {
   useBackTop();
 
   const { id } = useParams();
-  const { data: songList, isLoading } = useSongList({ data: { id } });
-
+  const { data: songList, isLoading } = useRankingSongs(id!);
   const formatNumber = (num: number) => {
     if (num < 10000) {
       return num.toString(); // 小于一万直接显示

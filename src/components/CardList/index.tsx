@@ -40,6 +40,7 @@ export const CardList: React.FC<CardListProps> = ({
         songidlist: songidlist,
         customrender: many?.renderFunc,
         item: item,
+        dataSource: dataSource,
       });
     }
     console.error("CardList 必须传入react元素！");

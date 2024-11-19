@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { message, QRCode } from "antd";
+import { message } from "antd";
 import styled from "@emotion/styled";
 import _ from "lodash";
 
@@ -19,7 +19,6 @@ const Qrcode: React.FC = () => {
     RootState,
     Pick<LoginState, "data" | "islogin">
   >((state) => state.login);
-  // const { changeLogin } = loginSlice.actions;
 
   const { data: { data: { profile = {} } = {} } = {}, islogin } = loginState;
   const timerRef = useRef(null) as React.MutableRefObject<any>;
@@ -103,7 +102,7 @@ const Qrcode: React.FC = () => {
         <span style={{ marginBottom: "2rem", display: "inline-block" }}>
           使用网易云app登录
         </span>
-        <div>
+        <ImageWrap>
           {expired ? (
             <>
               <span>二维码已过期,请重新获取</span>
@@ -116,10 +115,9 @@ const Qrcode: React.FC = () => {
               </p>
             </>
           ) : (
-            // <QRCode value={qrimg}></QRCode>
             <img src={qrimg} alt="" />
           )}
-        </div>
+        </ImageWrap>
       </div>
     </Content>
   );
@@ -128,22 +126,29 @@ const Qrcode: React.FC = () => {
 export default Qrcode;
 
 const Content = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  /* display: flex;
+  justify-content: center; */
+  /* align-items: center; */
+  position: relative;
 
   span {
     font-size: 1rem;
   }
 
   > div {
-    width: 14rem;
-    height: 14rem;
     text-align: center;
+  }
+`;
 
-    img {
-      width: 100%;
-      height: 100%;
-    }
+const ImageWrap = styled.div`
+  width: 14rem;
+  height: 14rem;
+  position: absolute;
+
+  img {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    /* top: 2rem; */
   }
 `;

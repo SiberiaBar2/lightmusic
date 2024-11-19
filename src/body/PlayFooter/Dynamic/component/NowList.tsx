@@ -40,6 +40,7 @@ export const NowList = forwardRef<NowListType, any>((props, ref) => {
       maskStyle={{
         background: "transparent",
       }}
+      width={500}
       rootStyle={{
         height: "calc(100% - 0.5rem)",
         top: 0,
@@ -51,7 +52,7 @@ export const NowList = forwardRef<NowListType, any>((props, ref) => {
       bodyStyle={{
         boxShadow: "none !important",
         padding: 0,
-        background: "rgba(0, 0, 0, 0.8)",
+        // background: "rgba(0, 0, 0, 0.6)",
       }}
     >
       <Container>
