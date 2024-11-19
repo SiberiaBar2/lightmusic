@@ -5,12 +5,10 @@ import React, {
   useState,
   ForwardedRef,
   useRef,
-  useEffect,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import _ from "lodash";
 import styled from "@emotion/styled";
-import { Divider } from "antd";
 import {
   DoubleDown,
   GoEnd,
@@ -26,7 +24,6 @@ import {
 import { DrawProps, DrawRefType, player, PlayType } from "..";
 import { Common } from "../../Common";
 import { IsSame } from "../../IsSame";
-import { useSongs } from "../../useSongs";
 import { CardList } from "components";
 import { stringAdds } from "utils/utils";
 import { playState } from "store/play";
@@ -34,12 +31,10 @@ import { RootState } from "store";
 import { songsState } from "store/songs";
 import { Like } from "./like";
 import { useFuncDebounce } from "@karlfranz/reacthooks";
-import { useReLoadImage } from "hooks";
-import { useBackGroundColor } from "entries/utils";
+
+import { useSonglyric } from "body/PlayFooter/utils";
 
 import "./index.css";
-import { https } from "utils";
-import { useSonglyric } from "body/PlayFooter/utils";
 
 const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   const { time, picUrl, songId, type, handeChangeType } = props;
@@ -54,12 +49,9 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
   }));
 
   const LryicConfig = {
-    // lyric,
     time,
     songId,
   };
-
-  // const themeColor = useBackGroundColor(picUrl, "drawer");
 
   return visiable ? (
     <DrawerModal>
@@ -68,8 +60,6 @@ const Drawer = (props: DrawProps, ref: ForwardedRef<DrawRefType>) => {
           id="drawer"
           style={{
             background: props?.backGroundColor,
-            // themeColor ||
-            // "linear-gradient(rgb(6, 28, 30), rgb(21, 108, 117), rgb(6, 28, 30))",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             position: "absolute",
@@ -117,7 +107,6 @@ const RoundWrap: React.FC<
     type: any;
   }
 > = React.memo(({ picUrl, handeChangeType, type }) => {
-  const dispatch = useDispatch();
   const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
     _.pick(state.play, "play")
   );
@@ -128,8 +117,8 @@ const RoundWrap: React.FC<
   const { play } = playState;
   const { songId } = songsState;
 
-  const imgRef = useRef<HTMLImageElement>(null);
-  useReLoadImage(imgRef, picUrl, "pict", () => "");
+  // const imgRef = useRef<HTMLImageElement>(null);
+  // useReLoadImage(imgRef, picUrl, "pict", () => "");
   const debouncedCallback = useFuncDebounce();
   const getElement = (type: number) => {
     switch (type) {
@@ -181,7 +170,7 @@ const RoundWrap: React.FC<
   return (
     <Round>
       <div>
-        <img ref={imgRef} />
+        <img src={picUrl} />
       </div>
       <Player>
         <GoStart
@@ -236,7 +225,6 @@ const RoundWrap: React.FC<
         >
           {getElement(type.type)}
         </span>
-        {/* <PlayTypeIcon /> */}
       </Player>
     </Round>
   );
@@ -293,35 +281,35 @@ const LyricWrap: React.FC<Pick<DrawProps, "songId" | "time">> = ({
   );
 };
 
-const CommonWrap: React.FC<Pick<DrawProps, "songId">> = React.memo(
-  ({ songId }) => {
-    const { hotComments, comments, userId, topComments, songs } = useSongs(
-      songId || "",
-      ""
-    );
+// const CommonWrap: React.FC<Pick<DrawProps, "songId">> = React.memo(
+//   ({ songId }) => {
+//     const { hotComments, comments, userId, topComments, songs } = useSongs(
+//       songId || "",
+//       ""
+//     );
 
-    return (
-      <Comment>
-        <CommentList>
-          <Divider orientation="left">热评</Divider>
-          {Array.isArray(hotComments) &&
-            hotComments.map((ele: any) => (
-              <Common key={ele.commentId} {...ele} />
-            ))}
-          <Divider orientation="left">最新评论</Divider>
-          {Array.isArray(comments) &&
-            comments.map((ele: any) => <Common key={ele.commentId} {...ele} />)}
-        </CommentList>
-        <Revelant>
-          <Divider orientation="left">相关</Divider>
-          <CardList grid={{ column: 1, gutter: 1 }} dataSource={songs}>
-            <IsSame />
-          </CardList>
-        </Revelant>
-      </Comment>
-    );
-  }
-);
+//     return (
+//       <Comment>
+//         <CommentList>
+//           <Divider orientation="left">热评</Divider>
+//           {Array.isArray(hotComments) &&
+//             hotComments.map((ele: any) => (
+//               <Common key={ele.commentId} {...ele} />
+//             ))}
+//           <Divider orientation="left">最新评论</Divider>
+//           {Array.isArray(comments) &&
+//             comments.map((ele: any) => <Common key={ele.commentId} {...ele} />)}
+//         </CommentList>
+//         <Revelant>
+//           <Divider orientation="left">相关</Divider>
+//           <CardList grid={{ column: 1, gutter: 1 }} dataSource={songs}>
+//             <IsSame />
+//           </CardList>
+//         </Revelant>
+//       </Comment>
+//     );
+//   }
+// );
 
 export default forwardRef(Drawer);
 
@@ -353,7 +341,6 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  /* margin-top: 5rem; */
   display: flex;
   justify-content: center;
   align-items: center;

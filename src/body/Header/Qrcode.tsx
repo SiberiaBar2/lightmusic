@@ -126,9 +126,6 @@ const Qrcode: React.FC = () => {
 export default Qrcode;
 
 const Content = styled.div`
-  /* display: flex;
-  justify-content: center; */
-  /* align-items: center; */
   position: relative;
 
   span {
@@ -149,6 +146,5 @@ const ImageWrap = styled.div`
     width: 100%;
     height: 100%;
     left: 0;
-    /* top: 2rem; */
   }
 `;

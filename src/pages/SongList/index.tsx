@@ -49,7 +49,7 @@ export const SongList: React.FC = () => {
     <Skeleton loading={isLoading} active={true}>
       <ImageContainer>
         <Image
-          style={{ width: "15rem", height: "15rem" }}
+          style={{ width: "15rem", height: "15rem", borderRadius: "1rem" }}
           src={songList?.playlist?.coverImgUrl}
         />
         <Describtion>

@@ -17,7 +17,6 @@ export const ROUTERPATH: { [x: string]: string } = {
   最近播放: "recent",
   我喜欢: "ilike",
   我的歌单: "songsheet",
-  // 其他: "other",
 };
 
 export const NOLOGINROUTERPATH: { [x: string]: string } = {

@@ -40,7 +40,6 @@ export const Common: React.FC = (props: any) => {
 };
 
 const Container = styled.div`
-  /* height: 5rem; */
   display: flex;
   align-items: center;
   margin: 1rem 0;
@@ -60,41 +59,25 @@ const Container = styled.div`
   div:nth-of-type(2) {
     width: calc(100% - 4rem);
     padding: 0.2rem;
-    /* height: 5.5rem; */
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    /* align-items: center; */
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     box-sizing: border-box;
     font-size: 1.4rem;
 
     p {
       margin: 0;
-      /* font-size: 1.2rem; */
     }
-    /* 
-    span {
-      font-size: 1.2rem;
-    } */
-
     p:nth-of-type(1) {
       span:nth-of-type(1) {
         margin-right: 1rem;
-        /* color: rgb(100, 88, 34); */
-        /* width: ; */
       }
 
       span:nth-of-type(2) {
         display: inline-block;
-        /* width: 70%; */
-        /* height: 1rem; */
-        /* overflow: hidden; */
-        /* text-overflow: ellipsis; */
         cursor: pointer;
-        /* white-space: nowrap; */
       }
-      /* display: flex; */
       margin-bottom: 0.5rem;
     }
 

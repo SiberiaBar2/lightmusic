@@ -5,10 +5,6 @@ export const Suggest: React.FC = (props: any) => {
   const { param } = props;
   const { data: { result } = { result: {} } } = useSuggest(param);
 
-  // console.log("serch", result);
-
-  //   console.log("param", param, "data -------》", albums);
-
   return (
     <Container>
       {result?.albums &&

@@ -3,7 +3,7 @@ import { RootState } from "store";
 import { Dynamic } from "./Dynamic";
 import { StaticFooter } from "./StaticFooter";
 import { songsState } from "store/songs";
-import { loginSlice, LoginState } from "store/login";
+import { LoginState } from "store/login";
 
 export const PlayFooter: React.FC = () => {
   const dispatch = useDispatch();

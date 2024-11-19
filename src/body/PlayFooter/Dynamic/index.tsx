@@ -22,17 +22,15 @@ import {
   useEffect,
   MouseEvent,
 } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
-import { Button, Dropdown, MenuProps, Slider, Tooltip, message } from "antd";
+import { Dropdown, Tooltip, message } from "antd";
 import _ from "lodash";
 
-import { likeState } from "store/ilike";
 import Drawer from "./component/Drawer";
 import { Like } from "./component/like";
-import { useSongs } from "../useSongs";
 import { RootState } from "store";
-import { playState, changePlay } from "store/play";
+import { playState } from "store/play";
 import { songsInfo, songsState } from "store/songs";
 import {
   Container,
@@ -43,37 +41,15 @@ import {
   SongsInfo,
   DivRight,
 } from "../style";
-import { stringAdds } from "utils/utils";
 import { FatherHoc } from "./component/FatherHoc";
 import { NowList } from "./component/NowList";
-import {
-  BasicPlayer,
-  Controller,
-  SongDetailConfig,
-  TimeType,
-  useToggleSongs,
-} from "./component/utils";
-import { PlayTypeIcon } from "./component/PlayTypeIcon";
+import { Controller, SongDetailConfig, TimeType } from "./component/utils";
 import { ToneQualityState, changeToneQuality } from "store/toneQuality";
-// import { changePicturl } from "store/picturl";
 
-import {
-  useBoolean,
-  useStateSync,
-  useSessonState,
-  useKeyUpdate,
-  useQuery,
-  useFuncDebounce,
-  useMount,
-} from "@karlfranz/reacthooks";
+import { useQuery, useFuncDebounce } from "@karlfranz/reacthooks";
 import styled from "@emotion/styled";
 import { https } from "utils";
 import { LoginState } from "store/login";
-import { useReLoadImage } from "hooks";
-import { useLogin } from "body/Header/utils";
-const singer = process.env.REACT_APP_SPA_URL as string;
-
-const INITTIME = "00:00";
 
 export enum PlayType {
   dan = 1,
@@ -648,10 +624,7 @@ export const Dynamic: React.FC<{
           >
             <span>{toneQuality?.label || "-"}</span>
           </Dropdown>
-          <Tooltip title={PLAYTYPE[type.type]}>
-            {getElement(type.type)}
-            {/* <PlayTypeIcon type={type.type} /> */}
-          </Tooltip>
+          <Tooltip title={PLAYTYPE[type.type]}>{getElement(type.type)}</Tooltip>
           <Tooltip title={"播放列表"}>
             <ListBottom
               theme="outline"

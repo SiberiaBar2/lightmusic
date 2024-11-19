@@ -18,7 +18,6 @@ import {
   Ilike,
   SongSheet,
   RecommendSongs,
-  Other,
   Login,
 } from "pages";
 import { debounce } from "utils/utils";
@@ -29,7 +28,6 @@ import { getBack } from "./pic";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
 import { songsState } from "store/songs";
-import { useBackGroundColor } from "./utils";
 
 localStorage.setItem("zhixue", "false");
 const count = 390;
@@ -64,8 +62,6 @@ const Entries = () => {
       ],
     } = PLAYCONSTANTS,
   } = useSongDetail(songId);
-
-  // useBackGroundColor(picUrl, "backgroundDiv");
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
@@ -135,7 +131,6 @@ const Entries = () => {
           <Route path="search/:searchparam" element={<Search />} />
           <Route path="ilike" element={<Ilike />} />
           <Route path="songsheet" element={<SongSheet />} />
-          <Route path="other" element={<Other />} />
           <Route
             path="/"
             element={<Navigate to={"recommendsongsheet"} replace />}

@@ -1,4 +1,3 @@
-import { String } from "lodash";
 import {
   useRef,
   useEffect,
@@ -6,10 +5,9 @@ import {
   useMemo,
   MutableRefObject,
   useState,
-  RefObject,
 } from "react";
 import { URLSearchParamsInit, useSearchParams } from "react-router-dom";
-import { cleanObject, stringAdds } from "utils/utils";
+import { cleanObject } from "utils/utils";
 
 export const useMount = (callBack: () => void) => {
   useEffect(() => {
@@ -128,42 +126,42 @@ export const useBackTop = () => {
 };
 
 // 预加载图片
-export const useReLoadImage = (
-  imgRef: RefObject<HTMLImageElement> | null,
-  picUrl: string,
-  alt?: string,
-  customFunc?: () => any
-) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const prevText = useRef("");
+// export const useReLoadImage = (
+//   imgRef: RefObject<HTMLImageElement> | null,
+//   picUrl: string,
+//   alt?: string,
+//   customFunc?: () => any
+// ) => {
+//   const [isLoading, setIsLoading] = useState(false);
+//   const prevText = useRef("");
 
-  const text = useMemo(() => {
-    if (isLoading && customFunc?.()) {
-      prevText.current = customFunc?.();
-      return prevText.current;
-    }
-    return prevText.current;
-  }, [isLoading, customFunc]);
-  useEffect(() => {
-    if (imgRef?.current && picUrl) {
-      const img = new Image();
-      img.src = picUrl;
-      img.onload = function () {
-        if (imgRef?.current) {
-          imgRef.current.src = stringAdds(picUrl);
-          imgRef.current.alt = alt || "";
-        }
-        setIsLoading(true);
-      };
-    }
+//   const text = useMemo(() => {
+//     if (isLoading && customFunc?.()) {
+//       prevText.current = customFunc?.();
+//       return prevText.current;
+//     }
+//     return prevText.current;
+//   }, [isLoading, customFunc]);
+//   useEffect(() => {
+//     if (imgRef?.current && picUrl) {
+//       const img = new Image();
+//       img.src = picUrl;
+//       img.onload = function () {
+//         if (imgRef?.current) {
+//           imgRef.current.src = stringAdds(picUrl);
+//           imgRef.current.alt = alt || "";
+//         }
+//         setIsLoading(true);
+//       };
+//     }
 
-    return () => {
-      setIsLoading(false);
-    };
-  }, [imgRef?.current, picUrl]);
+//     return () => {
+//       setIsLoading(false);
+//     };
+//   }, [imgRef?.current, picUrl]);
 
-  return {
-    isLoading,
-    text,
-  } as const;
-};
+//   return {
+//     isLoading,
+//     text,
+//   } as const;
+// };

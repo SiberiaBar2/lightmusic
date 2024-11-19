@@ -23,11 +23,7 @@ export const MusciCard: React.FC<Props> = (props) => {
   return (
     <>
       {customrender ? (
-        <Tooltip title={item.name}>
-          {/* <Name> */}
-          {renderTag(index as number)}
-          {/* </Name> */}
-        </Tooltip>
+        <Tooltip title={item.name}>{renderTag(index as number)}</Tooltip>
       ) : null}
       <Container>
         <Img
@@ -52,14 +48,4 @@ const Img = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 1rem;
-`;
-
-// type a = typeof MusciCard
-const Name = styled.div`
-  /* height: 1.5rem; */
-  /* width: 70%; */
-  /* margin: 0.5rem; */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 `;

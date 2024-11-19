@@ -172,24 +172,3 @@ export const getMostFrequentColor = (imageUrl: string): Promise<string> => {
     img.onerror = () => reject("Image load error");
   });
 };
-
-export const useBackGroundColor = (picUrl: string, id: string) => {
-  const [themeColor, seThemeColor] = useState("");
-
-  useEffect(() => {
-    if (picUrl && id) {
-      getMostFrequentColor(picUrl).then((color) => {
-        const backElement = document.getElementById(`${id}`);
-
-        if (backElement) {
-          backElement.style.background = createVibrantGradient(color);
-        } else {
-          // 用于弹窗首测的背景颜色
-          seThemeColor(createVibrantGradient(color));
-        }
-      });
-    }
-  }, [picUrl, id]);
-
-  return themeColor;
-};

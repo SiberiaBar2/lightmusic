@@ -1,14 +1,14 @@
-import React, { useState, forwardRef, useImperativeHandle } from "react";
-import { Drawer } from "antd";
+import { useState, forwardRef, useImperativeHandle } from "react";
 import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
+import { Drawer } from "antd";
 
-import { NowListType } from "..";
-import { CardList } from "components";
-import SongsItem from "components/SongsItem";
-import { RootState } from "store";
-import { songsState } from "store/songs";
 import { useSongDetail } from "body/PlayFooter/utils";
+import SongsItem from "components/SongsItem";
+import { songsState } from "store/songs";
+import { CardList } from "components";
+import { RootState } from "store";
+import { NowListType } from "..";
 
 export const NowList = forwardRef<NowListType, any>((props, ref) => {
   const songsState = useSelector<
@@ -52,7 +52,6 @@ export const NowList = forwardRef<NowListType, any>((props, ref) => {
       bodyStyle={{
         boxShadow: "none !important",
         padding: 0,
-        // background: "rgba(0, 0, 0, 0.6)",
       }}
     >
       <Container>

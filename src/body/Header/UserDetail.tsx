@@ -39,7 +39,6 @@ export const UserDetail: React.FC<{ uid: number }> = ({ uid }) => {
   useMemo(() => {
     if (data?.code === 200) {
       message.success("退出成功");
-
       // 这里接口响应不及时、会出现两次退出登录的情况！
       // 因此，采用直接清除缓存的方式
       // localStorage.clear();

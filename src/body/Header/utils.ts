@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useHttp } from "utils";
 
 // 热搜榜
-// querykey中间不能加/
 export const useHotList = () => {
   const client = useHttp();
   return useQuery(["searchhotdetail"], () => client("search/hot/detail"));

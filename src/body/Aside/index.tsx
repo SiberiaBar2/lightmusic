@@ -15,10 +15,7 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 export const Aside: React.FC = () => {
   const navigate = useNavigate();
-
   const loginStatus = useLogin();
-  console.log("useLogin", loginStatus);
-
   const items: MenuItem[] = (loginStatus ? asideList : noLoginAsideList).map(
     (aside) => {
       return {
@@ -54,15 +51,4 @@ const AntMenu = styled(Menu)`
   width: 20rem;
   height: 80%;
   background: rgb(250, 250, 252);
-`;
-
-const Arrow = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 5rem;
-  bottom: 0.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 `;
