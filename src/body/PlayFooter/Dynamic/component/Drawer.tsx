@@ -182,7 +182,7 @@ const RoundWrap: React.FC<
         />
         {play !== "play" ? (
           <Play
-            onClick={player?.playMusic}
+            onClick={() => player?.playMusic()}
             theme="outline"
             size="30"
             style={{

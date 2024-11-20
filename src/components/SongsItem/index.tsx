@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback } from "react";
+import { MouseEvent, useCallback, CSSProperties } from "react";
 import { Tag, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "@emotion/styled";
@@ -26,9 +26,14 @@ const SONGSTYPE: { [x: number]: string } = {
   [Keys.eightth]: "", // 非会员可免费播放低音质，会员可播放高音质及下载
 };
 
+const ICONSTYLE: CSSProperties = {
+  display: "flex",
+  cursor: "pointer",
+  marginRight: "1rem",
+  alignItems: "center",
+};
 const SongsItem: React.FC<childrenReturnType> = (props) => {
-  const { songindex, songidlist, customrender, item, dataSource, ...other } =
-    props;
+  const { songindex, songidlist, item, dataSource } = props;
   const { id, al, fee } = item;
 
   const loginStatus = useLogin();
@@ -36,14 +41,8 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
     _.pick(state.ilike, ["likes"])
   );
 
-  // console.log("likeState", likeState);
-
   const dispatch = useDispatch();
   const { likes } = likeState;
-
-  // const backTopRef = useRef() as MutableRefObject<any>;
-  // const backTopInstance = backTopRef.current;
-  const check = useCheckMusic();
   const debouncedCallback = useFuncDebounce();
 
   const songsState = useSelector<
@@ -58,30 +57,6 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
   >(id, songindex, String(songidlist), dataSource);
 
   const { songId } = songsState;
-  // const isUse = (id: number) => {
-  //   // const { data } = check(id);
-  //   const data = check(id);
-  //   console.log("data", data);
-  //   // return data?.success;
-  // };
-
-  // const canUse = isUse(id);
-  // console.log("isUse", isUse(id));
-
-  // const isClick = isUse(id)
-  //   ? {
-  //       onClick: () =>
-  //         setParam({
-  //           ...param,
-  //           songId: id,
-  //           song: songIndex,
-  //           prevornext: String(songIdList),
-  //         }),
-  //     }
-  //   : {
-  //       onClick: () => message.error("暂无版权", 2),
-  //     };
-  // 是否播放的是当前项，如果是 则添加 active 效果，并禁止重复点击的保存！
   const isActive = () => {
     return item.id === songId;
   };
@@ -141,9 +116,6 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
 
       const like = _.cloneDeep(likes);
       like.unshift(id as number);
-
-      // console.log("songId", songId, "likelist", like);
-
       dispatch(
         changelike({
           likes: like,
@@ -170,8 +142,8 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
         justifyContent: "space-between",
         width: "100%",
         cursor: "pointer",
-        height: "4rem",
-        lineHeight: "4rem",
+        height: "6rem",
+        lineHeight: "6rem",
         // color: canUse
         //   ? isActive()
         //     ? "rgb(136, 58, 30)"
@@ -206,82 +178,83 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
             });
           }}
           theme="outline"
-          size="18"
+          size="22"
           fill="rgb(251, 236, 222)"
           style={{
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
-            marginLeft: "0.5rem",
+            marginLeft: "1rem",
           }}
         />
         <ImgWrap>
           <img src={al?.picUrl} alt="" />
         </ImgWrap>
-        <span style={{ marginRight: "0.5rem" }}>{item.name}</span>
-        {/* {item.name !== al?.name ? (
-          <span style={{ marginRight: "1rem" }}>({al?.name})</span>
-        ) : null} */}
-        {SONGSTYPE[fee as number] ? (
-          <AntTag>{SONGSTYPE[fee as number]}</AntTag>
-        ) : null}
-        {loginStatus ? (
-          likes.includes(id) ? (
-            <ParkLike
-              // onClick={(
-              //   e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-              // ) => {
-              //   console.log("自己", e);
-              //   e.stopPropagation();
-              //   likeMusci();
-              // }}
-              onClick={_.debounce(function (
-                // onClick={debouncedCallback(function (
-                e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-              ) {
-                console.log(
-                  "自己1",
-                  e,
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  this as MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-                );
-                e.stopPropagation();
-                likeMusci();
-              }, 500)}
-              theme={"filled"}
-              size={22}
-              fill="rgb(237, 90, 101)"
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-              }}
-            />
-          ) : (
-            <ParkLike
-              onClick={debouncedCallback(
-                (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
-                  console.log("自己2");
-
-                  e.stopPropagation();
-                  likeMusci();
-                }
-              )}
-              theme={"outline"}
-              size={22}
-              fill="rgb(237, 90, 101)"
-              style={{
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-              }}
-            />
-          )
-        ) : null}
+        <SongInfo>
+          <span>{item?.name}</span>
+          <span>{item?.alia?.[0]}</span>
+        </SongInfo>
         {/* {!canUse ? <span>暂无版权</span> : null} */}
       </Line>
-      <Container>{renderAuth()}</Container>
+      <Container>
+        {renderAuth()}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {SONGSTYPE[fee as number] ? (
+            <AntTag>{SONGSTYPE[fee as number]}</AntTag>
+          ) : null}
+          {loginStatus ? (
+            likes.includes(id) ? (
+              <ParkLike
+                // onClick={(
+                //   e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+                // ) => {
+                //   console.log("自己", e);
+                //   e.stopPropagation();
+                //   likeMusci();
+                // }}
+                onClick={_.debounce(function (
+                  // onClick={debouncedCallback(function (
+                  e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+                ) {
+                  console.log(
+                    "自己1",
+                    e,
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    this as MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+                  );
+                  e.stopPropagation();
+                  likeMusci();
+                }, 500)}
+                theme={"filled"}
+                size={22}
+                fill="rgb(237, 90, 101)"
+                style={ICONSTYLE}
+              />
+            ) : (
+              <ParkLike
+                onClick={debouncedCallback(
+                  (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
+                    console.log("自己2");
+
+                    e.stopPropagation();
+                    likeMusci();
+                  }
+                )}
+                theme={"outline"}
+                size={22}
+                fill="rgb(237, 90, 101)"
+                style={ICONSTYLE}
+              />
+            )
+          ) : null}
+        </div>
+      </Container>
     </div>
   );
 };
@@ -302,8 +275,8 @@ const Line = styled.div`
   align-items: center;
 `;
 const ImgWrap = styled.div`
-  width: 3rem;
-  height: 3rem;
+  width: 4rem;
+  height: 4rem;
   margin: 0 1rem;
 
   > img {
@@ -317,4 +290,17 @@ const Container = styled.div`
   width: 50%;
   display: flex;
   justify-content: space-between;
+`;
+
+const SongInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-right: 1rem;
+  height: 100%;
+
+  > span {
+    height: 3rem;
+    font-size: 12px;
+    line-height: 3rem;
+  }
 `;

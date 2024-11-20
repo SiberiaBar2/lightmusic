@@ -1,15 +1,16 @@
 import styled from "@emotion/styled";
 import { Skeleton, Image } from "antd";
 import { useParams } from "react-router-dom";
+import numeral from "numeral";
+
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
 import { config } from "utils/customRender";
-import { useBackTop } from "hooks";
-import numeral from "numeral";
+// import { useBackTop } from "hooks";
 import { useRankingSongs } from "components/CardSongs/utils";
 
 export const SongList: React.FC = () => {
-  useBackTop();
+  // useBackTop();
 
   const { id } = useParams();
   const { data: songList, isLoading } = useRankingSongs(id!);

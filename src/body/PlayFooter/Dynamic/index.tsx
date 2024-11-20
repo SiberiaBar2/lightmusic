@@ -77,7 +77,6 @@ const INITSONGDETAIL = {
 export interface DrawProps {
   picUrl: string;
   time: string;
-  // lyric: string;
   songId?: number | string;
   handeChangeType?: any;
   type: {
@@ -535,7 +534,7 @@ export const Dynamic: React.FC<{
 
           {play !== "play" ? (
             <Play
-              onClick={player?.playMusic}
+              onClick={() => player?.playMusic()}
               theme="outline"
               size="24"
               fill="rgb(251, 236, 222)"

@@ -1,10 +1,10 @@
-import { createVibrantGradient, getMostFrequentColor } from "entries/utils";
 import _ from "lodash";
 
-import store from "store";
+import { createVibrantGradient, getMostFrequentColor } from "entries/utils";
 import { changePlay } from "store/play";
 import { songsInfo } from "store/songs";
 import { https } from "utils";
+import store from "store";
 
 export type TimeType = { time: number; timeStr: string };
 type SongConfig = {
@@ -48,7 +48,6 @@ export class BasicPlayer {
   public saveRenderTime = (h: typeof this.setRenderCurrentTime) => {
     this.setRenderCurrentTime = h;
   };
-
   public setRenderSongConfig: ((c: SongDetailConfig) => void) | null = null;
   public setSongConfig = (h: React.SetStateAction<any>) => {
     if (!this.setRenderSongConfig) this.setRenderSongConfig = h;
@@ -59,7 +58,6 @@ export class BasicPlayer {
   public initAudio = (url?: string) => {
     this.toneQuality =
       store.getState?.()?.toneQuality?.toneQuality?.key || "standard";
-
     if (!this.audio) {
       this.audio = new Audio(url);
       this.audio.volume = 0.5;
@@ -73,15 +71,26 @@ export class BasicPlayer {
       );
       this.audio.currentTime = this.currentTime!;
       this.audio.ontimeupdate = this.ontimeUpdate;
+      // this.audio.load();
     }
   };
 
   public clearAudio() {
-    if (this.audio) {
-      this.audio.pause();
-      this.audio.src = "";
-      this.audio.load();
-      this.audio = null;
+    try {
+      if (this.audio) {
+        this.audio?.pause();
+        // this.audio.currentTime = 0;
+        this.audio.src = "";
+        this.audio.load(); // 强制初始化 会重置播放时间
+
+        // 如果在 DOM 中，则移除
+        if (this.audio.parentNode) {
+          this.audio.remove();
+        }
+        this.audio = null;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -109,11 +118,13 @@ export class BasicPlayer {
       await this.getSongUrl();
     }
   };
-  public playMusic = async () => {
+  public playMusic = async (noCheck?: boolean) => {
     if (this.timer) {
       clearInterval(this.timer);
     }
-    await this.checkAudioResource(this.songPlayDetail?.url);
+    if (!noCheck) {
+      await this.checkAudioResource(this.songPlayDetail?.url);
+    }
     try {
       this.clearAudio();
       if (!this.songPlayDetail?.url) {
@@ -165,12 +176,6 @@ export class BasicPlayer {
       if (this.audio && !this.audio.paused) {
         this.audio?.pause();
         store.dispatch(changePlay({ play: "pause" }));
-        // if (this.timer) {
-        //   clearInterval(this.timer);
-        // }
-        // this.timer = setInterval(() => {
-        //   this.getSongUrl();
-        // }, 900000);
       }
     } catch (error) {
       console.error(error);
@@ -194,18 +199,17 @@ export class BasicPlayer {
       const nowSongDetail = this.songsState?.platList?.find(
         (ele: any) => ele.id == id
       );
-      const picUrl = _.get(nowSongDetail, "al.picUrl");
-      const name = _.get(nowSongDetail, "name");
-      const authName = _.get(nowSongDetail, "ar[0].name");
       const dt = _.get(nowSongDetail, "dt");
-
+      const name = _.get(nowSongDetail, "name");
+      const picUrl = _.get(nowSongDetail, "al.picUrl");
+      const authName = _.get(nowSongDetail, "ar[0].name");
       const backGroundColor = await this.changeBackGroundColor(picUrl);
       const songDetailConfig = {
-        picUrl,
+        backGroundColor,
         authName,
+        picUrl,
         name,
         dt,
-        backGroundColor,
       };
       this.setRenderSongConfig?.(songDetailConfig);
     }
@@ -251,7 +255,6 @@ export class BasicPlayer {
     store.dispatch(
       songsInfo({
         ...this.songsState,
-        prevornext: this.songsState.prevornext,
         songId: this.getSongsId[index],
         song: index,
       })
@@ -260,9 +263,9 @@ export class BasicPlayer {
     await this.getSongUrl();
     this.playMusic();
   };
-  public playPrev = () => {
-    this.clearAudio();
-    this.getSongState();
+  public playPrev = async () => {
+    await this.clearAudio();
+    await this.getSongState();
     const prev = this.getCurrentIndex(Number(this.songsState?.song) - 1);
     this.songsState = {
       ...this.songsState,
@@ -270,9 +273,9 @@ export class BasicPlayer {
     };
     this.changeSong(prev);
   };
-  public playNext = () => {
-    this.clearAudio();
-    this.getSongState();
+  public playNext = async () => {
+    await this.clearAudio();
+    await this.getSongState();
     const next = this.getCurrentIndex(Number(this.songsState?.song) + 1);
     this.songsState = {
       ...this.songsState,
@@ -280,7 +283,7 @@ export class BasicPlayer {
     };
     this.changeSong(next);
   };
-  public changeToneQuality = (toneQuality: string) => {
+  public changeToneQuality = async (toneQuality: string) => {
     this.getSongState();
     this.toneQuality = toneQuality;
     this.currentTime = this.audio?.currentTime;
@@ -292,7 +295,8 @@ export class BasicPlayer {
         song: index,
       })
     );
-    this.playMusic();
+    await this.getSongUrl();
+    this.playMusic(true);
   };
   public getDurationTime = (dt: number) => {
     if (dt) {
@@ -384,8 +388,9 @@ export class Controller extends BasicPlayer {
       this.getSongsId[this.getSongsId?.length - 1]
     ) {
       this.pauseMusic();
+    } else {
+      this.playNext();
     }
-    this.playNext();
   };
   public loopList = () => {
     this.reset();
@@ -400,7 +405,6 @@ export class Controller extends BasicPlayer {
     store.dispatch(
       songsInfo({
         ...this.songsState,
-        prevornext: this.songsState.prevornext,
         songId: this.getSongsId[random],
         song: random,
       })

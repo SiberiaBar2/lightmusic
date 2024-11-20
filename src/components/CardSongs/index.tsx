@@ -8,6 +8,7 @@ export const CardSongs: React.FC<{ item?: any }> = (props) => {
   const { item } = props;
   const { data: { playlist: { tracks } } = { playlist: { tracks: [] } } } =
     useRankingSongs(item.id);
+
   return (
     <Container>
       <MusciCard item={item} />

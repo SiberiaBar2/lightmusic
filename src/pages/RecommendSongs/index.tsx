@@ -1,27 +1,30 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { useQuery } from "@karlfranz/reacthooks";
 import { Empty } from "antd";
 
-import { CardList } from "components";
 import SongsItem from "components/SongsItem";
-import { useRecommendSongs } from "pages/RecommendSongSheet/utils";
 import { config } from "utils/customRender";
-import { RootState } from "store";
 import { LoginState } from "store/login";
+import { songsState } from "store/songs";
+import { CardList } from "components";
+import { RootState } from "store";
 import { useHttp } from "utils";
-import { useQuery } from "@karlfranz/reacthooks";
 
 export const RecommendSongs: React.FC = React.memo(() => {
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
     (state) => state.login
   );
+  const songsState = useSelector<RootState, Pick<songsState, "platList">>(
+    (state) => state.songs
+  );
   const { data: { data: { profile = {} } = {} } = {} } = loginState;
-  // const { data: { data: { dailySongs = [] } = {} } = {} } = useRecommendSongs();
-
-  console.log("render次数");
-
   const client = useHttp();
-  const { data: { data: { dailySongs = [] } = {} } = {} as any } = useQuery(
+  const {
+    data: {
+      data: { dailySongs = songsState?.platList || [] } = {},
+    } = {} as any,
+  } = useQuery(
     () =>
       client("recommend/songs", {
         data: {
@@ -35,11 +38,8 @@ export const RecommendSongs: React.FC = React.memo(() => {
       },
     }
   );
-  // console.log("data ---->", dailySongs);
 
   const renderFunc = () => {
-    console.log("profile?.userId", profile?.userId);
-
     if (profile?.userId) {
       return (
         <CardList many={config} dataSource={dailySongs}>
