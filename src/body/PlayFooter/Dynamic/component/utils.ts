@@ -21,7 +21,8 @@ const TIME = {
 };
 
 export type SongDetailConfig = Record<
-  "picUrl" | "name" | "authName" | "backGroundColor",
+  "picUrl" | "name" | "authName",
+  // "picUrl" | "name" | "authName" | "backGroundColor",
   string
 > & {
   dt: number;
@@ -203,9 +204,9 @@ export class BasicPlayer {
       const name = _.get(nowSongDetail, "name");
       const picUrl = _.get(nowSongDetail, "al.picUrl");
       const authName = _.get(nowSongDetail, "ar[0].name");
-      const backGroundColor = await this.changeBackGroundColor(picUrl);
+      // const backGroundColor = await this.changeBackGroundColor(picUrl);
       const songDetailConfig = {
-        backGroundColor,
+        // backGroundColor,
         authName,
         picUrl,
         name,
@@ -254,7 +255,6 @@ export class BasicPlayer {
   private changeSong = async (index: number) => {
     store.dispatch(
       songsInfo({
-        ...this.songsState,
         songId: this.getSongsId[index],
         song: index,
       })
@@ -290,7 +290,6 @@ export class BasicPlayer {
     const index = +this.songsState.song;
     store.dispatch(
       songsInfo({
-        ...this.songsState,
         songId: this.getSongsId[index],
         song: index,
       })
@@ -404,7 +403,6 @@ export class Controller extends BasicPlayer {
 
     store.dispatch(
       songsInfo({
-        ...this.songsState,
         songId: this.getSongsId[random],
         song: random,
       })

@@ -21,8 +21,8 @@ export const songsSlice = createSlice({
     songsInfo: (state, { payload }) => {
       state.songId = payload.songId;
       state.song = payload.song;
-      state.prevornext = payload.prevornext;
-      state.platList = payload.platList;
+      if (payload.prevornext) state.prevornext = payload.prevornext;
+      if (payload.platList) state.platList = payload.platList;
     },
   },
 });

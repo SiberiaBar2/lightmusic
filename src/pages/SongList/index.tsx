@@ -10,8 +10,6 @@ import { config } from "utils/customRender";
 import { useRankingSongs } from "components/CardSongs/utils";
 
 export const SongList: React.FC = () => {
-  // useBackTop();
-
   const { id } = useParams();
   const { data: songList, isLoading } = useRankingSongs(id!);
   const formatNumber = (num: number) => {

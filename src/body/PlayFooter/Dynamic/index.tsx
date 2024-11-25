@@ -228,7 +228,16 @@ export const Dynamic: React.FC<{
     player.getSongDetailConfig(songId + "");
   }, []);
 
-  const { name, picUrl, authName, dt, backGroundColor } = songDetailConfig;
+  const { name, picUrl, authName, dt } = songDetailConfig;
+
+  const [backGroundColor, setBackGroundColor] = useState("");
+  useEffect(() => {
+    if (picUrl)
+      (async () => {
+        const backGroundColor = await player.changeBackGroundColor(picUrl);
+        setBackGroundColor(backGroundColor);
+      })();
+  }, [picUrl]);
 
   // const changeOpen = useCallback((open: boolean) => {
   //   setOpen(open);
