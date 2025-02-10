@@ -5,13 +5,29 @@ import numeral from "numeral";
 
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
-import { config } from "utils/customRender";
+// import { config } from "utils/customRender";
 // import { useBackTop } from "hooks";
-import { useRankingSongs } from "components/CardSongs/utils";
+// import { useRankingSongs } from "components/CardSongs/utils";
+import React, { useEffect, useMemo, useState } from "react";
+import { https } from "utils";
+const client = https();
 
 export const SongList: React.FC = () => {
   const { id } = useParams();
-  const { data: songList, isLoading } = useRankingSongs(id!);
+
+  const [songList, setSongList] = useState({} as any);
+
+  useEffect(() => {
+    (async () => {
+      if (id) {
+        const res = await client("playlist/detail", { data: { id } });
+
+        console.log("000000->", res);
+        setSongList(res);
+      }
+    })();
+  }, [id]);
+
   const formatNumber = (num: number) => {
     if (num < 10000) {
       return num.toString(); // 小于一万直接显示
@@ -45,7 +61,8 @@ export const SongList: React.FC = () => {
   );
 
   return (
-    <Skeleton loading={isLoading} active={true}>
+    <div>
+      {/* <Skeleton loading={isLoading} active={true}> */}
       <ImageContainer>
         <Image
           style={{ width: "15rem", height: "15rem", borderRadius: "1rem" }}
@@ -56,13 +73,13 @@ export const SongList: React.FC = () => {
         </Describtion>
       </ImageContainer>
       <CardList
-        many={config}
+        // many={config}
         size="large"
         dataSource={songList?.playlist?.tracks}
       >
         <SongsItem />
       </CardList>
-    </Skeleton>
+    </div>
   );
 };
 

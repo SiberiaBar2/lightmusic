@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface songsState {
   songId?: number | string;
@@ -14,19 +14,27 @@ const initialState: songsState = {
   platList: [],
 };
 
+interface SongsInfoPayload {
+  songId?: number | string;
+  song?: number | string;
+  prevornext?: string;
+  platList?: any[];
+}
+
 export const songsSlice = createSlice({
   name: "songs",
   initialState,
   reducers: {
-    songsInfo: (state, { payload }) => {
-      state.songId = payload.songId;
-      state.song = payload.song;
-      if (payload.prevornext) state.prevornext = payload.prevornext;
-      if (payload.platList) state.platList = payload.platList;
+    songsInfo: (state, { payload }: PayloadAction<SongsInfoPayload>) => {
+      if (payload.songId !== undefined) state.songId = payload.songId;
+      if (payload.song !== undefined) state.song = payload.song;
+      if (payload.prevornext !== undefined)
+        state.prevornext = payload.prevornext;
+      if (payload.platList !== undefined) state.platList = payload.platList;
     },
   },
 });
 
-export const songsInfo = songsSlice.actions.songsInfo;
+export const { songsInfo } = songsSlice.actions;
 
 export default songsSlice.reducer;

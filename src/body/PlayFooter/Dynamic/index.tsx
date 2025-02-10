@@ -22,7 +22,7 @@ import {
   useEffect,
   MouseEvent,
 } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import { Dispatch as reduxDispatch, AnyAction } from "redux";
 import { Dropdown, Tooltip, message } from "antd";
 import _ from "lodash";
@@ -126,7 +126,8 @@ export const Dynamic: React.FC<{
   const { songId } = param;
 
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
-    (state) => state.login
+    (state) => state.login,
+    shallowEqual
   );
   const { data: { data: { profile: { userId = 0 } = {} } = {} } = {} } =
     loginState;
@@ -204,21 +205,22 @@ export const Dynamic: React.FC<{
   } as TimeType);
 
   player.saveRenderTime(setTime);
-  const playState = useSelector<RootState, Pick<playState, "play">>((state) =>
-    _.pick(state.play, "play")
+  const playState = useSelector<RootState, Pick<playState, "play">>(
+    (state) => _.pick(state.play, "play"),
+    shallowEqual
   );
   const { play } = playState;
 
   const qualityState = useSelector<
     RootState,
     Pick<ToneQualityState, "toneQuality">
-  >((state) => _.pick(state.toneQuality, "toneQuality"));
+  >((state) => _.pick(state.toneQuality, "toneQuality"), shallowEqual);
   const { toneQuality } = qualityState;
 
   const songsState = useSelector<
     RootState,
     Pick<songsState, "songId" | "song" | "prevornext">
-  >((state) => state.songs);
+  >((state) => state.songs, shallowEqual);
 
   const [songDetailConfig, setSongDetailConfig] =
     useState<SongDetailConfig>(INITSONGDETAIL);
@@ -229,7 +231,6 @@ export const Dynamic: React.FC<{
   }, []);
 
   const { name, picUrl, authName, dt } = songDetailConfig;
-
   const [backGroundColor, setBackGroundColor] = useState("");
   useEffect(() => {
     if (picUrl)

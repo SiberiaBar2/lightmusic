@@ -34,3 +34,33 @@ export const useDouble = <T, K, U>(
 
   return [strategy, debounce] as const;
 };
+export const doubleCilck = <T, K, U>(
+  id: T,
+  songindex: K,
+  songidlist: U,
+  platList: any[]
+) => {
+  const strategy: StrategyType = {
+    [Keys.single]: function () {
+      // dispatch(
+      //   songsInfo({
+      //     ...songsState,
+      //     songId: id,
+      //     song: songindex,
+      //     prevornext: String(songidlist),
+      //   })
+      // );
+      // dispatch(changePlay({ play: "init" }));
+    },
+    [Keys.double]: function () {
+      player.saveSongConfig({
+        prevornext: String(songidlist),
+        song: songindex as string,
+        songId: id as number,
+        platList: platList,
+      });
+    },
+  };
+
+  return [strategy, debounce] as const;
+};

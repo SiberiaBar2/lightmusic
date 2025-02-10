@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import _ from "lodash";
 
 import SongsItem from "components/SongsItem";
 import { config } from "utils/customRender";
-import { songsState } from "store/songs";
+// import { songsState } from "store/songs";
 import { LoginState } from "store/login";
 import { CardList } from "components";
 import { RootState } from "store";
@@ -12,15 +12,17 @@ import { https } from "utils";
 
 export const Ilike: React.FC = () => {
   const loginState = useSelector<RootState, Pick<LoginState, "data">>(
-    (state) => state.login
+    (state) => state.login,
+    shallowEqual
   );
-  const songsState = useSelector<RootState, Pick<songsState, "platList">>(
-    (state) => state.songs
-  );
+  // const songsState = useSelector<RootState, Pick<songsState, "platList">>(
+  //   (state) => state.songs,
+  //   shallowEqual
+  // );
 
   const { data } = loginState;
 
-  const [playlist, setPlaylist] = useState<any[]>(songsState?.platList || []);
+  const [playlist, setPlaylist] = useState<any[]>([]);
   const client = https();
   const getLikeList = async (uid: number) => {
     const res = await client("user/playlist", {

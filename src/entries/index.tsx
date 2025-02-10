@@ -27,8 +27,9 @@ import { useMountRef } from "@karlfranz/reacthooks";
 import { getBack } from "./pic";
 import { useSelector } from "react-redux";
 import { RootState } from "store";
-import { songsState } from "store/songs";
+// import { songsState } from "store/songs";
 
+console.log("weweeqwe");
 localStorage.setItem("zhixue", "false");
 const count = 390;
 const defaults = {
@@ -48,20 +49,20 @@ const BACK = getBack();
 const Entries = () => {
   const mountStatus = useMountRef();
 
-  const songsState = useSelector<
-    RootState,
-    Pick<songsState, "songId" | "song" | "prevornext">
-  >((state) => state.songs);
-  const { songId } = songsState;
-  const {
-    data: {
-      songs: [
-        {
-          al: { picUrl },
-        },
-      ],
-    } = PLAYCONSTANTS,
-  } = useSongDetail(songId);
+  // const songsState = useSelector<
+  //   RootState,
+  //   Pick<songsState, "songId" | "song" | "prevornext">
+  // >((state) => state.songs);
+  // const { songId } = songsState;
+  // const {
+  //   data: {
+  //     songs: [
+  //       {
+  //         al: { picUrl },
+  //       },
+  //     ],
+  //   } = PLAYCONSTANTS,
+  // } = useSongDetail(songId);
 
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
@@ -88,6 +89,8 @@ const Entries = () => {
       startVelocity: 45,
     });
   };
+
+  console.log("wewe====>");
 
   const renderLoading = () => (
     <div

@@ -73,10 +73,10 @@ const Qrcode: React.FC = () => {
             userCookie: data.cookie,
           },
         });
-      }, 500);
+      }, 200);
       // setTimeout(() => {
       //   location.reload();
-      // }, 1000);
+      // }, 500);
     }
   };
   const { mutate: check } = useCheckLoginStatus(getData);
