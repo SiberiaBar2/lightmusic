@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 export const createVibrantGradient = (dominantColor: string): string => {
   // 生成鲜艳的颜色和更深的颜色
   const enhanceAndDarkenColor = (

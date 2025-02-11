@@ -1,6 +1,4 @@
 import { ArrowUpOutlined } from "@ant-design/icons";
-import styled from "@emotion/styled";
-import { Aside as BodyAside, PlayFooter, Header as BodyHeader } from "body";
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,6 +7,9 @@ import {
 } from "react-router-dom";
 import { FloatButton } from "antd";
 import confetti from "canvas-confetti";
+import styled from "@emotion/styled";
+
+import { Aside as BodyAside, PlayFooter, Header as BodyHeader } from "body";
 import {
   RecommendSongSheet,
   Ranking,
@@ -20,16 +21,9 @@ import {
   RecommendSongs,
   Login,
 } from "pages";
-import { debounce } from "utils/utils";
-import { useSongDetail } from "body/PlayFooter/utils";
-import { PLAYCONSTANTS } from "body/PlayFooter/contants";
 import { useMountRef } from "@karlfranz/reacthooks";
 import { getBack } from "./pic";
-import { useSelector } from "react-redux";
-import { RootState } from "store";
-// import { songsState } from "store/songs";
 
-console.log("weweeqwe");
 localStorage.setItem("zhixue", "false");
 const count = 390;
 const defaults = {
@@ -48,22 +42,6 @@ const BACK = getBack();
 
 const Entries = () => {
   const mountStatus = useMountRef();
-
-  // const songsState = useSelector<
-  //   RootState,
-  //   Pick<songsState, "songId" | "song" | "prevornext">
-  // >((state) => state.songs);
-  // const { songId } = songsState;
-  // const {
-  //   data: {
-  //     songs: [
-  //       {
-  //         al: { picUrl },
-  //       },
-  //     ],
-  //   } = PLAYCONSTANTS,
-  // } = useSongDetail(songId);
-
   const xuanlan = () => {
     if (localStorage.getItem("zhixue") === "false") return;
     fire(0.25, {
@@ -89,8 +67,6 @@ const Entries = () => {
       startVelocity: 45,
     });
   };
-
-  console.log("wewe====>");
 
   const renderLoading = () => (
     <div
@@ -155,9 +131,7 @@ const Entries = () => {
     </Main>
   );
   const renderView = () => (
-    <View
-    // onClick={debounce(xuanlan, 2000)}
-    >
+    <View>
       <ContainerMask />
       <Router>
         <CenterContent>
@@ -271,7 +245,6 @@ const Section = styled.section`
 
 const CenterContent = styled.div`
   height: 100%;
-  /* position: relative; */
   display: flex;
   flex-direction: column;
 `;

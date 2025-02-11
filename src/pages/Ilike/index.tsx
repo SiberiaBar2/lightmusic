@@ -4,7 +4,6 @@ import _ from "lodash";
 
 import SongsItem from "components/SongsItem";
 import { config } from "utils/customRender";
-// import { songsState } from "store/songs";
 import { LoginState } from "store/login";
 import { CardList } from "components";
 import { RootState } from "store";
@@ -15,10 +14,6 @@ export const Ilike: React.FC = () => {
     (state) => state.login,
     shallowEqual
   );
-  // const songsState = useSelector<RootState, Pick<songsState, "platList">>(
-  //   (state) => state.songs,
-  //   shallowEqual
-  // );
 
   const { data } = loginState;
 
@@ -44,7 +39,7 @@ export const Ilike: React.FC = () => {
   return (
     <div>
       <CardList many={config} dataSource={playlist}>
-        <SongsItem />
+        <SongsItem showLike={false} customrender={config.renderFunc} />
       </CardList>
     </div>
   );

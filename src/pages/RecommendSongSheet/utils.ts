@@ -23,11 +23,6 @@ interface Recommend {
 export const useRecommend = () => {
   const client = useHttp();
   return useQueryC<Recommend, null>(() => client("personalized"));
-
-  // return useQuery({
-  //   queryKey: "recommend",
-  //   queryFn: () => client("personalized"),
-  // });
 };
 
 export const useRecommendResource = (userCookie?: string) => {
@@ -49,10 +44,6 @@ export const useBanner = () => {
     },
     null
   >(() => client("banner"));
-  // return useQuery({
-  //   queryKey: "banner",
-  //   queryFn: () => client("banner"),
-  // });
 };
 
 // 推荐歌曲

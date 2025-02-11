@@ -1,21 +1,15 @@
 import { CSSProperties } from "react";
 import { useLocation } from "react-router-dom";
 import { Spin } from "antd";
-import styled from "@emotion/styled";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useQuery } from "@karlfranz/reacthooks";
 import { Navigation, Pagination, Autoplay } from "swiper";
+import styled from "@emotion/styled";
 
+import { cookie, useBanner, useRecommend } from "./utils";
 import { AntCard } from "components/AntCard";
 import { CardList } from "components";
 import { arrAdds } from "utils/utils";
-import {
-  cookie,
-  useBanner,
-  useRecommend,
-  // useRecommendResource,
-  // useRecommendSongs,
-} from "./utils";
 
 import "swiper/css/bundle";
 import { useHttp } from "utils";

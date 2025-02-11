@@ -1,25 +1,23 @@
-import { MouseEvent, useCallback, CSSProperties, useEffect } from "react";
-import { Tag, message } from "antd";
+import { MouseEvent, useCallback, CSSProperties } from "react";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import styled from "@emotion/styled";
-import _ from "lodash";
 import { Like as ParkLike, Play, PauseOne } from "@icon-park/react";
+import { Tag, message } from "antd";
 import { createSelector } from "reselect";
+import _ from "lodash";
+import styled from "@emotion/styled";
 
 import { useCheckMusic, useLike } from "body/PlayFooter/utils";
 import { childrenReturnType } from "components/CardList";
 
-// import { songsState } from "store/songs";
-import { likeState, changelike } from "store/ilike";
-import { RootState } from "store";
-// import { useDouble } from "body/utils";
 import { Keys } from "types";
+import { RootState } from "store";
+import { likeState, changelike } from "store/ilike";
 import { useFuncDebounce } from "@karlfranz/reacthooks";
 import { useLogin } from "body/Header/utils";
 import { player } from "body/PlayFooter/Dynamic";
 import { doubleCilck } from "body/utils";
 import { playState } from "store/play";
-// import { songsInfo } from "store/songs";
+
 const cookie = localStorage.getItem("cookie");
 
 const SONGSTYPE: { [x: number]: string } = {
@@ -48,7 +46,7 @@ const selectSongsState = createSelector(
 );
 
 const SongsItem: React.FC<childrenReturnType> = (props) => {
-  const { songindex, songidlist, item, dataSource } = props;
+  const { songindex, songidlist, item, dataSource, showLike = true } = props;
   const { id, al, fee } = item;
 
   const playState = useSelector<RootState, Pick<playState, "play">>(
@@ -224,7 +222,7 @@ const SongsItem: React.FC<childrenReturnType> = (props) => {
           {SONGSTYPE[fee as number] ? (
             <AntTag>{SONGSTYPE[fee as number]}</AntTag>
           ) : null}
-          {loginStatus ? (
+          {showLike && loginStatus ? (
             likes.includes(id) ? (
               <ParkLike
                 onClick={_.debounce((e: MouseEvent<HTMLSpanElement>) => {

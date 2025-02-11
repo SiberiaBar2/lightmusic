@@ -1,6 +1,4 @@
 import { useHttp } from "utils";
-// import { useQuery } from "react-query";
-import { useEffect } from "react";
 import { useQuery } from "@karlfranz/reacthooks";
 
 export const useRankingSongs = (id: number | string) => {
@@ -11,8 +9,7 @@ export const useRankingSongs = (id: number | string) => {
       success(res) {
         console.log("返回", res);
       },
-      // refreshDeps: [id],
-      refreshDeps: [],
+      refreshDeps: [id],
     }
   );
 

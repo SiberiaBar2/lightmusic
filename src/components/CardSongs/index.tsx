@@ -6,8 +6,7 @@ import { useRankingSongs } from "./utils";
 
 export const CardSongs: React.FC<{ item?: any }> = (props) => {
   const { item } = props;
-  const { data: { playlist: { tracks } } = { playlist: { tracks: [] } } } =
-    useRankingSongs(item.id);
+  const { data } = useRankingSongs(item.id);
 
   return (
     <Container>
@@ -15,7 +14,8 @@ export const CardSongs: React.FC<{ item?: any }> = (props) => {
       <CardList
         many={config}
         style={{ flex: 1 }}
-        dataSource={tracks.slice(0, 5)}
+        maxRender={5}
+        dataSource={data?.playlist?.tracks}
       >
         <SongsItem />
       </CardList>

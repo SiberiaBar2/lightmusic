@@ -414,8 +414,17 @@ export class Controller extends BasicPlayer {
   };
 
   // 喜欢歌曲
-  public likeSong = () => {
-    // this.audio?.play();
+  public likeSong = (param: {
+    id: number;
+    cookie: string;
+    like?: boolean;
+    timerstamp: number;
+  }) => {
+    const client = https();
+    return client("like", {
+      method: "GET",
+      data: param,
+    });
   };
   // 开启心动模式💓
   public openHeartbeat = () => {

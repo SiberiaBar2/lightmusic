@@ -5,11 +5,10 @@ import numeral from "numeral";
 
 import { CardList } from "components";
 import SongsItem from "components/SongsItem";
-// import { config } from "utils/customRender";
 // import { useBackTop } from "hooks";
-// import { useRankingSongs } from "components/CardSongs/utils";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { https } from "utils";
+
 const client = https();
 
 export const SongList: React.FC = () => {
@@ -21,8 +20,6 @@ export const SongList: React.FC = () => {
     (async () => {
       if (id) {
         const res = await client("playlist/detail", { data: { id } });
-
-        console.log("000000->", res);
         setSongList(res);
       }
     })();

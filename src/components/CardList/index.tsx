@@ -1,7 +1,6 @@
 import React from "react";
 import { List } from "antd";
 import styled from "@emotion/styled";
-import SongsItem from "components/SongsItem";
 
 interface CardListProps
   extends React.PropsWithChildren<React.ComponentProps<typeof List>> {
@@ -11,6 +10,7 @@ interface CardListProps
     color?: string[];
     background?: string[];
   };
+  maxRender?: number;
 }
 
 export interface childrenReturnType {
@@ -18,11 +18,12 @@ export interface childrenReturnType {
   songindex?: number;
   songidlist?: number[];
   customrender?: (value: any) => JSX.Element;
+  showLike?: boolean;
   [x: string]: any;
 }
 
 export const CardList: React.FC<CardListProps> = React.memo(
-  ({ children, dataSource, custom, many, ...other }) => {
+  ({ children, dataSource, custom, many, maxRender, ...other }) => {
     console.log("dataSource", dataSource);
     const songidlist = dataSource?.map((item) => {
       return (item as any).id as number;
@@ -66,26 +67,20 @@ export const CardList: React.FC<CardListProps> = React.memo(
     //   };
     // };
 
+    const renderDataSource = () => {
+      if (maxRender !== undefined) {
+        return dataSource?.slice(0, maxRender);
+      }
+      return dataSource;
+    };
     return (
       <>
         <AntList
-          dataSource={dataSource}
+          dataSource={renderDataSource()}
           renderItem={(item: any, index: number) => (
             // <List.Item style={customStyle(index)}>
             <List.Item style={{ padding: 0 }}>
               {addConfig(item, index, children)}
-
-              {/* {console.log("item", item)} */}
-              {/* <SongsItem
-                {...{
-                  key: item.id,
-                  songindex: index,
-                  songidlist: songidlist,
-                  customrender: many?.renderFunc,
-                  item: item,
-                  dataSource: dataSource,
-                }}
-              /> */}
             </List.Item>
           )}
           {...other}
