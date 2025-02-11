@@ -346,9 +346,13 @@ export class BasicPlayer {
   };
 
   public saveSongConfig = async (config: SongConfig) => {
+    this.getSongState();
+    if (config.songId === this.songsState.songId) {
+      return this.playMusic();
+    }
     this.reset();
     this.clearAudio();
-    this.songsState = { ...config };
+    this.songsState = { ...this.songsState, ...config };
     this.getSongsId = this.songsState.prevornext
       ?.split(",")
       .map((ele: any) => Number(ele));
@@ -423,7 +427,10 @@ export class Controller extends BasicPlayer {
     const client = https();
     return client("like", {
       method: "GET",
-      data: param,
+      data: {
+        ...param,
+        timestamp: new Date().getTime(),
+      },
     });
   };
   // 开启心动模式💓
